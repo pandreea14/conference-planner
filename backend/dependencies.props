@@ -1,0 +1,33 @@
+<Project>
+  <PropertyGroup Label="Package Versions">
+		<AutoMapperPackageVersion>15.0.1</AutoMapperPackageVersion>
+    <FluentValidationVersion>11.3.1</FluentValidationVersion>
+		<HealthChecksUI>9.0.0</HealthChecksUI>
+    <IdentityServerPackageVersion>3.0.1</IdentityServerPackageVersion>
+    <InternationalizationPackageVersion>1.0.5</InternationalizationPackageVersion>
+    <MediatRContractsPackageVersion>2.0.1</MediatRContractsPackageVersion>
+    <MediatRPackageVersion>12.5.0</MediatRPackageVersion>
+		<MicrosoftAspNetCoreMvcNewtonsoftJsonPackagesVersion>9.0.7</MicrosoftAspNetCoreMvcNewtonsoftJsonPackagesVersion>
+		<MicrosoftEntityFrameworkPackagesVersion>9.0.1</MicrosoftEntityFrameworkPackagesVersion>
+		<MicrosoftExtensionsPackagesVersion>9.0.1</MicrosoftExtensionsPackagesVersion>
+		<MicrosoftIdentityProtocolsOpenIdConnectPackageVersion>8.3.1</MicrosoftIdentityProtocolsOpenIdConnectPackageVersion>
+		<MicrosoftNETTestPackageVersion>17.12.0</MicrosoftNETTestPackageVersion>
+		<NBBPackagesVersion>9.0.2</NBBPackagesVersion>
+    <NewtonsoftJsonPackageVersion>13.0.3</NewtonsoftJsonPackageVersion>
+    <OpenApiPackageVersion>9.0.7</OpenApiPackageVersion>
+		<Otel>1.12.0</Otel>
+		<OtelPrometheusAspNetCoreExporter>1.12.0-beta.1</OtelPrometheusAspNetCoreExporter>
+		<OtelInstrumentation>1.12.0</OtelInstrumentation>
+		<OtelContribEFCore>1.12.0-beta.2</OtelContribEFCore>
+		<OtelContribRuntime>1.12.0</OtelContribRuntime>
+    <ScrutorPackageVersion>6.1.0</ScrutorPackageVersion>
+		<SerilogAspNetCorePackageVersion>9.0.0</SerilogAspNetCorePackageVersion>
+		<SerilogSinksMSSqlServerPackageVersion>8.2.2</SerilogSinksMSSqlServerPackageVersion>
+    <SerilogSinksConsolePackageVersion>6.0.0</SerilogSinksConsolePackageVersion>
+    <SwashbucklePackageVersion>9.0.3</SwashbucklePackageVersion>
+    <YarpPackageVersion>2.3.0</YarpPackageVersion>
+		<TSDistributedCachePackagesVersion>1.5.0</TSDistributedCachePackagesVersion>
+		<xunitPackageVersion>2.9.2</xunitPackageVersion>
+		<xunitrunnervisualstudioPackageVersion>2.9.2</xunitrunnervisualstudioPackageVersion>
+  </PropertyGroup>
+</Project>

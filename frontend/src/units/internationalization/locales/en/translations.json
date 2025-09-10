@@ -1,0 +1,96 @@
+{
+  "DATE": "{{date, intlDate}}",
+  "LONG_DATE": "{{date, intlLongDate}}",
+  "DATE_FORMAT": "{{date}}",
+  "YEAR_AND_MONTH": "{{date, MMMM YYYY}}",
+  "NUMBER": "{{number, intlNumber}}",
+  "DECIMAL": "{{number, decimalPlaces}}",
+  "Navigation": {
+    "Homepage": "Homepage",
+    "Conferences": "Conferences",
+    "Settings": "Settings",
+    "Notifications": "Notifications",
+    "Support": "Support",
+    "Search": "Search...",
+    "GoToHome": "Go to Homepage"
+  },
+  "Validations": {
+    "Generic": {
+      "MinLength": "The value must be at least {{min}} characters long",
+      "Greater": "The value must be greater than {{min}}",
+      "Less": "The value must be less than {{max}}"
+    }
+  },
+  "User": {
+    "Error": "Error retrieving user data: {{message}}",
+    "Loading": "Loading...",
+    "Unknown": "Unknown",
+    "AccessDenied": "Access Denied",
+    "InsufficientPermissions": "You don't have permission to access this page. Please contact your administrator if you believe this is an error."
+  },
+  "Document": {
+    "StatusChanged": "Status changed successfully",
+    "Saved": "Document saved successfully"
+  },
+  "Common": {
+    "ComingSoon": "Coming soon...",
+    "PageNotFound": "Page not found",
+    "BackToList": "Back to list",
+    "Notifications": "Notifications",
+    "HideInfo": "Hide info",
+    "ShowInfo": "Show info",
+    "NoOptions": "No options",
+    "Error": "Error: {{message}}",
+    "Loading": "Loading...",
+    "Save": "Save",
+    "Remove": "Remove",
+    "Cancel": "Cancel",
+    "Drag": "Drag",
+    "Filters": "Filters",
+    "SelectAll": "Select All",
+    "DeselectAll": "Deselect All",
+    "ExecutionError": "Execution error: {{message}}",
+    "Edit": "Edit",
+    "Add": "Add"
+  },
+  "Logout": "Logout",
+  "LanguageSelector": {
+    "SelectLanguage": "Select language"
+  },
+  "Homepage": {
+    "Title": "Homepage"
+  },
+  "Contracts": {
+    "Title": "Contracts"
+  },
+  "Notifications": {
+    "Title": "Notifications"
+  },
+  "Support": {
+    "Title": "Support"
+  },
+  "Settings": {
+    "Title": "Settings",
+    "CacheManagement": "Cache Management",
+    "CacheDescription": "Reset the application cache to ensure you're seeing the latest data and configurations.",
+    "SystemInfo": "System Information",
+    "SystemInfoDescription": "View current application and database version information.",
+    "Label": "Reset cache",
+    "Success": "Cache reset successfully",
+    "Error": "Cache reset failed: {{message}}"
+  },
+  "SystemVersion": {
+    "Title": "System Version",
+    "Loading": "Loading...",
+    "Unavailable": "Version info unavailable",
+    "ApplicationInfo": "Application Information",
+    "BffInfo": "Backend for Frontend Information",
+    "Version": "Version",
+    "Service": "Service",
+    "Environment": "Environment",
+    "AppVersion": "App version: {{version}}",
+    "LastUpdated": "Last updated: {{date}}",
+    "DatabaseVersion": "Database version",
+    "Error": "Version error: {{message}}"
+  }
+}

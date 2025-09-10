@@ -1,0 +1,95 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36203.30
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Charisma.Api", "src\Charisma.Api\Charisma.Api.csproj", "{CA1BA316-B25F-40F2-B619-9CECE7D759B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{7CF4D60B-DABA-4B83-8612-60D0B0EA612D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "worker", "worker", "{79CF3A53-44C0-451B-88A5-58C73BA07A3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Charisma.Api.Application", "src\Charisma.Api.Application\Charisma.Api.Application.csproj", "{D1D575F1-47E4-4EE4-A6CB-C4A4F940C247}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6F479A61-B690-4B9F-B0DA-0701F7A7CDA6}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		dependencies.props = dependencies.props
+		Directory.Build.props = Directory.Build.props
+		GitVersion.yml = GitVersion.yml
+		NuGet.config = NuGet.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Charisma.Worker", "src\Charisma.Worker\Charisma.Worker.csproj", "{AFAFD118-A9F3-49C8-ABBE-BCB051BDA5E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Charisma.Worker.Application", "src\Charisma.Worker.Application\Charisma.Worker.Application.csproj", "{C2B21931-A8F0-4348-9871-1CA8F354CD26}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{D002BFE0-7493-456E-95DC-2DB3B1FF7A50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Charisma.Common.Domain", "src\Charisma.Common.Domain\Charisma.Common.Domain.csproj", "{32B7F4C2-30DC-4811-B485-48D1CD0DF462}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Charisma.Common.Infrastructure", "src\Charisma.Common.Infrastructure\Charisma.Common.Infrastructure.csproj", "{FF304549-0D5D-4CF1-977C-D1F0A48B4B1C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bff", "bff", "{6BDB8AD3-0BED-4E10-992E-4F0D3D8CB738}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Charisma.Bff", "src\Charisma.Bff\Charisma.Bff.csproj", "{B24446F5-B09A-49A5-AD0C-9BC7CA1FD6CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA1BA316-B25F-40F2-B619-9CECE7D759B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA1BA316-B25F-40F2-B619-9CECE7D759B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA1BA316-B25F-40F2-B619-9CECE7D759B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA1BA316-B25F-40F2-B619-9CECE7D759B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1D575F1-47E4-4EE4-A6CB-C4A4F940C247}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1D575F1-47E4-4EE4-A6CB-C4A4F940C247}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1D575F1-47E4-4EE4-A6CB-C4A4F940C247}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1D575F1-47E4-4EE4-A6CB-C4A4F940C247}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFAFD118-A9F3-49C8-ABBE-BCB051BDA5E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFAFD118-A9F3-49C8-ABBE-BCB051BDA5E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFAFD118-A9F3-49C8-ABBE-BCB051BDA5E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFAFD118-A9F3-49C8-ABBE-BCB051BDA5E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B21931-A8F0-4348-9871-1CA8F354CD26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B21931-A8F0-4348-9871-1CA8F354CD26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B21931-A8F0-4348-9871-1CA8F354CD26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B21931-A8F0-4348-9871-1CA8F354CD26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32B7F4C2-30DC-4811-B485-48D1CD0DF462}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32B7F4C2-30DC-4811-B485-48D1CD0DF462}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32B7F4C2-30DC-4811-B485-48D1CD0DF462}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32B7F4C2-30DC-4811-B485-48D1CD0DF462}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF304549-0D5D-4CF1-977C-D1F0A48B4B1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF304549-0D5D-4CF1-977C-D1F0A48B4B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF304549-0D5D-4CF1-977C-D1F0A48B4B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF304549-0D5D-4CF1-977C-D1F0A48B4B1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B24446F5-B09A-49A5-AD0C-9BC7CA1FD6CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B24446F5-B09A-49A5-AD0C-9BC7CA1FD6CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B24446F5-B09A-49A5-AD0C-9BC7CA1FD6CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B24446F5-B09A-49A5-AD0C-9BC7CA1FD6CF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CA1BA316-B25F-40F2-B619-9CECE7D759B0} = {7CF4D60B-DABA-4B83-8612-60D0B0EA612D}
+		{7CF4D60B-DABA-4B83-8612-60D0B0EA612D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{79CF3A53-44C0-451B-88A5-58C73BA07A3D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{D1D575F1-47E4-4EE4-A6CB-C4A4F940C247} = {7CF4D60B-DABA-4B83-8612-60D0B0EA612D}
+		{AFAFD118-A9F3-49C8-ABBE-BCB051BDA5E2} = {79CF3A53-44C0-451B-88A5-58C73BA07A3D}
+		{C2B21931-A8F0-4348-9871-1CA8F354CD26} = {79CF3A53-44C0-451B-88A5-58C73BA07A3D}
+		{D002BFE0-7493-456E-95DC-2DB3B1FF7A50} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{32B7F4C2-30DC-4811-B485-48D1CD0DF462} = {D002BFE0-7493-456E-95DC-2DB3B1FF7A50}
+		{FF304549-0D5D-4CF1-977C-D1F0A48B4B1C} = {D002BFE0-7493-456E-95DC-2DB3B1FF7A50}
+		{6BDB8AD3-0BED-4E10-992E-4F0D3D8CB738} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{B24446F5-B09A-49A5-AD0C-9BC7CA1FD6CF} = {6BDB8AD3-0BED-4E10-992E-4F0D3D8CB738}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D1F8D67B-E8B0-4F65-A104-C9381D30186B}
+	EndGlobalSection
+EndGlobal

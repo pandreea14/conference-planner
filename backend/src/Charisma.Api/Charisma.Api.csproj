@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="$(OpenApiPackageVersion)" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="$(HealthChecksUI)" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="$(IdentityServerPackageVersion)" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="$(MicrosoftIdentityProtocolsOpenIdConnectPackageVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(MicrosoftAspNetCoreMvcNewtonsoftJsonPackagesVersion)" />
+    <PackageReference Include="NBB.Correlation" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Correlation.AspNet" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Correlation.Serilog" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Correlation.Serilog.SqlServer" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.BackwardCompatibility" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.Host" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.MultiTenancy" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.Nats" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.OpenTelemetry" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.Rusi" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.MultiTenancy.AspNet" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.MultiTenancy.Identification.Http" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.MultiTenancy.Identification.Messaging" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Tools.Serilog.Enrichers.TenantId" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Tools.Serilog.OpenTelemetryTracingSink" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="$(Otel)" />
+    <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="$(OtelPrometheusAspNetCoreExporter)" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="$(Otel)" />
+    <PackageReference Include="OpenTelemetry.Extensions.Propagators" Version="$(Otel)" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="$(OtelInstrumentation)" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="$(OtelContribEFCore)" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="$(OtelInstrumentation)" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="$(OtelContribRuntime)" />
+    <PackageReference Include="Scrutor" Version="$(ScrutorPackageVersion)" />
+    <PackageReference Include="Serilog.AspNetCore" Version="$(SerilogAspNetCorePackageVersion)" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="$(SerilogSinksConsolePackageVersion)" />
+    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="$(SerilogSinksMSSqlServerPackageVersion)" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbucklePackageVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Charisma.Api.Application\Charisma.Api.Application.csproj" />
+    <ProjectReference Include="..\Charisma.Common.Domain\Charisma.Common.Domain.csproj" />
+    <ProjectReference Include="..\Charisma.Common.Infrastructure\Charisma.Common.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

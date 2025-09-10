@@ -1,0 +1,86 @@
+{
+  "Navigation": {
+    "Homepage": "Pagina principală",
+    "Conferences": "Conferințe",
+    "Settings": "Setări",
+    "Notifications": "Notificări",
+    "Support": "Suport",
+    "Search": "Căutare...",
+    "GoToHome": "Mergi la pagina principală"
+  },
+  "Validations": {
+    "Generic": {
+      "MinLength": "Valoarea trebuie să fie de cel puțin {{min}} caractere",
+      "Greater": "Valoarea trebuie să fie mai mare decât {{min}}",
+      "Less": "Valoarea trebuie să fie mai mică decât {{max}}"
+    }
+  },
+  "User": {
+    "Error": "Eroare la citirea datelor utilizatorului: {{message}}",
+    "Loading": "Se încarcă...",
+    "Unknown": "Necunoscut",
+    "AccessDenied": "Acces interzis",
+    "InsufficientPermissions": "Nu aveți permisiunea de a accesa această pagină. Vă rugăm să contactați administratorul dacă considerați că aceasta este o eroare."
+  },
+  "Common": {
+    "ComingSoon": "În curând...",
+    "PageNotFound": "Pagina nu a fost găsită",
+    "BackToList": "Înapoi la listă",
+    "Notifications": "Notificări",
+    "HideInfo": "Ascunde informațiile",
+    "ShowInfo": "Afișează informațiile",
+    "NoOptions": "Nu există opțiuni",
+    "Error": "Eroare: {{message}}",
+    "Loading": "Se încarcă...",
+    "Save": "Salvează",
+    "Remove": "Șterge",
+    "Cancel": "Anulează",
+    "Drag": "Trage",
+    "Filters": "Filtre",
+    "SelectAll": "Selectează tot",
+    "DeselectAll": "Deselectează tot",
+    "ExecutionError": "Eroare la execuție: {{message}}",
+    "Edit": "Modifică",
+    "Add": "Adaugă"
+  },
+  "Logout": "Deconectare",
+  "LanguageSelector": {
+    "SelectLanguage": "Selectează limba"
+  },
+  "Homepage": {
+    "Title": "Pagina principală"
+  },
+  "Contracts": {
+    "Title": "Contracte"
+  },
+  "Notifications": {
+    "Title": "Notificări"
+  },
+  "Support": {
+    "Title": "Suport"
+  },
+  "Settings": {
+    "Title": "Setări",
+    "CacheManagement": "Gestionarea cache-ului",
+    "CacheDescription": "Resetați cache-ul aplicației pentru a vă asigura că vedeți cele mai recente date și configurații.",
+    "SystemInfo": "Informații sistem",
+    "SystemInfoDescription": "Vizualizați informațiile curente despre versiunea aplicației și a bazei de date.",
+    "Label": "Resetează cache-ul",
+    "Success": "Cache-ul a fost resetat cu succes",
+    "Error": "Resetarea cache-ului a eșuat: {{message}}"
+  },
+  "SystemVersion": {
+    "Title": "Informații versiune",
+    "Loading": "Se încarcă...",
+    "Unavailable": "Informații despre versiune indisponibile",
+    "ApplicationInfo": "Informații despre aplicație",
+    "BffInfo": "Informații Backend for Frontend",
+    "Version": "Versiune",
+    "Service": "Serviciu",
+    "Environment": "Mediu",
+    "AppVersion": "Versiunea aplicației: {{version}}",
+    "LastUpdated": "Ultima actualizare: {{date}}",
+    "DatabaseVersion": "Versiunea bazei de date",
+    "Error": "Eroare incărcare versiune: {{message}}"
+  }
+}

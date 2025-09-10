@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR.Contracts" Version="$(MediatRContractsPackageVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(MicrosoftEntityFrameworkPackagesVersion)" />
+    <PackageReference Include="NBB.Core.Abstractions" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.DataContracts" Version="$(NBBPackagesVersion)" />
+  </ItemGroup>
+
+</Project>

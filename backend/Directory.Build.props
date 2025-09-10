@@ -1,0 +1,8 @@
+<Project>
+  <Import Project="dependencies.props" />
+  <PropertyGroup>
+    <Version>$(GitVersion_SemVer)</Version>
+    <Authors>Totalsoft</Authors>
+    <Company>Totalsoft</Company>
+  </PropertyGroup>
+</Project>

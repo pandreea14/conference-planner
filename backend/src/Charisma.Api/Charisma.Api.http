@@ -1,0 +1,11 @@
+@Charisma.Api_HostAddress = http://localhost:5178/api
+
+GET {{Charisma.Api_HostAddress}}/system/version
+Accept: application/json
+TenantId: ddb0fea1-95f7-42fa-af59-283b3f14096d
+###
+
+POST {{Charisma.Api_HostAddress}}/system/reset-cache
+Accept: application/json
+TenantId: ddb0fea1-95f7-42fa-af59-283b3f14096d
+###

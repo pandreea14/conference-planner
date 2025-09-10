@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="$(AutoMapperPackageVersion)" />
+    <PackageReference Include="Charisma.Leasing.Internationalization" Version="$(InternationalizationPackageVersion)" />
+    <PackageReference Include="MediatR" Version="$(MediatRPackageVersion)" />
+    <PackageReference Include="NBB.Messaging.Abstractions" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Application.DataContracts" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Correlation.AspNet" Version="$(NBBPackagesVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Charisma.Common.Domain\Charisma.Common.Domain.csproj" />
+    <ProjectReference Include="..\Charisma.Common.Infrastructure\Charisma.Common.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

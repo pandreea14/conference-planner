@@ -1,0 +1,27 @@
+/*
+  Inter font-face rules removed. Now using @fontsource/inter for local font loading.
+  See src/main.tsx for font imports.
+*/
+
+:root {
+  --font-family-inter: 'Inter', 'Inter UI', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Global font application */
+* {
+  font-family: var(--font-family-inter);
+}
+
+/* Optimized font rendering for better readability */
+body {
+  font-family: var(--font-family-inter);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga' 1, 'kern' 1;
+}
+
+/* Prevent font flash */
+.wf-loading * {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}

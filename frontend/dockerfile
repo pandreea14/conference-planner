@@ -1,0 +1,36 @@
+# build environment
+FROM node:22 AS builder
+WORKDIR /app
+
+ARG NPM_TOKEN  
+COPY .npmrc .npmrc 
+COPY package*.json ./
+RUN npm install
+RUN rm -f .npmrc
+
+ARG VITE_APP_VERSION=0.0.0.0
+ENV VITE_APP_VERSION=${VITE_APP_VERSION}
+ARG VITE_APP_DATE=1900-01-01
+ENV VITE_APP_DATE=${VITE_APP_DATE}
+
+COPY . ./
+RUN npm run build
+
+# production environment
+FROM node:22
+
+ARG imageUser=tsuser
+ARG imageUserGroup=tsgroup
+ARG imageUserId=1375
+ARG imageUserGroupId=1375
+
+RUN addgroup --system --gid $imageUserGroupId $imageUserGroup && \     
+    adduser --system --uid $imageUserId --ingroup $imageUserGroup $imageUser
+
+COPY --chown=$imageUser:$imageUserGroup --from=builder /app/dist ./dist
+COPY --chown=$imageUser:$imageUserGroup --from=builder /app/setenv.js ./setenv.js
+RUN npm install -g serve
+
+USER $imageUser
+EXPOSE 8080
+CMD ["sh","-c","node setenv.js && serve -s dist -p 8080"]

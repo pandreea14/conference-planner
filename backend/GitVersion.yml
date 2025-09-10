@@ -1,0 +1,7 @@
+branches:
+  main:
+    increment: Minor
+    tag: ''
+ignore:
+  sha: []
+merge-message-formats: {}

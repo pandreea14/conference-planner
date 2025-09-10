@@ -1,0 +1,86 @@
+{
+  "Navigation": {
+    "Homepage": "Page d'accueil",
+    "Conferences": "Conférences",
+    "Settings": "Paramètres",
+    "Notifications": "Notifications",
+    "Support": "Support",
+    "Search": "Rechercher...",
+    "GoToHome": "Aller à l'accueil"
+  },
+  "Validations": {
+    "Generic": {
+      "MinLength": "La valeur doit comporter au moins {{min}} caractères",
+      "Greater": "La valeur doit être supérieure à {{min}}",
+      "Less": "La valeur doit être inférieure à {{max}}"
+    }
+  },
+  "User": {
+    "Error": "Erreur lors de la récupération des données utilisateur : {{message}}",
+    "Loading": "Chargement...",
+    "Unknown": "Inconnu",
+    "AccessDenied": "Accès refusé",
+    "InsufficientPermissions": "Vous n'avez pas la permission d'accéder à cette page. Veuillez contacter votre administrateur si vous pensez qu'il s'agit d'une erreur."
+  },
+  "Common": {
+    "ComingSoon": "Bientôt disponible...",
+    "PageNotFound": "Page non trouvée",
+    "BackToList": "Retour à la liste",
+    "Notifications": "Notifications",
+    "HideInfo": "Masquer les informations",
+    "ShowInfo": "Afficher les informations",
+    "NoOptions": "Aucune option",
+    "Error": "Erreur : {{message}}",
+    "Loading": "Chargement...",
+    "Save": "Enregistrer",
+    "Remove": "Supprimer",
+    "Cancel": "Annuler",
+    "Drag": "Faire glisser",
+    "Filters": "Filtres",
+    "SelectAll": "Sélectionner tout",
+    "DeselectAll": "Désélectionner tout",
+    "ExecutionError": "Erreur d'exécution: {{message}}",
+    "Edit": "Modifier",
+    "Add": "Ajouter"
+  },
+  "Logout": "Déconnexion",
+  "LanguageSelector": {
+    "SelectLanguage": "Choisir la langue"
+  },
+  "Homepage": {
+    "Title": "Page d'accueil"
+  },
+  "Contracts": {
+    "Title": "Contrats"
+  },
+  "Notifications": {
+    "Title": "Notifications"
+  },
+  "Support": {
+    "Title": "Support"
+  },
+  "Settings": {
+    "Title": "Paramètres",
+    "CacheManagement": "Gestion du cache",
+    "CacheDescription": "Réinitialisez le cache de l'application pour vous assurer que vous voyez les dernières données et configurations.",
+    "SystemInfo": "Informations système",
+    "SystemInfoDescription": "Voir les informations actuelles de version de l'application et de la base de données.",
+    "Label": "Réinitialiser le cache",
+    "Success": "Cache réinitialisé avec succès",
+    "Error": "Échec de la réinitialisation du cache: {{message}}"
+  },
+  "SystemVersion": {
+    "Title": "Version du système",
+    "Loading": "Chargement...",
+    "Unavailable": "Informations de version indisponibles",
+    "ApplicationInfo": "Informations de l'application",
+    "BffInfo": "Informations Backend for Frontend",
+    "Version": "Version",
+    "Service": "Service",
+    "Environment": "Environnement",
+    "AppVersion": "Version de l'application: {{version}}",
+    "LastUpdated": "Dernière mise à jour: {{date}}",
+    "DatabaseVersion": "Version de la base de données",
+    "Error": "Erreur de version: {{message}}"
+  }
+}

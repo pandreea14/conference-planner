@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Charisma.Common.Domain\Charisma.Common.Domain.csproj" />
+    <ProjectReference Include="..\Charisma.Common.Infrastructure\Charisma.Common.Infrastructure.csproj" />
+    <ProjectReference Include="..\Charisma.Worker.Application\Charisma.Worker.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="$(HealthChecksUI)" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MicrosoftExtensionsPackagesVersion)" />
+    <PackageReference Include="NBB.Correlation.Serilog" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Correlation.Serilog.SqlServer" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.BackwardCompatibility" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.Host" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.MultiTenancy" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.Nats" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.OpenTelemetry" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Messaging.Rusi" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.MultiTenancy.Identification.Messaging" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Tools.Serilog.Enrichers.TenantId" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="NBB.Tools.Serilog.OpenTelemetryTracingSink" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="$(Otel)" />
+    <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="$(OtelPrometheusAspNetCoreExporter)" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="$(Otel)" />
+    <PackageReference Include="OpenTelemetry.Extensions.Propagators" Version="$(Otel)" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="$(OtelInstrumentation)" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="$(OtelContribEFCore)" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="$(OtelInstrumentation)" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="$(OtelContribRuntime)" />
+    <PackageReference Include="Serilog.AspNetCore" Version="$(SerilogAspNetCorePackageVersion)" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="$(SerilogSinksConsolePackageVersion)" />
+    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="$(SerilogSinksMSSqlServerPackageVersion)" />
+  </ItemGroup>
+
+</Project>

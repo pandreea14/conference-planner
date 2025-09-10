@@ -1,0 +1,7 @@
+@Charisma.Bff_HostAddress = http://localhost:5200/bff-api
+
+GET {{Charisma.Bff_HostAddress}}/system/version
+Accept: application/json
+TenantId: 21c7227a-f855-4f6d-b12c-954d441f25b4
+
+###
