@@ -75,7 +75,8 @@ namespace Charisma.Api.Extensions
                 Required = true,
                 Schema = new OpenApiSchema()
                 {
-                    Type = "string"
+                    Type = "string",
+                    Default = new Microsoft.OpenApi.Any.OpenApiString("ba5ff8f4-ac8f-4f73-898a-5e4a6babdd46")
                 }
             });
         }
