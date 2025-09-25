@@ -62,5 +62,28 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
 
             return await Task.FromResult(c);
         }
+
+        //public async Task<Conference> SaveConference(Conference conference)
+        //{
+        //    var success = await dbContext.Database.CanConnectAsync();
+        //    logger.LogInformation("Database connection success: {Success}", success);
+
+        //    if (conference.Id == 0)
+        //    {
+        //        dbContext.Conferences.Add(conference);
+        //    }
+        //    await dbContext.SaveChangesAsync();
+        //    return conference;
+        //}
+
+        public void AddConference(Conference conference)
+        {
+            dbContext.Conferences.Add(conference);
+        }
+
+        public async Task Save()
+        {
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

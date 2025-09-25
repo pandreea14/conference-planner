@@ -12,6 +12,8 @@ namespace Charisma.Common.Domain.Abstractions
         Task<List<ConferenceLocation>> GetConferenceLocations();
         Task<List<Conference>> GetConferences();
         Task<Conference> GetConferenceById(int id);
-
+        //Task<Conference> SaveConference(Conference conference);
+        void AddConference(Conference conference);
+        Task Save();
     }
 }
