@@ -27,14 +27,29 @@ namespace Charisma.Worker.Application.Handlers.Commands
                     OrganizerEmail = request.Conference.OrganizerEmail,
                     StartDate = request.Conference.StartDate,
                     EndDate = request.Conference.EndDate,
-                    LocationId = request.Conference.LocationId,
                     ConferenceTypeId = request.Conference.ConferenceTypeId,
                     CategoryId = request.Conference.CategoryId,
+                    LocationId = request.Conference.LocationId, //daca locationid =0 facem new location() 
                 };
+                if (request.Conference.LocationId == 0)
+                {
+                    conference.Location = new ConferenceLocation()
+                    {
+                        CityId = request.Conference.Location.City.Id,
+                        CountryId = request.Conference.Location.Country.Id,
+                        CountyId = request.Conference.Location.County.Id,
+                        Address = request.Conference.Location.Address,
+                        Code = request.Conference.Location.Code,
+                        Latitude = request.Conference.Location.Latitude,
+                        Longitude = request.Conference.Location.Longitude,
+                        Name = request.Conference.Location.Name
+                    };
+                }
                 conferenceRepository.AddConference(conference);
             }
             else             
             {
+                //aici trb sa verifici daca trb adaugata o noua locatie sau speaker - ceva cu new location/speaker
                 conference = await conferenceRepository.GetConferenceById(request.Conference.Id) ?? throw new Exception($"Conference with id {request.Conference.Id} not found.");
                 
                 conference.Name = request.Conference.Name;
@@ -44,9 +59,23 @@ namespace Charisma.Worker.Application.Handlers.Commands
                 conference.LocationId = request.Conference.LocationId;
                 conference.ConferenceTypeId = request.Conference.ConferenceTypeId;
                 conference.CategoryId = request.Conference.CategoryId;
+
+                if (conference.LocationId == 0)
+                {
+                    conference.Location = new ConferenceLocation()
+                    {
+                        CityId = request.Conference.Location.City.Id,
+                        CountryId = request.Conference.Location.Country.Id,
+                        CountyId = request.Conference.Location.County.Id,
+                        Address = request.Conference.Location.Address,
+                        Code = request.Conference.Location.Code,
+                        Latitude = request.Conference.Location.Latitude,
+                        Longitude = request.Conference.Location.Longitude,
+                        Name = request.Conference.Location.Name
+                    };
+                }
             }
 
-            //salvare in baza de date
             await conferenceRepository.Save();
             await messageBusPublisher.PublishAsync(new ConferenceSaved(conference.Id), cancellationToken);
         }

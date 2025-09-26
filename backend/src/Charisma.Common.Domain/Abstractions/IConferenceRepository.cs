@@ -15,5 +15,6 @@ namespace Charisma.Common.Domain.Abstractions
         //Task<Conference> SaveConference(Conference conference);
         void AddConference(Conference conference);
         Task Save();
+        void DeleteConference(Conference conference);
     }
 }

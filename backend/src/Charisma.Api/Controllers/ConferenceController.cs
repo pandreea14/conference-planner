@@ -43,17 +43,17 @@ namespace Charisma.Api.Controllers
         }
 
         [HttpPost("save-conference")]
-        public async Task<IActionResult> SaveConference([FromBody]SaveConference command)
+        public async Task<IActionResult> SaveConference([FromBody] SaveConference command)
         {
             await _mediator.Send(command);
             return Ok(new AsyncCommandResult(CorrelationManager.GetCorrelationId()));
         }
 
-        //[HttpDelete("delete-conference/{id}")]
-        //public async Task<IActionResult> DeleteConference([FromRoute]DeleteConference command)
-        //{
-        //    await _mediator.Send(command);
-        //    return Ok(new AsyncCommandResult(CorrelationManager.GetCorrelationId()));
-        //}
+        [HttpDelete("delete-conference/{id}")]
+        public async Task<IActionResult> DeleteConference([FromRoute] DeleteConference command)
+        {
+            await _mediator.Send(command);
+            return Ok(new AsyncCommandResult(CorrelationManager.GetCorrelationId()));
+        }
     }
 }
