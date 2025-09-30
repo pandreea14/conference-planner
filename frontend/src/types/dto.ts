@@ -17,6 +17,7 @@ type MenuItemDto = {
 
 type UserDto = {
   userId: number;
+  email: string;
   userName: string;
   firstName: string;
   lastName: string;

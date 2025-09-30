@@ -1,7 +1,9 @@
 {
   "Navigation": {
     "Homepage": "Pagina principală",
+    "User": "Utilizator",
     "Conferences": "Conferințe",
+    "Tutorial": "Tutorial",
     "Settings": "Setări",
     "Notifications": "Notificări",
     "Support": "Suport",
@@ -82,5 +84,17 @@
     "LastUpdated": "Ultima actualizare: {{date}}",
     "DatabaseVersion": "Versiunea bazei de date",
     "Error": "Eroare incărcare versiune: {{message}}"
+  },
+  "UserNew": {
+    "Title": "Pagina utilizatorului",
+    "Name": "Nume: {{name}}",
+    "Surname": "Prenume: {{surname}}",
+    "Email": "Email: {{email}}",
+    "Details": "Detalii utilizator",
+    "Address": "Adresă: {{address}}"
+  },
+  "Tutorial": {
+    "Title": "Tutorial",
+    "Description": "Aceasta este pagina de tutorial."
   }
 }

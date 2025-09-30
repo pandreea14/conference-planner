@@ -14,9 +14,14 @@ export interface MenuItem {
   badgeCount?: number;
 }
 
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+const UserIcon = AccountCircleIcon;
+
 export const staticPrimaryNavItems: MenuItem[] = [
   { id: "homepage", labelKey: "Navigation.Homepage", icon: HomeIcon, route: "/" },
-  { id: "conferences", labelKey: "Navigation.Conferences", icon: FolderIcon, route: "/conferences" }
+  { id: "user", labelKey: "Navigation.User", icon: UserIcon, route: "/user" },
+  { id: "conferences", labelKey: "Navigation.Conferences", icon: FolderIcon, route: "/conferences" },
+  { id: "tutorial", labelKey: "Navigation.Tutorial", icon: FolderIcon, route: "/tutorial" }
 ];
 
 export const staticSecondaryNavItems: MenuItem[] = [

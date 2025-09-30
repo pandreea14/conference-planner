@@ -1,7 +1,9 @@
 {
   "Navigation": {
     "Homepage": "Page d'accueil",
+    "User": "Utilisateur",
     "Conferences": "Conférences",
+    "Tutorial": "Tutoriel",
     "Settings": "Paramètres",
     "Notifications": "Notifications",
     "Support": "Support",
@@ -82,5 +84,17 @@
     "LastUpdated": "Dernière mise à jour: {{date}}",
     "DatabaseVersion": "Version de la base de données",
     "Error": "Erreur de version: {{message}}"
+  },
+  "UserNew": {
+    "Title": "La page de l'utilisateur",
+    "Name": "Prénom: {{name}}",
+    "Surname": "Nom: {{surname}}",
+    "Email": "Email: {{email}}",
+    "Details": "Détails de l'utilisateur",
+    "Address": "Adresse: {{address}}"
+  },
+  "Tutorial": {
+    "Title": "Tutoriel",
+    "Description": "Ceci est la page de tutoriel."
   }
 }

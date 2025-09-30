@@ -7,7 +7,9 @@
   "DECIMAL": "{{number, decimalPlaces}}",
   "Navigation": {
     "Homepage": "Homepage",
+    "User": "User",
     "Conferences": "Conferences",
+    "Tutorial": "Tutorial",
     "Settings": "Settings",
     "Notifications": "Notifications",
     "Support": "Support",
@@ -92,5 +94,17 @@
     "LastUpdated": "Last updated: {{date}}",
     "DatabaseVersion": "Database version",
     "Error": "Version error: {{message}}"
+  },
+  "UserNew": {
+    "Title": "User page",
+    "Name": "Name: {{name}}",
+    "Surname": "Surname: {{surname}}",
+    "Email": "Email: {{email}}",
+    "Details": "User Details",
+    "Address": "Address: {{address}}"
+  },
+  "Tutorial": {
+    "Title": "Tutorial",
+    "Description": "This is the tutorial page."
   }
 }
