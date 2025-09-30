@@ -24,6 +24,12 @@ type UserDto = {
   menuItems: MenuItemDto[];
 };
 
+type ConferenceDto = {
+  conferenceId: number,
+  conferenceName: string,
+  organizerEmail: string
+}
+
 type InitializationParamValue = string | number | boolean | Date | null;
 
 type InitializationParamDto = {
@@ -46,6 +52,7 @@ type CommandExecutionError = {
 export type {
   SystemVersionDto,
   UserDto,
+  ConferenceDto,
   UserGroupDto,
   MenuItemDto,
   InitializationParamDto,

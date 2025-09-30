@@ -92,5 +92,11 @@
     "LastUpdated": "Last updated: {{date}}",
     "DatabaseVersion": "Database version",
     "Error": "Version error: {{message}}"
+  },
+  "Conference": {
+    "Name": "Name",
+    "Location": "Location",
+    "StartDate": "StartDate",
+    "EndDate": "EndDate"
   }
 }
