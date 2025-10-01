@@ -16,14 +16,14 @@ namespace Charisma.Api.Controllers
     public class ConferencesController(IMediator mediator) : ControllerBase
     {
         [HttpGet("list-for-attendees")]
-        public async Task<IActionResult> GetConferenceListAttendees([FromRoute] GetConferenceList.Query query)
+        public async Task<IActionResult> GetConferenceListAttendees([FromQuery] GetConferenceList.Query query)
         {
             var result = await mediator.Send(query);
             return Ok(result);
         }
 
         [HttpGet("list-for-organisers")]
-        public async Task<IActionResult> GetConferenceListOrganisers([FromRoute] GetConferenceList.Query query)
+        public async Task<IActionResult> GetConferenceListOrganisers([FromQuery] GetConferenceList.Query query)
         {
             var result = await mediator.Send(query);
             return Ok(result);

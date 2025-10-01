@@ -1,4 +1,18 @@
-export const mockData = [
+export interface Conference {
+  id: number;
+  name: string;
+  conferenceType: string;
+  location: string;
+  speaker: string;
+  city: string;
+  county: string;
+  country: string;
+  startDate: Date;
+  endDate: Date;
+  attendeesNumber: number;
+}
+
+export const mockData: Conference[] = [
   {
     id: 1,
     name: "Conferinta despre gaste",
@@ -8,8 +22,8 @@ export const mockData = [
     city: "Brasov",
     county: "Brasov",
     country: "USA",
-    startDate: "11/11/2025 13:00:00",
-    endDate: "20:00:00",
+    startDate: new Date("11/11/2025 13:00:00"),
+    endDate: new Date("11/11/2025 20:00:00"),
     attendeesNumber: 100
   },
   {
@@ -21,8 +35,8 @@ export const mockData = [
     city: "Brasov",
     county: "Brasov",
     country: "Canada",
-    startDate: "11/11/2025 13:00:00",
-    endDate: "11/11/2025 20:00:00",
+    startDate: new Date("11/11/2025 13:00:00"),
+    endDate: new Date("11/11/2025 20:00:00"),
     attendeesNumber: 5
   },
   {
@@ -34,8 +48,8 @@ export const mockData = [
     city: "Brasov",
     county: "Brasov",
     country: "UK",
-    startDate: "11/11/2025 13:00:00",
-    endDate: "11/11/2025 20:00:00",
+    startDate: new Date("11/11/2025 13:00:00"),
+    endDate: new Date("11/11/2025 20:00:00"),
     attendeesNumber: 5
   },
   {
@@ -47,8 +61,8 @@ export const mockData = [
     city: "Brasov",
     county: "Brasov",
     country: "UK",
-    startDate: "11/11/2025 13:00:00",
-    endDate: "11/11/2025 20:00:00",
+    startDate: new Date("11/11/2025 13:00:00"),
+    endDate: new Date("11/11/2025 20:00:00"),
     attendeesNumber: 5
   },
   {
@@ -60,8 +74,8 @@ export const mockData = [
     city: "Brasov",
     county: "Brasov",
     country: "UK",
-    startDate: "11/11/2025 13:00:00",
-    endDate: "11/11/2025 20:00:00",
+    startDate: new Date("11/11/2025 13:00:00"),
+    endDate: new Date("11/11/2025 20:00:00"),
     attendeesNumber: 12
   },
   {
@@ -73,8 +87,8 @@ export const mockData = [
     city: "Brasov",
     county: "Brasov",
     country: "UK",
-    startDate: "11/11/2025 13:00:00",
-    endDate: "11/11/2025 20:00:00",
+    startDate: new Date("11/11/2025 13:00:00"),
+    endDate: new Date("11/11/2025 20:00:00"),
     attendeesNumber: 5
   },
   {
@@ -86,8 +100,8 @@ export const mockData = [
     city: "Brasov",
     county: "Brasov",
     country: "UK",
-    startDate: "11/11/2025 13:00:00",
-    endDate: "11/11/2025 20:00:00",
+    startDate: new Date("11/11/2025 13:00:00"),
+    endDate: new Date("11/11/2025 20:00:00"),
     attendeesNumber: 10
   }
 ];
