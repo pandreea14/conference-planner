@@ -9,7 +9,7 @@ export const mockData = [
     county: "Brasov",
     country: "USA",
     startDate: "11/11/2025 13:00:00",
-    endDate: "11/11/2025 20:00:00",
+    endDate: "20:00:00",
     attendeesNumber: 100
   },
   {
