@@ -74,6 +74,9 @@ const TutorialContainer: React.FC = () => {
         <TabPanel value="tir">
           <ThinkingInReact />
         </TabPanel>
+        {/* <TabPanel value="10">
+          <LessonTen />
+        </TabPanel> */}
       </TabContext>
     </Box>
   );

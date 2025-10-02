@@ -1,5 +1,5 @@
 import FilteredProductTable from "./FilteredProductTable";
-import { mockup } from "./MockUp";
+import { mockup } from "./mockup";
 
 const ThinkingInReact: React.FC = () => {
   return (

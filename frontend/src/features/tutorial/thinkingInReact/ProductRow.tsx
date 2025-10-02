@@ -1,4 +1,4 @@
-import type { Product } from "./MockUp";
+import type { Product } from "./mockup";
 
 const ProductRow: React.FC<{ product: Product }> = ({ product }) => {
   const name = product.stocked ? product.name : <span style={{ color: "red" }}>{product.name}</span>;
