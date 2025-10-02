@@ -1,13 +1,36 @@
-import { Grid } from "@mui/material";
-import { mockData } from "../mockDate";
+import { Grid, Typography } from "@mui/material";
 import ConferenceCard from "./ConferenceCard";
+import type { Conference } from "../mockDate";
 
-const ConferenceList: React.FC = () => {
+const ConferenceList: React.FC<{ conferences: Conference[]; filterName: string; filterLocation: string }> = ({
+  conferences,
+  filterName,
+  filterLocation
+  // filterStartDate
+}) => {
+  const filteredConferences = conferences.filter((conference) => {
+    const matchesName = filterName === "" || conference.name.toLowerCase().includes(filterName.toLowerCase());
+    const matchesLocation = filterLocation === "" || conference.location.toLowerCase().includes(filterLocation.toLowerCase());
+    // const matchesStartDate = filterStartDate
+
+    return matchesName && matchesLocation;
+  });
+
+  if (filteredConferences.length === 0) {
+    return (
+      <Grid container justifyContent="center" sx={{ padding: 4 }}>
+        <Typography variant="h6" color="text.secondary">
+          No conferences found to match the filters.
+        </Typography>
+      </Grid>
+    );
+  }
+
   return (
-    <Grid container spacing={1} padding={1} sx={{ width: "100%", height: "100%", overflow: "auto" }}>
-      {mockData.map((item) => (
-        <Grid key={item.id} size={{ xs: 6, md: 6 }} sx={{ display: "flex", padding: 1 }}>
-          <ConferenceCard conference={item} />
+    <Grid container spacing={1} padding={1}>
+      {filteredConferences.map((conference) => (
+        <Grid key={conference.id} size={{ xs: 6, md: 6 }} sx={{ display: "flex", padding: 1 }}>
+          <ConferenceCard conference={conference} />
         </Grid>
       ))}
     </Grid>

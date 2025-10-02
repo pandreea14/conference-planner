@@ -1,37 +1,42 @@
-import { TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 // import { DatePicker } from "@mui/x-date-pickers";
-import { useState } from "react";
 
-const ConferenceListFilters: React.FC = () => {
-  const [filters, setFilters] = useState({
-    name: "",
-    location: ""
-    // startDate: Date,
-    // endDate: Date
-  });
+const ConferenceListFilters: React.FC<{
+  filterName: string;
+  onFilterNameChange: (value: string) => void;
+  filterLocation: string;
+  onFilterLocationChange: (value: string) => void;
+  filterStartDate: Date;
+  onFilterStartDateChange: (value: Date) => void;
+}> = ({ filterName, onFilterNameChange, filterLocation, onFilterLocationChange, filterStartDate, onFilterStartDateChange }) => {
+  const handleFilterNameChange = (event: { target: { value: string } }) => onFilterNameChange(event.target.value);
+  const handleFilterLocationChange = (event: { target: { value: string } }) => onFilterLocationChange(event.target.value);
+  const handleFilterStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    onFilterStartDateChange(value ? new Date(value) : new Date(""));
+  };
+
   return (
-    <>
-      {/* <DatePicker
-        label="start date picker"
-        value={filters.startDate}
-        onChange={(newValue) => setFilters({ ...filters, startDate: newValue })}
-      />
-      <DatePicker label="end date picker" value={filters.endDate} onChange={(newValue) => setFilters({ ...filters, endDate: newValue })} /> */}
-      <TextField
-        id="name"
-        label="Conference name"
-        variant="outlined"
-        value={filters.name}
-        onChange={(e) => setFilters({ ...filters, name: e.target.value })}
-      />
+    <Box gap={2} display={"flex"} justifyContent={"space-around"}>
+      <TextField id="name" label="Conference name" variant="outlined" value={filterName} onChange={handleFilterNameChange} />
+
       <TextField
         id="location"
         label="Conference location"
         variant="outlined"
-        value={filters.location}
-        onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+        value={filterLocation}
+        onChange={handleFilterLocationChange}
       />
-    </>
+      <TextField
+        type="date"
+        sx={{ minWidth: 250 }}
+        name="startDate"
+        value={filterStartDate ? filterStartDate.toISOString().slice(0, 10) : ""}
+        onChange={handleFilterStartDateChange}
+      />
+
+      {/* <TextField type="date" sx={{ minWidth: 250 }} name="startDate" value={filterStartDate} onChange={handleFilterStartDateChange} /> */}
+    </Box>
   );
 };
 export default ConferenceListFilters;
