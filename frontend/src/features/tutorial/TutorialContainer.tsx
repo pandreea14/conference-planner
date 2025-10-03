@@ -2,8 +2,6 @@ import { Box, Tab } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-// import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
 import LessonOne from "./lesson001/LessonOne";
 import LessonTwo from "./lesson002/LessonTwo";
 import L3 from "./lesson003/LessonThree";
@@ -14,20 +12,22 @@ import LessonSeven from "./lesson007/LessonSeven";
 import LessonEight from "./lesson008/LessonEight";
 import LessonNine from "./lesson009/LessonNine";
 import ThinkingInReact from "./thinkingInReact/ThinkingInReact";
+import LessonTen from "./lesson010/LessonTen";
+import { useSearchParams } from "react-router-dom";
+import LessonEleven from "./lesson011/LessonEleven";
+import LessonTwelve from "./lesson012/LessonTwelve";
+import LessonThirteen from "./lesson013/LessonThirteen";
 
 const TutorialContainer: React.FC = () => {
-  // const [searchParams, setSearchParams] = useSearchParams("?tab=1");
-  const [value, setValue] = useState<string>("1");
-
-  // const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-  //     setSearchParams({ tab: newValue });
-  // };
+  const [searchParams, setSearchParams] = useSearchParams("?tab=1");
+  const value: string = searchParams.get("tab") || "1";
+  // const [value, setValue] = useState<string>("1");
 
   return (
     <Box sx={{ width: "100%", height: "100%" }}>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList onChange={(_e, newValue) => setValue(newValue)} variant="scrollable" scrollButtons="auto">
+          <TabList onChange={(_e, newValue) => setSearchParams({ tab: newValue })} variant="scrollable" scrollButtons="auto">
             <Tab label="Lesson One" value="1" />
             <Tab label="Lesson Two" value="2" />
             <Tab label="Lesson Three" value="3" />
@@ -74,9 +74,18 @@ const TutorialContainer: React.FC = () => {
         <TabPanel value="tir">
           <ThinkingInReact />
         </TabPanel>
-        {/* <TabPanel value="10">
+        <TabPanel value="10">
           <LessonTen />
-        </TabPanel> */}
+        </TabPanel>
+        <TabPanel value="11">
+          <LessonEleven />
+        </TabPanel>
+        <TabPanel value="12">
+          <LessonTwelve />
+        </TabPanel>
+        <TabPanel value="13">
+          <LessonThirteen />
+        </TabPanel>
       </TabContext>
     </Box>
   );
