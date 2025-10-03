@@ -24,11 +24,17 @@ type UserDto = {
   menuItems: MenuItemDto[];
 };
 
-type ConferenceDto = {
-  conferenceId: number,
-  conferenceName: string,
-  organizerEmail: string
-}
+// type ConferenceDto = {
+//   conferenceId: number;
+//   conferenceName: string;
+//   organizerEmail: string;
+// };
+
+type DictionaryItem = {
+  id: number;
+  code: string;
+  name: string;
+};
 
 type InitializationParamValue = string | number | boolean | Date | null;
 
@@ -52,11 +58,12 @@ type CommandExecutionError = {
 export type {
   SystemVersionDto,
   UserDto,
-  ConferenceDto,
+  // ConferenceDto,
   UserGroupDto,
   MenuItemDto,
   InitializationParamDto,
   InitializationParamValue,
   AsyncCommandResult,
-  CommandExecutionError
+  CommandExecutionError,
+  DictionaryItem
 };

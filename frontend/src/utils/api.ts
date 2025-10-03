@@ -17,6 +17,10 @@ const endpoints = {
   },
   users: {
     default: `${usersRoute}`
+  },
+  dictionaries: {
+    categories: `${apiHost}/dictionaries/categories`,
+    cities: `${apiHost}/dictionaries/cities`
   }
 };
 

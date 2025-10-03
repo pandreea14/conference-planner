@@ -6,15 +6,16 @@ const ConferenceListFilters: React.FC<{
   onFilterNameChange: (value: string) => void;
   filterLocation: string;
   onFilterLocationChange: (value: string) => void;
-  filterStartDate: Date;
-  onFilterStartDateChange: (value: Date) => void;
-}> = ({ filterName, onFilterNameChange, filterLocation, onFilterLocationChange, filterStartDate, onFilterStartDateChange }) => {
+  // filterStartDate: Date;
+  // onFilterStartDateChange: (value: Date) => void;
+}> = ({ filterName, onFilterNameChange, filterLocation, onFilterLocationChange }) => {
   const handleFilterNameChange = (event: { target: { value: string } }) => onFilterNameChange(event.target.value);
   const handleFilterLocationChange = (event: { target: { value: string } }) => onFilterLocationChange(event.target.value);
-  const handleFilterStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    onFilterStartDateChange(value ? new Date(value) : new Date(""));
-  };
+  // const handleFilterStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value;
+  //   onFilterStartDateChange(value ? new Date(value) : new Date(""));
+  // };
+  //> si < fata de data mea sau ceva
 
   return (
     <Box gap={2} display={"flex"} justifyContent={"space-around"}>
@@ -27,13 +28,13 @@ const ConferenceListFilters: React.FC<{
         value={filterLocation}
         onChange={handleFilterLocationChange}
       />
-      <TextField
+      {/* <TextField
         type="date"
         sx={{ minWidth: 250 }}
         name="startDate"
         value={filterStartDate ? filterStartDate.toISOString().slice(0, 10) : ""}
         onChange={handleFilterStartDateChange}
-      />
+      /> */}
 
       {/* <TextField type="date" sx={{ minWidth: 250 }} name="startDate" value={filterStartDate} onChange={handleFilterStartDateChange} /> */}
     </Box>
