@@ -1,3 +1,5 @@
+import type { List } from "lodash";
+
 type SystemVersionDto = {
   version: string;
   buildDate: string;
@@ -24,12 +26,6 @@ type UserDto = {
   menuItems: MenuItemDto[];
 };
 
-// type ConferenceDto = {
-//   conferenceId: number;
-//   conferenceName: string;
-//   organizerEmail: string;
-// };
-
 type DictionaryItem = {
   id: number;
   code: string;
@@ -55,15 +51,38 @@ type CommandExecutionError = {
   data: Record<string, unknown>;
 };
 
+type ConferenceXAttendeeDto = {
+  id: number;
+  attendeeEmail: string;
+  statusName: string;
+};
+
+type ConferenceDto = {
+  id: number;
+  conferenceTypeName: string;
+  locationName: string;
+  countryName: string;
+  countyName: string;
+  cityName: string;
+  name: string;
+  organizerEmail: string;
+  categoryName: string;
+  startDate: Date;
+  endDate: Date;
+  mainSpeakerName: string;
+  attendeesList: List<ConferenceXAttendeeDto>;
+};
+
 export type {
   SystemVersionDto,
   UserDto,
-  // ConferenceDto,
   UserGroupDto,
   MenuItemDto,
   InitializationParamDto,
   InitializationParamValue,
   AsyncCommandResult,
   CommandExecutionError,
-  DictionaryItem
+  DictionaryItem,
+  ConferenceDto,
+  ConferenceXAttendeeDto
 };

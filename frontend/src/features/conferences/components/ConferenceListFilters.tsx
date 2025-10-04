@@ -1,21 +1,27 @@
 import { Box, TextField } from "@mui/material";
-// import { DatePicker } from "@mui/x-date-pickers";
+import { isNull } from "lodash";
 
 const ConferenceListFilters: React.FC<{
   filterName: string;
   onFilterNameChange: (value: string) => void;
   filterLocation: string;
   onFilterLocationChange: (value: string) => void;
-  // filterStartDate: Date;
-  // onFilterStartDateChange: (value: Date) => void;
-}> = ({ filterName, onFilterNameChange, filterLocation, onFilterLocationChange }) => {
+  filterStartDate: string;
+  onFilterStartDateChange: (value: string) => void;
+}> = ({ filterName, onFilterNameChange, filterLocation, onFilterLocationChange, filterStartDate, onFilterStartDateChange }) => {
   const handleFilterNameChange = (event: { target: { value: string } }) => onFilterNameChange(event.target.value);
   const handleFilterLocationChange = (event: { target: { value: string } }) => onFilterLocationChange(event.target.value);
-  // const handleFilterStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = event.target.value;
-  //   onFilterStartDateChange(value ? new Date(value) : new Date(""));
-  // };
-  //> si < fata de data mea sau ceva
+  // const handleFilterDateChange = (event: { target: { value: Date } }) => onFilterStartDateChange(event.target.value);
+  const handleFilterDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onFilterStartDateChange(event.target.value);
+  };
+
+  const formatDate = (date: string): string => {
+    if (!date || date === "") return "";
+    const actualDate = new Date(date);
+    if (isNull(actualDate.getTime())) return "";
+    return actualDate.toISOString().slice(0, 10);
+  };
 
   return (
     <Box gap={2} display={"flex"} justifyContent={"space-around"}>
@@ -28,15 +34,22 @@ const ConferenceListFilters: React.FC<{
         value={filterLocation}
         onChange={handleFilterLocationChange}
       />
-      {/* <TextField
+      <TextField
         type="date"
+        placeholder="Start Date"
         sx={{ minWidth: 250 }}
         name="startDate"
+        value={formatDate(filterStartDate)}
+        onChange={handleFilterDateChange}
+      />
+      {/* <TextField
+        type="date"
+        label="End Date"
+        sx={{ minWidth: 250 }}
+        name="endDate"
         value={filterStartDate ? filterStartDate.toISOString().slice(0, 10) : ""}
-        onChange={handleFilterStartDateChange}
+        onChange={handleFilterDateChange}
       /> */}
-
-      {/* <TextField type="date" sx={{ minWidth: 250 }} name="startDate" value={filterStartDate} onChange={handleFilterStartDateChange} /> */}
     </Box>
   );
 };

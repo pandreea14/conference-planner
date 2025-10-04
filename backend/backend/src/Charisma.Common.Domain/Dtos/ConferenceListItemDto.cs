@@ -16,13 +16,13 @@ namespace Charisma.Common.Domain.Dtos
         public DateTime StartDate { get; init; }
         public DateTime EndDate { get; init; }
         public string Name { get; init; }
-        public List<ConferenceXAtendee> AtendeesList { get; init; }
+        public List<ConferenceXAttendeeDto> AttendeesList { get; init; }
         public string MainSpeakerName { get; init; }
     }
-    public record ConferenceXAtendee
+    public record ConferenceXAttendeeDto
     {
         public int Id { get; init; }
-        public string AtendeeEmail { get; init; }
+        public string AttendeeEmail { get; init; }
         public string StatusName {  get; init; }
     }
 

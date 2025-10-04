@@ -52,12 +52,12 @@ namespace Charisma.Api.Application.Queries.Conference
 
                 foreach (var conference in filtered)
                 {
-                    var atendeesList = new List<ConferenceXAtendee>();
+                    var attendeesList = new List<ConferenceXAttendeeDto>();
                     conference.ConferenceXAttendees?.ForEach(x =>
                     {
-                        atendeesList.Add(new ConferenceXAtendee
+                        attendeesList.Add(new ConferenceXAttendeeDto
                         {
-                            AtendeeEmail = x.AttendeeEmail,
+                            AttendeeEmail = x.AttendeeEmail,
                             Id = x.Id,
                             StatusName = x.Status.Name
                         });
@@ -77,7 +77,7 @@ namespace Charisma.Api.Application.Queries.Conference
                             EndDate = conference.EndDate,
                             Name = conference.Name,
                             MainSpeakerName = conference.ConferenceXSpeakers?.FirstOrDefault(x => x.IsMainSpeaker)?.Speaker?.Name,
-                            AtendeesList = atendeesList
+                            AttendeesList = attendeesList
                         };
 
                     result.Add(resultItem);

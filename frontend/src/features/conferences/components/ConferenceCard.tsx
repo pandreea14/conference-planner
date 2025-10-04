@@ -1,8 +1,8 @@
-import { ArrowForward, Delete, Edit, LocationOn, PeopleAlt, Person, Event } from "@mui/icons-material";
+import { ArrowForward, Delete, Edit, LocationOn, Person, Event, PeopleAlt } from "@mui/icons-material";
 import { Button, Card, Chip, Grid, IconButton, Typography } from "@mui/material";
-import type { Conference } from "../mockDate";
+import type { ConferenceDto } from "types";
 
-const ConferenceCard: React.FC<{ conference: Conference }> = ({ conference }) => {
+const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference }) => {
   return (
     <Card
       sx={{
@@ -28,33 +28,44 @@ const ConferenceCard: React.FC<{ conference: Conference }> = ({ conference }) =>
           </Grid>
           <Typography variant="caption">
             <Grid container justifyContent="flex" flexDirection="row" color={"grey"}>
-              {conference.conferenceType} | {conference.location}
+              {conference.conferenceTypeName} | {conference.locationName}
             </Grid>
           </Typography>
         </Grid>
         <Grid spacing={2}>
           <Typography fontSize={13}>
             <Person sx={{ verticalAlign: "middle", mr: 1 }} />
-            Main Speaker: {conference.speaker}
+            Main Speaker:
+            {conference.mainSpeakerName ? " " + conference.mainSpeakerName : " none yet"}
           </Typography>
           <Typography fontSize={13}>
             <LocationOn sx={{ verticalAlign: "middle", mr: 1 }} />
-            {conference.city}, {conference.county}, {conference.country}
+            {conference.cityName}, {conference.countyName}, {conference.countryName}
           </Typography>
           {/* daca e aceeasi zi vreau sa afizeze doar ora */}
           <Grid container spacing={1}>
             <Typography fontSize={13}>
               <Event sx={{ verticalAlign: "middle", mr: 1 }} />
-              {conference.startDate instanceof Date ? conference.startDate.toLocaleString() : conference.startDate}
+              {new Date(conference.startDate).toLocaleString("en-CA", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit"
+              })}
             </Typography>
             <Typography fontSize={13}>
               <ArrowForward sx={{ verticalAlign: "top", mr: 1 }} />
-              {conference.endDate instanceof Date ? conference.endDate.toLocaleString() : conference.endDate}
+              {new Date(conference.endDate).toLocaleString("en-CA", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit"
+              })}
             </Typography>
           </Grid>
         </Grid>
         <Grid>
-          <Chip icon={<PeopleAlt />} label={`${conference.attendeesNumber} attendees`} />
+          <Chip icon={<PeopleAlt />} label={`${conference.attendeesList?.length || 0} attendees`} />
         </Grid>
         <Grid justifyContent={"center"} display={"flex"}>
           <Button variant="contained">Show Details</Button>

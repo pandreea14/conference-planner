@@ -1,28 +1,24 @@
 import { Grid, Typography } from "@mui/material";
 import ConferenceCard from "./ConferenceCard";
-import type { Conference } from "../mockDate";
+import type { ConferenceDto } from "types";
 
-const ConferenceList: React.FC<{ conferences: Conference[]; filterName: string; filterLocation: string }> = ({
+const ConferenceList: React.FC<{ conferences: ConferenceDto[]; filterName: string; filterLocation: string; filterStartDate: string }> = ({
   conferences,
   filterName,
-  filterLocation
-  // filterStartDate
+  filterLocation,
+  filterStartDate
+  // filterEndDate
 }) => {
-  // const filteredConferences: JSX.Element[] = [];
-
-  // conferences.forEach((conference) => {
-  //   if (conference.name.toLocaleLowerCase().indexOf(filterName.toLocaleLowerCase()) === -1) return;
-  //   if (conference.location.toLocaleLowerCase().indexOf(filterLocation.toLocaleLowerCase()) === -1) return;
-  //   filteredConferences.push(<ConferenceCard conference={conference} />);
-  // });
-
   const filteredConferences = conferences.filter((conference) => {
     const matchesName = filterName === "" || conference.name.toLowerCase().includes(filterName.toLowerCase());
-    const matchesLocation = filterLocation === "" || conference.location.toLowerCase().includes(filterLocation.toLowerCase());
-    // const matchesStartDate = filterStartDate
+    const matchesLocation = filterLocation === "" || conference.locationName.toLowerCase().includes(filterLocation.toLowerCase());
+    const matchesStartDate = filterStartDate === "" || new Date(conference.startDate) >= new Date(filterStartDate);
+    // const matchesEndDate = !filterEndDate || conference.endDate <= filterEndDate;
 
-    return matchesName && matchesLocation;
+    return matchesName && matchesLocation && matchesStartDate;
   });
+
+  // console.log("filtrarea datelor ", filteredConferences);
 
   if (filteredConferences.length === 0) {
     return (
@@ -38,7 +34,6 @@ const ConferenceList: React.FC<{ conferences: Conference[]; filterName: string; 
     <Grid container spacing={1} padding={1}>
       {filteredConferences.map((conference) => (
         <Grid key={conference.id} size={{ xs: 6, md: 6 }} sx={{ display: "flex", padding: 1 }}>
-          {/* {filteredConferences} */}
           <ConferenceCard conference={conference} />
         </Grid>
       ))}

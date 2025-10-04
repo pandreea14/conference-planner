@@ -20,7 +20,11 @@ const endpoints = {
   },
   dictionaries: {
     categories: `${apiHost}/dictionaries/categories`,
-    cities: `${apiHost}/dictionaries/cities`
+    cities: `${apiHost}/dictionaries/cities`,
+    conferenceType: `${apiHost}/dictionaries/conferenceType`
+  },
+  conferences: {
+    conferencesForAttendees: `${apiHost}/conferences/list-for-attendees`
   }
 };
 
