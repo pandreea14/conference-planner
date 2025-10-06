@@ -73,6 +73,15 @@ type ConferenceDto = {
   attendeesList: List<ConferenceXAttendeeDto>;
 };
 
+type ConferenceFilterState = {
+  name: string;
+  location: string;
+  dateStart: string;
+  dateEnd: string;
+  email: string;
+  conferenceType: string[];
+};
+
 export type {
   SystemVersionDto,
   UserDto,
@@ -84,5 +93,6 @@ export type {
   CommandExecutionError,
   DictionaryItem,
   ConferenceDto,
-  ConferenceXAttendeeDto
+  ConferenceXAttendeeDto,
+  ConferenceFilterState
 };

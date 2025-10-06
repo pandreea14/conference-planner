@@ -1,20 +1,26 @@
-import { Grid } from "@mui/material";
+import { Box, Grid, IconButton } from "@mui/material";
 import ConferenceList from "./ConferenceList";
 import ConferenceListFilters from "./ConferenceListFilters";
 import { useState } from "react";
 import { endpoints } from "utils/api";
 import { useApiSWR } from "units/swr";
-import type { ConferenceDto, DictionaryItem } from "types/dto";
+import type { ConferenceDto } from "types/dto";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { Add } from "@mui/icons-material";
+import ConferenceCreateModal from "./ConferenceCreateModal";
 
 const ConferencesContainer: React.FC = () => {
   const { t } = useTranslation();
 
-  const [filterName, setFilterName] = useState<string>("");
-  const [filterLocation, setFilterLocation] = useState<string>("");
-  const [filterStartDate, setFilterStartDate] = useState<string>("");
-  // const [filterEndDate, setFilterEndDate] = useState<Date>(new Date());
+  const [state, setState] = useState({
+    name: "",
+    location: "",
+    dateStart: "",
+    dateEnd: "",
+    email: "",
+    conferenceType: ["Remote", "OnSite"]
+  });
 
   // const { data: categories = [] } = useApiSWR<DictionaryItem[], Error>(endpoints.dictionaries.categories, {
   //   onError: (err) => toast.error(t("User.Error", { message: err.message }))
@@ -22,10 +28,6 @@ const ConferencesContainer: React.FC = () => {
   // console.log("categories:", categories);
   // console.log("first item:", categories[0]);
 
-  const { data: cities = [] } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.cities, {
-    onError: (err) => toast.error(t("User.Error", { message: err.message }))
-  });
-  console.log("cities from API:", cities);
   // // console.log("first:", cities[0]?.name);
 
   const { data: conferences = [] } = useApiSWR<ConferenceDto[]>(endpoints.conferences.conferencesForAttendees, {
@@ -34,19 +36,25 @@ const ConferencesContainer: React.FC = () => {
   console.log("conferences from API:", conferences);
   console.log("conferences attendees for first conference from API:", conferences[0]?.attendeesList?.length || 0);
 
+  const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
+
   return (
     <Grid padding={3} sx={{ width: "100%", height: "100%" }}>
-      <ConferenceListFilters
-        filterName={filterName}
-        onFilterNameChange={setFilterName}
-        filterLocation={filterLocation}
-        onFilterLocationChange={setFilterLocation}
-        filterStartDate={filterStartDate}
-        onFilterStartDateChange={setFilterStartDate}
-        // filterEndDate={filterEndDate}
-        // onFilterEndDateChange={setFilterEndDate}
-      />
-      <ConferenceList conferences={conferences} filterName={filterName} filterLocation={filterLocation} filterStartDate={filterStartDate} />
+      <Box
+        sx={{
+          position: "fixed",
+          left: "90%",
+          zIndex: 1300
+        }}
+      >
+        <IconButton size="medium" sx={{ background: "darkblue" }} onClick={() => setOpenCreateModal(true)}>
+          {" "}
+          <Add sx={{ color: "white" }} />
+        </IconButton>
+      </Box>
+      <ConferenceCreateModal openCreateModal={openCreateModal} onClose={() => setOpenCreateModal(false)} />
+      <ConferenceListFilters state={state} onStateChange={setState} />
+      <ConferenceList conferences={conferences} state={state} />
     </Grid>
   );
 };

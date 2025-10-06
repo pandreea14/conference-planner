@@ -1,21 +1,18 @@
 import { Grid, Typography } from "@mui/material";
 import ConferenceCard from "./ConferenceCard";
 import type { ConferenceDto } from "types";
+import type { ConferenceFilterState } from "types";
 
-const ConferenceList: React.FC<{ conferences: ConferenceDto[]; filterName: string; filterLocation: string; filterStartDate: string }> = ({
-  conferences,
-  filterName,
-  filterLocation,
-  filterStartDate
-  // filterEndDate
-}) => {
+const ConferenceList: React.FC<{ conferences: ConferenceDto[]; state: ConferenceFilterState }> = ({ conferences, state }) => {
   const filteredConferences = conferences.filter((conference) => {
-    const matchesName = filterName === "" || conference.name.toLowerCase().includes(filterName.toLowerCase());
-    const matchesLocation = filterLocation === "" || conference.locationName.toLowerCase().includes(filterLocation.toLowerCase());
-    const matchesStartDate = filterStartDate === "" || new Date(conference.startDate) >= new Date(filterStartDate);
-    // const matchesEndDate = !filterEndDate || conference.endDate <= filterEndDate;
+    const matchesName = state?.name === "" || conference.name.toLowerCase().includes(state?.name.toLowerCase());
+    const matchesEmail = state?.email === "" || conference.organizerEmail.toLowerCase().includes(state?.email.toLowerCase());
+    const matchesLocation = state?.location === "" || conference.locationName.toLowerCase().includes(state?.location.toLowerCase());
+    const matchesStartDate = state?.dateStart === "" || new Date(conference.startDate) >= new Date(state?.dateStart);
+    const matchesEndDate = state?.dateEnd === "" || new Date(conference.endDate) >= new Date(state?.dateEnd);
+    const matchesType = state?.conferenceType[0] === "" || state?.conferenceType.includes(conference.conferenceTypeName);
 
-    return matchesName && matchesLocation && matchesStartDate;
+    return matchesName && matchesLocation && matchesStartDate && matchesEndDate && matchesEmail && matchesType;
   });
 
   // console.log("filtrarea datelor ", filteredConferences);

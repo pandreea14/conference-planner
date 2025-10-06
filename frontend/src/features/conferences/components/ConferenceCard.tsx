@@ -17,11 +17,11 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
         <Grid>
           <Grid container justifyContent={"space-between"} align-items={"center"} spacing={1}>
             <Typography variant="h6">{conference.name}</Typography>
-            <Grid justifyContent={"flex-end"} display={"flex"} color={"orange"}>
-              <IconButton size="small" sx={{ color: "orange", mr: 1 }} onClick={() => console.log("Edit clicked for:", conference.name)}>
+            <Grid justifyContent={"flex-end"} display={"flex"}>
+              <IconButton size="small" sx={{ color: "red", mr: 1 }} onClick={() => console.log("Edit clicked for:", conference.name)}>
                 <Edit />
               </IconButton>
-              <IconButton size="small" sx={{ color: "orange" }} onClick={() => console.log("Delete clicked for:", conference.name)}>
+              <IconButton size="small" sx={{ color: "red" }} onClick={() => console.log("Delete clicked for:", conference.name)}>
                 <Delete />
               </IconButton>
             </Grid>
@@ -42,7 +42,6 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
             <LocationOn sx={{ verticalAlign: "middle", mr: 1 }} />
             {conference.cityName}, {conference.countyName}, {conference.countryName}
           </Typography>
-          {/* daca e aceeasi zi vreau sa afizeze doar ora */}
           <Grid container spacing={1}>
             <Typography fontSize={13}>
               <Event sx={{ verticalAlign: "middle", mr: 1 }} />

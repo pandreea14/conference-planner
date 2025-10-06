@@ -47,4 +47,34 @@ async function mutationFetcher<Command>(url: string, { arg }: { arg: Command }) 
   return response.json();
 }
 
-export { fetcher, mutationFetcher };
+async function putMutationFetcher<Command>(url: string, { arg }: { arg: Command }) {
+  const response = await fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(arg)
+  });
+
+  if (!response.ok) {
+    const apiError = await ErrorService.parseErrorResponse(response);
+    throw apiError;
+  }
+
+  return response.json();
+}
+
+async function deleteMutationFetcher<Command extends { id: string | number }>(url: string, { arg }: { arg: Command }) {
+  const response = await fetch(fit(url, { id: arg.id }), {
+    method: "DELETE",
+    headers,
+    body: JSON.stringify(arg)
+  });
+
+  if (!response.ok) {
+    const apiError = await ErrorService.parseErrorResponse(response);
+    throw apiError;
+  }
+
+  return response.json();
+}
+
+export { fetcher, mutationFetcher, putMutationFetcher, deleteMutationFetcher };
