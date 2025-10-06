@@ -3,7 +3,7 @@ import ConferenceCreate from "./ConferenceCreate";
 
 const ConferenceCreateModal: React.FC<{ openCreateModal: boolean; onClose: () => void }> = ({ openCreateModal, onClose }) => {
   return (
-    <Dialog open={openCreateModal} onClose={onClose} style={{ background: "white" }} maxWidth="md" fullWidth>
+    <Dialog open={openCreateModal} onClose={onClose} maxWidth="md" fullWidth>
       <ConferenceCreate />
     </Dialog>
   );

@@ -37,11 +37,15 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
         {
             var result = dbContext.Conferences
                 .Include(c => c.Location)
+                .Include(c => c.Location.City)
+                .Include(c => c.Location.Country)
+                .Include(c => c.Location.County)
                 .Include(c => c.Category)
                 .Include(c => c.ConferenceType)
                 .Include(c => c.ConferenceXSpeakers)
                     .ThenInclude(cs => cs.Speaker)
                 .Include(c => c.ConferenceXAttendees)
+                    .ThenInclude(s => s.Status)
                 .FirstOrDefaultAsync(c => c.Id == id);
             return result;
         }

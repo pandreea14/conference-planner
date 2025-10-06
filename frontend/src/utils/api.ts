@@ -26,7 +26,10 @@ const endpoints = {
     conferenceType: `${apiHost}/dictionaries/conference-types`
   },
   conferences: {
-    conferencesForAttendees: `${apiHost}/conferences/list-for-attendees`
+    conferencesForAttendees: `${apiHost}/conferences/list-for-attendees`,
+    conferenceById: `${apiHost}/conferences/conference`,
+    deleteConference: `${apiHost}/conferences/{id}`,
+    updateConference: `${apiHost}/conferences/change-attendance-status`
   }
 };
 

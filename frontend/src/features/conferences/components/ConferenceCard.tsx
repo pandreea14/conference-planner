@@ -1,8 +1,38 @@
 import { ArrowForward, Delete, Edit, LocationOn, Person, Event, PeopleAlt } from "@mui/icons-material";
 import { Button, Card, Chip, Grid, IconButton, Typography } from "@mui/material";
+import { notificationTypes } from "constants";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import type { ConferenceDto } from "types";
+import { useSubscription } from "units/notifications";
+import { deleteMutationFetcher, useApiSWRMutation } from "units/swr";
+import { endpoints } from "utils";
 
 const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference }) => {
+  const { t } = useTranslation();
+  const { trigger: deleteConference, isMutating: isDeletingConference } = useApiSWRMutation(
+    endpoints.conferences.deleteConference,
+    deleteMutationFetcher<{ id: number }>,
+    {
+      onError: (err) => toast.error(err.message)
+    }
+  );
+
+  useSubscription(notificationTypes.CONFERENCE_DELETED, {
+    onNotification: () => {
+      refetchConferenceList();
+      toast.info(t("Conferences.ConferenceDeletedNotification"));
+    }
+  });
+
+  // const { trigger: changeConference, isMutating: isChangingConference } = useApiSWRMutation(
+  //   endpoints.conferences.deleteConference,
+  //   putMutationFetcher<{ id: number }>,
+  //   {
+  //     onError: (err) => toast.error(err.message)
+  //   }
+  // );
+
   return (
     <Card
       sx={{
@@ -21,7 +51,12 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
               <IconButton size="small" sx={{ color: "red", mr: 1 }} onClick={() => console.log("Edit clicked for:", conference.name)}>
                 <Edit />
               </IconButton>
-              <IconButton size="small" sx={{ color: "red" }} onClick={() => console.log("Delete clicked for:", conference.name)}>
+              <IconButton
+                size="small"
+                sx={{ color: "red" }}
+                onClick={() => deleteConference({ id: conference.id })}
+                disabled={isDeletingConference}
+              >
                 <Delete />
               </IconButton>
             </Grid>
