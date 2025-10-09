@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import type { ConferenceDto } from "types";
 import { useSubscription } from "units/notifications";
-import { deleteMutationFetcher, useApiSWRMutation } from "units/swr";
+import { deleteMutationFetcher, useApiSWR, useApiSWRMutation } from "units/swr";
 import { endpoints } from "utils";
 
 const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference }) => {
@@ -17,6 +17,14 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
       onError: (err) => toast.error(err.message)
     }
   );
+
+  const {
+    // data: conferences = [],
+    // isLoading: isLoadingConferenceList,
+    mutate: refetchConferenceList
+  } = useApiSWR<ConferenceDto[], Error>(endpoints.conferences.conferencesForAttendees, {
+    onError: (err) => toast.error(t("User.Error", { message: err.message }))
+  });
 
   useSubscription(notificationTypes.CONFERENCE_DELETED, {
     onNotification: () => {
@@ -32,6 +40,13 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
   //     onError: (err) => toast.error(err.message)
   //   }
   // );
+
+  // useSubscription(notificationTypes.CONFERENCE_UPDATED, {
+  //   onNotification: () => {
+  //     refetchConferenceList();
+  //     toast.info(t("Conferences.ConferenceUpdatedNotification"));
+  //   }
+  // });
 
   return (
     <Card
