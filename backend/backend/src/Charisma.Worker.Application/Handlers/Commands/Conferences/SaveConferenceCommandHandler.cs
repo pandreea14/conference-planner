@@ -63,6 +63,7 @@ namespace Charisma.Worker.Application.Handlers.Commands.Conferences
                         }
                     }
                     dbSpeaker.IsMainSpeaker = reqSpeaker.IsMainSpeaker;
+                    dbSpeaker.Speaker.Name = reqSpeaker.Name;
                     dbSpeaker.Speaker.Nationality = reqSpeaker.Nationality;
                     dbSpeaker.Speaker.Rating = reqSpeaker.Rating;
 

@@ -4,7 +4,7 @@ import ConferenceListFilters from "./ConferenceListFilters";
 import { useState } from "react";
 import { endpoints } from "utils/api";
 import { useApiSWR } from "units/swr";
-import type { ConferenceDto } from "types/dto";
+import type { ConferenceDto, DictionaryItem } from "types/dto";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { Add } from "@mui/icons-material";
@@ -13,18 +13,19 @@ import ConferenceCreateModal from "./ConferenceCreateModal";
 const ConferencesContainer: React.FC = () => {
   const { t } = useTranslation();
 
+  const { data: types = [] } = useApiSWR<DictionaryItem[], Error>(endpoints.dictionaries.conferenceType, {
+    onError: (err) => toast.error(t("User.Error", { message: err.message }))
+  });
+
   const [state, setState] = useState({
     name: "",
     location: "",
     dateStart: "",
-    dateEnd: "",
     email: "",
-    conferenceType: ["Remote", "OnSite"]
+    conferenceType: [""]
+    // speakerName: [""]
   });
 
-  // const { data: categories = [] } = useApiSWR<DictionaryItem[], Error>(endpoints.dictionaries.categories, {
-  //   onError: (err) => toast.error(t("User.Error", { message: err.message }))
-  // });
   // console.log("categories:", categories);
   // console.log("first item:", categories[0]);
 
@@ -53,7 +54,7 @@ const ConferencesContainer: React.FC = () => {
         </IconButton>
       </Box>
       <ConferenceCreateModal openCreateModal={openCreateModal} onClose={() => setOpenCreateModal(false)} />
-      <ConferenceListFilters state={state} onStateChange={setState} />
+      <ConferenceListFilters state={state} onStateChange={setState} conferenceTypes={types} />
       <ConferenceList conferences={conferences} state={state} />
     </Grid>
   );

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import type { ConferenceDto } from "types";
 import { useSubscription } from "units/notifications";
-import { deleteMutationFetcher, useApiSWR, useApiSWRMutation } from "units/swr";
+import { deleteMutationFetcher, putMutationFetcher, useApiSWR, useApiSWRMutation } from "units/swr";
 import { endpoints } from "utils";
 
 const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference }) => {
@@ -33,13 +33,16 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
     }
   });
 
-  // const { trigger: changeConference, isMutating: isChangingConference } = useApiSWRMutation(
-  //   endpoints.conferences.deleteConference,
-  //   putMutationFetcher<{ id: number }>,
-  //   {
-  //     onError: (err) => toast.error(err.message)
-  //   }
-  // );
+  const { trigger: updateConference, isMutating: isChangingConference } = useApiSWRMutation(
+    endpoints.conferences.saveConference,
+    putMutationFetcher<{ id: number }>,
+    {
+      onSuccess: () => {
+        toast.success(t("Conference updated successfully"));
+      },
+      onError: (err) => toast.error(err.message)
+    }
+  );
 
   // useSubscription(notificationTypes.CONFERENCE_UPDATED, {
   //   onNotification: () => {
@@ -63,7 +66,7 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
           <Grid container justifyContent={"space-between"} align-items={"center"} spacing={1}>
             <Typography variant="h6">{conference.name}</Typography>
             <Grid justifyContent={"flex-end"} display={"flex"}>
-              <IconButton size="small" sx={{ color: "red", mr: 1 }} onClick={() => console.log("Edit clicked for:", conference.name)}>
+              <IconButton size="small" sx={{ color: "red", mr: 1 }}>
                 <Edit />
               </IconButton>
               <IconButton

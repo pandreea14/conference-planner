@@ -77,9 +77,19 @@ type ConferenceFilterState = {
   name: string;
   location: string;
   dateStart: string;
-  dateEnd: string;
   email: string;
   conferenceType: string[];
+  // speakerName: string[];
+};
+
+type SpeakerDto = {
+  id: number;
+  name: string;
+  nationality: string;
+  rating: number;
+  image: string | null;
+  email: string;
+  phoneNumber: string;
 };
 
 export type {
@@ -94,5 +104,6 @@ export type {
   DictionaryItem,
   ConferenceDto,
   ConferenceXAttendeeDto,
-  ConferenceFilterState
+  ConferenceFilterState,
+  SpeakerDto
 };
