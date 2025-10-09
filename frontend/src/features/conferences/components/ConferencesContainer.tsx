@@ -4,11 +4,11 @@ import ConferenceListFilters from "./ConferenceListFilters";
 import { useState } from "react";
 import { endpoints } from "utils/api";
 import { useApiSWR } from "units/swr";
-import type { ConferenceDto, DictionaryItem } from "types/dto";
+import type { ConferenceDto, DictionaryItem, SpeakerDto } from "types/dto";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { Add } from "@mui/icons-material";
-import ConferenceCreateModal from "./ConferenceCreateModal";
+import SaveConferenceModal from "./SaveConferenceModal";
 
 const ConferencesContainer: React.FC = () => {
   const { t } = useTranslation();
@@ -17,19 +17,9 @@ const ConferencesContainer: React.FC = () => {
     onError: (err) => toast.error(t("User.Error", { message: err.message }))
   });
 
-  const [state, setState] = useState({
-    name: "",
-    location: "",
-    dateStart: "",
-    email: "",
-    conferenceType: [""]
-    // speakerName: [""]
+  const { data: speakers = [] } = useApiSWR<SpeakerDto[], Error>(endpoints.conferences.getSpeakers, {
+    onError: (err) => toast.error(t("User.Error", { message: err.message }))
   });
-
-  // console.log("categories:", categories);
-  // console.log("first item:", categories[0]);
-
-  // // console.log("first:", cities[0]?.name);
 
   const { data: conferences = [] } = useApiSWR<ConferenceDto[]>(endpoints.conferences.conferencesForAttendees, {
     onError: (err) => toast.error(t("User.Error", { message: err.message }))
@@ -37,6 +27,14 @@ const ConferencesContainer: React.FC = () => {
   console.log("conferences from API:", conferences);
   console.log("conferences attendees for first conference from API:", conferences[0]?.attendeesList?.length || 0);
 
+  const [state, setState] = useState({
+    name: "",
+    location: "",
+    dateStart: "",
+    email: "",
+    conferenceType: [""],
+    speakerName: [""]
+  });
   const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
 
   return (
@@ -53,8 +51,8 @@ const ConferencesContainer: React.FC = () => {
           <Add sx={{ color: "white" }} />
         </IconButton>
       </Box>
-      <ConferenceCreateModal openCreateModal={openCreateModal} onClose={() => setOpenCreateModal(false)} />
-      <ConferenceListFilters state={state} onStateChange={setState} conferenceTypes={types} />
+      <SaveConferenceModal openCreateModal={openCreateModal} onClose={() => setOpenCreateModal(false)} />
+      <ConferenceListFilters state={state} onStateChange={setState} conferenceTypes={types} speakers={speakers} />
       <ConferenceList conferences={conferences} state={state} />
     </Grid>
   );

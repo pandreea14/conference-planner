@@ -2,38 +2,25 @@ import { Close } from "@mui/icons-material";
 import { Box, Button, Grid, IconButton, Modal, TextField } from "@mui/material";
 import { isNull } from "lodash";
 import { useState } from "react";
-import type { ConferenceFilterState, DictionaryItem } from "types";
+import type { ConferenceFilterState, DictionaryItem, SpeakerDto } from "types";
 
 const ConferenceListFilters: React.FC<{
   state: ConferenceFilterState;
   onStateChange: (value: ConferenceFilterState) => void;
   conferenceTypes: DictionaryItem[];
-}> = ({ state, onStateChange, conferenceTypes }) => {
-  const handleChangeName = (event: { target: { value: string } }) => {
+  speakers: SpeakerDto[];
+}> = ({ state, onStateChange, conferenceTypes, speakers }) => {
+  const handleChangeName = (field: string, event: { target: { value: string } }) => {
     onStateChange({
       ...state,
-      name: event.target.value
+      [field]: event.target.value
     });
   };
 
-  const handleChangeLocation = (event: { target: { value: string } }) => {
+  const handleChangeDropDown = (field: string, event: React.ChangeEvent<HTMLSelectElement>) => {
     onStateChange({
       ...state,
-      location: event.target.value
-    });
-  };
-
-  const handleChangeEmail = (event: { target: { value: string } }) => {
-    onStateChange({
-      ...state,
-      email: event.target.value
-    });
-  };
-
-  const handleChangeConferenceType = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onStateChange({
-      ...state,
-      conferenceType: [event.target.value]
+      [field]: [event.target.value]
     });
   };
 
@@ -58,13 +45,12 @@ const ConferenceListFilters: React.FC<{
       location: "",
       dateStart: "",
       email: "",
-      conferenceType: [""]
+      conferenceType: [""],
+      speakerName: [""]
     });
   };
   const handleSearch = () => {
     setOpen(false);
-
-    console.log("Search applied", state);
   };
 
   return (
@@ -90,17 +76,29 @@ const ConferenceListFilters: React.FC<{
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             sx={{ mt: 2 }}
           >
-            <TextField id="name" label="Conference name" variant="outlined" value={state?.name} onChange={handleChangeName} />
+            <TextField
+              id="name"
+              label="Conference name"
+              variant="outlined"
+              value={state?.name}
+              onChange={(event) => handleChangeName("name", event)}
+            />
 
             <TextField
               id="location"
               label="Conference location"
               variant="outlined"
               value={state?.location}
-              onChange={handleChangeLocation}
+              onChange={(event) => handleChangeName("location", event)}
             />
 
-            <TextField id="email" label="Organizer Email" variant="outlined" value={state?.email} onChange={handleChangeEmail} />
+            <TextField
+              id="email"
+              label="Organizer Email"
+              variant="outlined"
+              value={state?.email}
+              onChange={(event) => handleChangeName("email", event)}
+            />
 
             <TextField
               type="date"
@@ -114,8 +112,8 @@ const ConferenceListFilters: React.FC<{
 
             <select
               name={"SpeakerName"}
-              value={state?.conferenceType}
-              onChange={handleChangeConferenceType}
+              value={state?.speakerName}
+              onChange={(event) => handleChangeDropDown("speakerName", event)}
               style={{
                 padding: "10px",
                 borderRadius: "4px",
@@ -126,7 +124,7 @@ const ConferenceListFilters: React.FC<{
               }}
             >
               <option value="">Select speaker</option>
-              {conferenceTypes.map((ct) => (
+              {speakers.map((ct) => (
                 <option key={ct.id} value={ct.name}>
                   {ct.name}
                 </option>
@@ -136,7 +134,7 @@ const ConferenceListFilters: React.FC<{
             <select
               name={"ConferenceType"}
               value={state?.conferenceType}
-              onChange={handleChangeConferenceType}
+              onChange={(event) => handleChangeDropDown("conferenceType", event)}
               style={{
                 padding: "10px",
                 borderRadius: "4px",

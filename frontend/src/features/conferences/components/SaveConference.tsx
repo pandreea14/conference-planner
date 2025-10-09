@@ -2,11 +2,11 @@ import { Delete, Save } from "@mui/icons-material";
 import { Box, Button, Card, Checkbox, Grid, IconButton, TextField } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { DictionaryItem } from "types";
+import type { DictionaryItem, SpeakerDto } from "types";
 import { mutationFetcher, useApiSWR, useApiSWRMutation } from "units/swr";
 import { endpoints, toast } from "utils";
 
-const ConferenceCreate: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSuccess }) => {
+const SaveConference: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSuccess }) => {
   const { t } = useTranslation();
 
   const { data: categories = [] } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.categories, {
@@ -22,6 +22,9 @@ const ConferenceCreate: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSucc
     onError: (err) => toast.error(t("User.Error", { message: err.message }))
   });
   const { data: counties = [] } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.counties, {
+    onError: (err) => toast.error(t("User.Error", { message: err.message }))
+  });
+  const { data: speakers = [] } = useApiSWR<SpeakerDto[], Error>(endpoints.conferences.getSpeakers, {
     onError: (err) => toast.error(t("User.Error", { message: err.message }))
   });
   const { trigger: createConference, isMutating: isCreatingConference } = useApiSWRMutation(
@@ -93,6 +96,13 @@ const ConferenceCreate: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSucc
     }));
   };
 
+  const handleChangeForIds = (field: string, event: { target: { value: string } }) => {
+    setConferenceData((prev) => ({
+      ...prev,
+      [field]: parseInt(event.target.value) || 0
+    }));
+  };
+
   const handleChangeLocation = (field: string, event: { target: { value: string } }) => {
     setConferenceData((prev) => ({
       ...prev,
@@ -103,7 +113,14 @@ const ConferenceCreate: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSucc
     }));
   };
 
-  const handleChangeSpeaker = (index: number, field: string, value: string | number | boolean) => {
+  const handleChangeLocationForIds = (field: string, event: { target: { value: string } }) => {
+    setConferenceData((prev) => ({
+      ...prev,
+      location: { ...prev.location, [field]: parseInt(event.target.value) || 0 }
+    }));
+  };
+
+  const handleChangeSpeaker = (index: number | 0, field: string, value: string | number | boolean) => {
     setConferenceData((prev) => ({
       ...prev,
       speakerList: prev.speakerList.map((speaker, i) => (i === index ? { ...speaker, [field]: value } : speaker))
@@ -228,7 +245,7 @@ const ConferenceCreate: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSucc
             <select
               name={"ConferenceType"}
               value={conferenceData.conferenceTypeId}
-              onChange={(e) => setConferenceData((prev) => ({ ...prev, conferenceTypeId: parseInt(e.target.value) || 0 }))}
+              onChange={(e) => handleChangeForIds("conferenceTypeId", e)}
               style={{
                 padding: "10px",
                 borderRadius: "4px",
@@ -249,7 +266,7 @@ const ConferenceCreate: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSucc
             <select
               name={"Category"}
               value={conferenceData.categoryId}
-              onChange={(e) => setConferenceData((prev) => ({ ...prev, categoryId: parseInt(e.target.value) || 0 }))}
+              onChange={(e) => handleChangeForIds("categoryId", e)}
               style={{
                 padding: "10px",
                 borderRadius: "4px",
@@ -306,12 +323,7 @@ const ConferenceCreate: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSucc
             <select
               name={"Country"}
               value={conferenceData.location.countryId}
-              onChange={(e) =>
-                setConferenceData((prev) => ({
-                  ...prev,
-                  location: { ...prev.location, countryId: parseInt(e.target.value) || 0 }
-                }))
-              }
+              onChange={(e) => handleChangeLocationForIds("countryId", e)}
               style={{
                 padding: "10px",
                 borderRadius: "4px",
@@ -332,12 +344,9 @@ const ConferenceCreate: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSucc
             <select
               name={"County"}
               value={conferenceData.location.countyId}
-              onChange={(e) =>
-                setConferenceData((prev) => ({
-                  ...prev,
-                  location: { ...prev.location, countyId: parseInt(e.target.value) || 0 }
-                }))
-              }
+              onChange={(e) => {
+                handleChangeLocationForIds("countyId", e);
+              }}
               style={{
                 padding: "10px",
                 borderRadius: "4px",
@@ -358,12 +367,7 @@ const ConferenceCreate: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSucc
             <select
               name={"City"}
               value={conferenceData.location.cityId}
-              onChange={(e) =>
-                setConferenceData((prev) => ({
-                  ...prev,
-                  location: { ...prev.location, cityId: parseInt(e.target.value) || 0 }
-                }))
-              }
+              onChange={(e) => handleChangeLocationForIds("cityId", e)}
               style={{
                 padding: "10px",
                 borderRadius: "4px",
@@ -385,6 +389,22 @@ const ConferenceCreate: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSucc
 
         <Card sx={{ padding: "20px" }}>
           <h2>Speaker information </h2>
+
+          <Grid container gap={2} display={"flex"} justifyContent={"space-around"}>
+            <select
+              name={"Speaker"}
+              onChange={(e) => {
+                handleChangeSpeaker(0, "id", e.target.value);
+              }}
+            >
+              <option value="">Select speaker</option>
+              {speakers.map((speaker) => (
+                <option key={speaker.id} value={speaker.id}>
+                  {speaker.name}
+                </option>
+              ))}
+            </select>
+          </Grid>
 
           {conferenceData.speakerList.map((speaker, index) => (
             <Grid key={index} gap={2} mt={2} spacing={2} display={"flex"} justifyContent={"space-between"} flexDirection={"row"}>
@@ -435,4 +455,4 @@ const ConferenceCreate: React.FC<{ onSaveSuccess?: () => void }> = ({ onSaveSucc
     </Grid>
   );
 };
-export default ConferenceCreate;
+export default SaveConference;

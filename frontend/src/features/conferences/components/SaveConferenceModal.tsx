@@ -1,13 +1,13 @@
 import { Dialog } from "@mui/material";
-import ConferenceCreate from "./ConferenceCreate";
 import { useApiSWR } from "units/swr";
 import type { ConferenceDto } from "types";
 import { endpoints, toast } from "utils";
 import { notificationTypes } from "constants";
 import { useSubscription } from "units/notifications";
 import { useTranslation } from "react-i18next";
+import SaveConference from "./SaveConference";
 
-const ConferenceCreateModal: React.FC<{ openCreateModal: boolean; onClose: () => void }> = ({ openCreateModal, onClose }) => {
+const SaveConferenceModal: React.FC<{ openCreateModal: boolean; onClose: () => void }> = ({ openCreateModal, onClose }) => {
   const { t } = useTranslation();
   const { mutate: refetchConferenceList } = useApiSWR<ConferenceDto[]>(endpoints.conferences.conferencesForAttendees);
 
@@ -25,8 +25,8 @@ const ConferenceCreateModal: React.FC<{ openCreateModal: boolean; onClose: () =>
 
   return (
     <Dialog open={openCreateModal} onClose={onClose} maxWidth="md" fullWidth>
-      <ConferenceCreate onSaveSuccess={handleSaveSuccess} />
+      <SaveConference onSaveSuccess={handleSaveSuccess} />
     </Dialog>
   );
 };
-export default ConferenceCreateModal;
+export default SaveConferenceModal;

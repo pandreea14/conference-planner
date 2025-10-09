@@ -9,13 +9,10 @@ const ConferenceList: React.FC<{ conferences: ConferenceDto[]; state: Conference
     const matchesEmail = state?.email === "" || conference.organizerEmail.toLowerCase().includes(state?.email.toLowerCase());
     const matchesLocation = state?.location === "" || conference.locationName.toLowerCase().includes(state?.location.toLowerCase());
     const matchesStartDate = state?.dateStart === "" || new Date(conference.startDate) >= new Date(state?.dateStart);
-    // const matchesEndDate = state?.dateEnd === "" || new Date(conference.endDate) >= new Date(state?.dateEnd);
     const matchesType = state?.conferenceType[0] === "" || state?.conferenceType.includes(conference.conferenceTypeName);
 
     return matchesName && matchesLocation && matchesStartDate && matchesEmail && matchesType;
   });
-
-  // console.log("filtrarea datelor ", filteredConferences);
 
   if (filteredConferences.length === 0) {
     return (

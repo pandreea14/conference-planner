@@ -30,7 +30,8 @@ const endpoints = {
     conferenceById: `${apiHost}/conferences/conference`,
     saveConference: `${apiHost}/conferences/save-conference`,
     deleteConference: `${apiHost}/conferences/{id}`,
-    updateAttendanceStatus: `${apiHost}/conferences/change-attendance-status`
+    updateAttendanceStatus: `${apiHost}/conferences/change-attendance-status`,
+    getSpeakers: `${apiHost}/conferences/speakers`
   }
 };
 

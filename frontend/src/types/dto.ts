@@ -79,7 +79,7 @@ type ConferenceFilterState = {
   dateStart: string;
   email: string;
   conferenceType: string[];
-  // speakerName: string[];
+  speakerName: string[];
 };
 
 type SpeakerDto = {
@@ -88,8 +88,8 @@ type SpeakerDto = {
   nationality: string;
   rating: number;
   image: string | null;
-  email: string;
-  phoneNumber: string;
+  // email: string;
+  // phoneNumber: string;
 };
 
 export type {
