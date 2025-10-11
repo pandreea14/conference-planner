@@ -20,7 +20,7 @@ const ConferenceListFilters: React.FC<{
   const handleChangeDropDown = (field: string, event: React.ChangeEvent<HTMLSelectElement>) => {
     onStateChange({
       ...state,
-      [field]: [event.target.value]
+      [field]: event.target.value ? [event.target.value] : [""]
     });
   };
 
@@ -112,7 +112,7 @@ const ConferenceListFilters: React.FC<{
 
             <select
               name={"SpeakerName"}
-              value={state?.speakerName}
+              value={state?.speakerName?.[0] || ""}
               onChange={(event) => handleChangeDropDown("speakerName", event)}
               style={{
                 padding: "10px",
@@ -125,7 +125,7 @@ const ConferenceListFilters: React.FC<{
             >
               <option value="">Select speaker</option>
               {speakers.map((ct) => (
-                <option key={ct.id} value={ct.name}>
+                <option key={ct.conferenceSpeakerId} value={ct.name}>
                   {ct.name}
                 </option>
               ))}
@@ -133,7 +133,7 @@ const ConferenceListFilters: React.FC<{
 
             <select
               name={"ConferenceType"}
-              value={state?.conferenceType}
+              value={state?.conferenceType?.[0] || ""}
               onChange={(event) => handleChangeDropDown("conferenceType", event)}
               style={{
                 padding: "10px",

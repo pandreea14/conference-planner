@@ -4,3 +4,4 @@ export const DOCUMENT_STATE_CHANGED = "Charisma.Common.Domain.Dtos.Events.Docume
 export const RECEIVABLE_SAVED = "Charisma.Common.Domain.Dtos.Events.ReceivableSaved";
 export const CONFERENCE_DELETED = "Charisma.Common.Domain.Dtos.Events.Conferences.ConferenceDeleted";
 export const CONFERENCE_CREATED = "Charisma.Common.Domain.Dtos.Events.Conferences.ConferenceCreated";
+export const CONFERENCE_UPDATED = "Charisma.Common.Domain.Dtos.Events.Conferences.ConferenceUpdated";

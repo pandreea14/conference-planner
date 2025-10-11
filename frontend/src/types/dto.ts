@@ -59,6 +59,13 @@ type ConferenceXAttendeeDto = {
 
 type ConferenceDto = {
   id: number;
+  conferenceTypeId?: number;
+  conferenceTypeCode?: string;
+  categoryId?: number;
+  categoryCode?: string;
+  locationId?: number;
+  location?: LocationDto;
+  speakerList?: SpeakerDto[];
   conferenceTypeName: string;
   locationName: string;
   countryName: string;
@@ -67,8 +74,8 @@ type ConferenceDto = {
   name: string;
   organizerEmail: string;
   categoryName: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   mainSpeakerName: string;
   attendeesList: List<ConferenceXAttendeeDto>;
 };
@@ -83,13 +90,39 @@ type ConferenceFilterState = {
 };
 
 type SpeakerDto = {
+  conferenceSpeakerId: number;
   id: number;
+  speakerId?: number;
   name: string;
   nationality: string;
   rating: number;
-  image: string | null;
-  // email: string;
-  // phoneNumber: string;
+  image?: string | null;
+  isMainSpeaker: boolean;
+};
+
+type LocationDto = {
+  locationId: number;
+  name: string;
+  code: string;
+  address: string;
+  countryId: number;
+  countyId: number;
+  cityId: number;
+  latitude: number;
+  longitude: number;
+};
+
+type SaveConferenceDto = {
+  id: number;
+  conferenceTypeId: number;
+  locationId: number;
+  location: LocationDto;
+  organizerEmail: string;
+  categoryId: number;
+  startDate: string;
+  endDate: string;
+  name: string;
+  speakerList: SpeakerDto[];
 };
 
 export type {
@@ -105,5 +138,7 @@ export type {
   ConferenceDto,
   ConferenceXAttendeeDto,
   ConferenceFilterState,
-  SpeakerDto
+  SpeakerDto,
+  SaveConferenceDto,
+  LocationDto
 };
