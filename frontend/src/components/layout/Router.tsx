@@ -9,6 +9,7 @@ import NotificationsContainer from "../../features/notifications/NotificationsCo
 import SupportContainer from "../../features/support/SupportContainer";
 import ConferencesContainer from "features/conferences/components/ConferencesContainer";
 import SaveConferenceContainer from "features/conferences/components/SaveConferenceContainer";
+import ConferenceDetailsContainer from "features/conferences/components/ConferenceDetailsContainer";
 
 const Router: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const Router: React.FC = () => {
           <Route path="conferences" element={<ConferencesContainer />} />
           <Route path="conferences/new" element={<SaveConferenceContainer />} />
           <Route path="conferences/edit/:id" element={<SaveConferenceContainer />} />
+          <Route path="conferences/details/:id" element={<ConferenceDetailsContainer />} />
           <Route path="settings" element={<SettingsContainer />} />
           <Route path="notifications" element={<NotificationsContainer />} />
           <Route path="support" element={<SupportContainer />} />

@@ -7,8 +7,6 @@ import type { ConferenceDto } from "types";
 import { useSubscription } from "units/notifications";
 import { deleteMutationFetcher, useApiSWR, useApiSWRMutation } from "units/swr";
 import { endpoints } from "utils";
-import SaveConferenceModal from "./SaveConferenceModal";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference }) => {
@@ -38,22 +36,16 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
     }
   });
 
-  // const handleEditClick = () => {
-  //   setOpenSaveModal(true);
-  // };
-
-  const [openSaveModal, setOpenSaveModal] = useState<boolean>(false);
-  const { data: conferenceById } = useApiSWR<ConferenceDto>(
-    openSaveModal ? `${endpoints.conferences.conferenceById}/${conference.id}` : null
-  );
+  const { data: conferenceById } = useApiSWR<ConferenceDto>(`${endpoints.conferences.conferenceById}/${conference.id}`);
   console.log("conference ", conferenceById);
   console.log("conference id", conference.id);
-  // const saveConference: SaveConferenceDto = {
-  //   id: conference.id,
-  //   conferenceTypeId: conference.c
-  // }
+
   const handleEditConference = () => {
     navigate(`/conferences/edit/${conference.id}`);
+  }; //saveconferencecontainer
+
+  const handleDetailPage = () => {
+    navigate(`/conferences/details/${conference.id}`);
   };
 
   return (
@@ -107,8 +99,7 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
                 {new Date(conference.startDate).toLocaleString("en-CA", {
                   year: "numeric",
                   month: "short",
-                  day: "numeric",
-                  hour: "2-digit"
+                  day: "numeric"
                 })}
               </Typography>
               <Typography fontSize={13}>
@@ -116,8 +107,7 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
                 {new Date(conference.endDate).toLocaleString("en-CA", {
                   year: "numeric",
                   month: "short",
-                  day: "numeric",
-                  hour: "2-digit"
+                  day: "numeric"
                 })}
               </Typography>
             </Grid>
@@ -126,12 +116,12 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
             <Chip icon={<PeopleAlt />} label={`${conference.attendeesList?.length || 0} attendees`} />
           </Grid>
           <Grid justifyContent={"center"} display={"flex"}>
-            <Button variant="contained">Show Details</Button>
+            <Button variant="contained" onClick={handleDetailPage}>
+              Show Details
+            </Button>
           </Grid>
         </Grid>
       </Card>
-
-      <SaveConferenceModal openCreateModal={openSaveModal} onClose={() => setOpenSaveModal(false)} conference={conferenceById} />
     </>
   );
 };

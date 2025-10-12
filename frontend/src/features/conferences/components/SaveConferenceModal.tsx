@@ -92,7 +92,6 @@ const SaveConferenceModal: React.FC<{
         />
       </DialogContent>
 
-      {/* ✅ Optional: You can add action buttons here if needed */}
       {/* 
       <DialogActions sx={{ px: 3, pb: 2 }}>
         <Button 

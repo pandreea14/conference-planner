@@ -14,8 +14,6 @@ const ConferencesContainer: React.FC = () => {
   const { data: conferences = [] } = useApiSWR<ConferenceDto[]>(endpoints.conferences.conferencesForAttendees);
   console.log("conferences from API:", conferences);
   const navigate = useNavigate();
-  // console.log("conferences attendees for first conference from API:", conferences[0]?.attendeesList?.length || 0);
-
   const [state, setState] = useState({
     name: "",
     location: "",
@@ -24,7 +22,6 @@ const ConferencesContainer: React.FC = () => {
     conferenceType: [""],
     speakerName: [""]
   });
-  // const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
 
   const handleCreateConference = () => {
     navigate("/conferences/new");

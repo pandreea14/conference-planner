@@ -7,6 +7,8 @@ import { endpoints, toast } from "utils";
 import { useTranslation } from "react-i18next";
 import type { ConferenceDto } from "types";
 import SaveConference from "../components/SaveConference";
+import { notificationTypes } from "constants";
+import { useSubscription } from "units/notifications";
 
 const SaveConferenceContainer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,9 +25,36 @@ const SaveConferenceContainer: React.FC = () => {
   } = useApiSWR<ConferenceDto>(isEditMode ? `${endpoints.conferences.conferenceById}/${id}` : null);
   console.log("Conference data for editing:", conference);
 
+  const { mutate: refetchConferenceList } = useApiSWR<ConferenceDto[]>(endpoints.conferences.conferencesForAttendees);
+  // const handleSaveSuccess = () => {
+  //   refetchConferenceList();
+  //   onClose();
+  //   setIsSaving(false);
+  // };
+
+  // const handleSaveError = () => {
+  //   setIsSaving(false);
+  // };
+
+  useSubscription(notificationTypes.CONFERENCE_CREATED, {
+    onNotification: () => {
+      refetchConferenceList();
+      toast.info(t("Conferences.ConferenceCreatedNotification"));
+    }
+  });
+
+  useSubscription(notificationTypes.CONFERENCE_UPDATED, {
+    onNotification: () => {
+      refetchConferenceList();
+      toast.info(t("Conferences.ConferenceUpdatedNotification"));
+    }
+  });
+
   const handleSaveSuccess = () => {
+    refetchConferenceList();
     toast.success(t(isEditMode ? "Conference updated successfully" : "Conference created successfully"));
-    navigate("/conferences"); // Navigate back to conference list
+    navigate("/conferences");
+    setIsSaving(false);
   };
 
   const handleSaveError = () => {
@@ -40,7 +69,6 @@ const SaveConferenceContainer: React.FC = () => {
     navigate("/conferences");
   };
 
-  // Handle loading and error states
   if (isEditMode && isLoading) {
     return (
       <Grid container justifyContent="center" sx={{ mt: 4 }}>
@@ -64,6 +92,7 @@ const SaveConferenceContainer: React.FC = () => {
           elevation={0}
           sx={{
             p: 2,
+            // position: "fixed",
             backgroundColor: "white",
             borderRadius: 1,
             borderBottom: "1px solid #e0e0e0"
