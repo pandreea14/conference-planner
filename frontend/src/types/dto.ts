@@ -89,10 +89,17 @@ type ConferenceFilterState = {
   speakerName: string[];
 };
 
+type SpeakerResponseDto = {
+  id: number;
+  name: string;
+  nationality: string;
+  rating: number;
+  image?: string | null;
+};
+
 type SpeakerDto = {
   conferenceSpeakerId: number;
-  id: number;
-  speakerId?: number;
+  speakerId: number;
   name: string;
   nationality: string;
   rating: number;
@@ -140,5 +147,6 @@ export type {
   ConferenceFilterState,
   SpeakerDto,
   SaveConferenceDto,
-  LocationDto
+  LocationDto,
+  SpeakerResponseDto
 };

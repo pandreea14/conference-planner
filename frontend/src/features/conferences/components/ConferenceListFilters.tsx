@@ -2,13 +2,13 @@ import { Close } from "@mui/icons-material";
 import { Box, Button, Grid, IconButton, Modal, TextField } from "@mui/material";
 import { isNull } from "lodash";
 import { useState } from "react";
-import type { ConferenceFilterState, DictionaryItem, SpeakerDto } from "types";
+import type { ConferenceFilterState, DictionaryItem, SpeakerResponseDto } from "types";
 
 const ConferenceListFilters: React.FC<{
   state: ConferenceFilterState;
   onStateChange: (value: ConferenceFilterState) => void;
   conferenceTypes: DictionaryItem[];
-  speakers: SpeakerDto[];
+  speakers: SpeakerResponseDto[];
 }> = ({ state, onStateChange, conferenceTypes, speakers }) => {
   const handleChangeName = (field: string, event: { target: { value: string } }) => {
     onStateChange({
@@ -125,7 +125,7 @@ const ConferenceListFilters: React.FC<{
             >
               <option value="">Select speaker</option>
               {speakers.map((ct) => (
-                <option key={ct.conferenceSpeakerId} value={ct.name}>
+                <option key={ct.id} value={ct.name}>
                   {ct.name}
                 </option>
               ))}

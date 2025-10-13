@@ -1,5 +1,5 @@
 import { ArrowForward, Delete, Edit, LocationOn, Person, Event, PeopleAlt } from "@mui/icons-material";
-import { Button, Card, Chip, Grid, IconButton, Typography } from "@mui/material";
+import { Button, Card, Chip, Grid, Typography } from "@mui/material";
 import { notificationTypes } from "constants";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -36,9 +36,9 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
     }
   });
 
-  const { data: conferenceById } = useApiSWR<ConferenceDto>(`${endpoints.conferences.conferenceById}/${conference.id}`);
-  console.log("conference ", conferenceById);
-  console.log("conference id", conference.id);
+  // const { data: conferenceById } = useApiSWR<ConferenceDto>(`${endpoints.conferences.conferenceById}/${conference.id}`);
+  // console.log("conference ", conferenceById);
+  // console.log("conference id", conference.id);
 
   const handleEditConference = () => {
     navigate(`/conferences/edit/${conference.id}`);
@@ -46,7 +46,7 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
 
   const handleDetailPage = () => {
     navigate(`/conferences/details/${conference.id}`);
-  };
+  }; //conferenceDataContainer
 
   return (
     <>
@@ -63,19 +63,6 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
           <Grid>
             <Grid container justifyContent={"space-between"} align-items={"center"} spacing={1}>
               <Typography variant="h6">{conference.name}</Typography>
-              <Grid justifyContent={"flex-end"} display={"flex"}>
-                <IconButton size="small" sx={{ color: "red", mr: 1 }} onClick={handleEditConference}>
-                  <Edit />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  sx={{ color: "red" }}
-                  onClick={() => deleteConference({ id: conference.id })}
-                  disabled={isDeletingConference}
-                >
-                  <Delete />
-                </IconButton>
-              </Grid>
             </Grid>
             <Typography variant="caption">
               <Grid container justifyContent="flex" flexDirection="row" color={"grey"}>
@@ -115,9 +102,20 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto }> = ({ conference })
           <Grid>
             <Chip icon={<PeopleAlt />} label={`${conference.attendeesList?.length || 0} attendees`} />
           </Grid>
-          <Grid justifyContent={"center"} display={"flex"}>
+          <Grid justifyContent={"flex-end"} display={"flex"}>
             <Button variant="contained" onClick={handleDetailPage}>
               Show Details
+            </Button>
+            <Button size="small" sx={{ color: "black", mr: 1, ml: 1, backgroundColor: "beige" }} onClick={handleEditConference}>
+              <Edit sx={{ color: "orange" }} /> Edit
+            </Button>
+            <Button
+              size="small"
+              sx={{ color: "black", backgroundColor: "pink" }}
+              onClick={() => deleteConference({ id: conference.id })}
+              disabled={isDeletingConference}
+            >
+              <Delete sx={{ color: "red" }} /> Remove
             </Button>
           </Grid>
         </Grid>

@@ -26,7 +26,7 @@ namespace Charisma.Common.Domain.Dtos.Commands.Conferences
         public int SpeakerId { get; init; }
         public string Name { get; init; }
         public string Nationality { get; init; }
-        public int Rating { get; init; }
+        public decimal? Rating { get; init; }
         public bool IsMainSpeaker { get; init; }
 
     }

@@ -3,6 +3,7 @@ using Charisma.Common.Domain.Entities.Conferences;
 using Charisma.Common.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,6 +30,7 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
         public Task<List<ConferenceXAttendee>> GetAtendeesForConference(int conferenceId)
         {
             var result = dbContext.ConferenceXAttendees
+                .Where(ca => ca.ConferenceId == conferenceId)
                 .ToListAsync();
             return result;
         }

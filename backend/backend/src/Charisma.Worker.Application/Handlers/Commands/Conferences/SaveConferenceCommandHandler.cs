@@ -24,20 +24,21 @@ namespace Charisma.Worker.Application.Handlers.Commands.Conferences
             var allSpeakers = await conferenceRepository.GetSpeakers();
             //is there a new conference
             if (request.Id == null || request.Id == 0)
-            { 
+            {
                 var conference = new Conference
                 {
                     ConferenceTypeId = request.ConferenceTypeId,
-                    Location = new Location() {
-                                    Name = request.Location.Name,
-                                    Code = request.Location.Code,
-                                    CountryId = request.Location.CountryId,
-                                    Address = request.Location.Address,
-                                    CountyId = request.Location.CountyId,
-                                    CityId = request.Location.CityId,
-                                    Latitude = request.Location.Latitude,
-                                    Longitude = request.Location.Longitude,
-                                },
+                    Location = new Location()
+                    {
+                        Name = request.Location.Name,
+                        Code = request.Location.Code,
+                        CountryId = request.Location.CountryId,
+                        Address = request.Location.Address,
+                        CountyId = request.Location.CountyId,
+                        CityId = request.Location.CityId,
+                        Latitude = request.Location.Latitude,
+                        Longitude = request.Location.Longitude,
+                    },
                     OrganizerEmail = request.OrganizerEmail,
                     CategoryId = request.CategoryId,
                     StartDate = request.StartDate,
@@ -49,14 +50,14 @@ namespace Charisma.Worker.Application.Handlers.Commands.Conferences
                 //Speaker List
                 foreach (var reqSpeaker in request.SpeakerList)
                 {
-                    
+
                     ConferenceXSpeaker dbSpeaker = new ConferenceXSpeaker();
                     dbSpeaker.Speaker = new Common.Domain.Entities.Conferences.Speaker();
 
                     if (reqSpeaker.SpeakerId != 0)
                     {
-                        var foundSpeaker = allSpeakers.FirstOrDefault(x=> x.Name == reqSpeaker.Name);
-                        if(foundSpeaker != null)
+                        var foundSpeaker = allSpeakers.FirstOrDefault(x => x.Name == reqSpeaker.Name);
+                        if (foundSpeaker != null)
                         {
                             dbSpeaker.Speaker = foundSpeaker;
                             dbSpeaker.SpeakerId = reqSpeaker.SpeakerId;
@@ -121,35 +122,39 @@ namespace Charisma.Worker.Application.Handlers.Commands.Conferences
                 conference.Location.Longitude = request.Location.Longitude;
 
                 //Speaker List
-                for(int i = conference.ConferenceXSpeakers.Count - 1; i >= 0; i--)
+                for (int i = conference.ConferenceXSpeakers.Count - 1; i >= 0; i--)
                 {
-                    if (!request.SpeakerList.Any(x=> x.SpeakerId == conference.ConferenceXSpeakers[i].SpeakerId))
+                    if (!request.SpeakerList.Any(x => x.SpeakerId == conference.ConferenceXSpeakers[i].SpeakerId))
                         conference.ConferenceXSpeakers.RemoveAt(i);
                 }
-                foreach(var reqSpeaker in request.SpeakerList)
+                foreach (var reqSpeaker in request.SpeakerList)
                 {
-                    var dbSpeaker = conference.ConferenceXSpeakers.FirstOrDefault(x => x.Speaker.Name == reqSpeaker.Name);
-                    if (dbSpeaker != null)
+                    var dbSpeaker = conference.ConferenceXSpeakers.FirstOrDefault(x => x.Speaker.Id == reqSpeaker.SpeakerId);
+                    if (dbSpeaker != null && dbSpeaker.Speaker.Id != 0)
                     {
                         dbSpeaker.IsMainSpeaker = reqSpeaker.IsMainSpeaker;
                         dbSpeaker.Speaker.Nationality = reqSpeaker.Nationality;
+                        dbSpeaker.Speaker.Name = reqSpeaker.Name;
                         dbSpeaker.Speaker.Rating = reqSpeaker.Rating;
                     }
                     else
                     {
-                        var foundSpeaker = allSpeakers.FirstOrDefault(x => x.Name == reqSpeaker.Name); 
-                        if(foundSpeaker != null)
+                        var foundSpeaker = allSpeakers.FirstOrDefault(x => x.Id == reqSpeaker.SpeakerId);
+                        if (foundSpeaker != null)
                         {
-                            new ConferenceXSpeaker()
-                            {
-                                IsMainSpeaker = reqSpeaker.IsMainSpeaker,
-                                Speaker = foundSpeaker
-                            };
-
                             foundSpeaker.Rating = reqSpeaker.Rating;
                             foundSpeaker.Nationality = reqSpeaker.Nationality;
+
+                            dbSpeaker = new ConferenceXSpeaker()
+                            {
+                                IsMainSpeaker = reqSpeaker.IsMainSpeaker,
+                                Speaker = foundSpeaker,
+                                SpeakerId = foundSpeaker.Id
+                            };
+                            conference.ConferenceXSpeakers.Add(dbSpeaker);
                         }
                         else
+                        {
                             dbSpeaker = new ConferenceXSpeaker()
                             {
                                 IsMainSpeaker = reqSpeaker.IsMainSpeaker,
@@ -160,8 +165,8 @@ namespace Charisma.Worker.Application.Handlers.Commands.Conferences
                                     Nationality = reqSpeaker.Nationality,
                                 }
                             };
-
-                        conference.ConferenceXSpeakers.Add(dbSpeaker);
+                            conference.ConferenceXSpeakers.Add(dbSpeaker);
+                        }
                     }
                 }
 

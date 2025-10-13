@@ -21,43 +21,34 @@ const SaveConferenceContainer: React.FC = () => {
   const {
     data: conference,
     error,
-    isLoading
+    isLoading,
+    mutate: refetchCurrentConference
   } = useApiSWR<ConferenceDto>(isEditMode ? `${endpoints.conferences.conferenceById}/${id}` : null);
-  console.log("Conference data for editing:", conference);
+  // console.log("Conference data for editing:", conference);
 
   const { mutate: refetchConferenceList } = useApiSWR<ConferenceDto[]>(endpoints.conferences.conferencesForAttendees);
-  // const handleSaveSuccess = () => {
-  //   refetchConferenceList();
-  //   onClose();
-  //   setIsSaving(false);
-  // };
-
-  // const handleSaveError = () => {
-  //   setIsSaving(false);
-  // };
 
   useSubscription(notificationTypes.CONFERENCE_CREATED, {
     onNotification: () => {
       refetchConferenceList();
-      toast.info(t("Conferences.ConferenceCreatedNotification"));
+      toast.info(t("Conferences.ConferenceCreatedNotification") || "Conference created successfully");
     }
   });
 
   useSubscription(notificationTypes.CONFERENCE_UPDATED, {
     onNotification: () => {
+      if (isEditMode) {
+        refetchCurrentConference();
+      }
       refetchConferenceList();
-      toast.info(t("Conferences.ConferenceUpdatedNotification"));
+      toast.info(t("Conferences.ConferenceUpdatedNotification") || "Conference updated successfully");
     }
   });
 
   const handleSaveSuccess = () => {
-    refetchConferenceList();
-    toast.success(t(isEditMode ? "Conference updated successfully" : "Conference created successfully"));
+    // refetchConferenceList();
+    console.log("Save success handler called, isEditMode: ", isEditMode);
     navigate("/conferences");
-    setIsSaving(false);
-  };
-
-  const handleSaveError = () => {
     setIsSaving(false);
   };
 
@@ -114,12 +105,7 @@ const SaveConferenceContainer: React.FC = () => {
       </Grid>
 
       <Grid>
-        <SaveConference
-          onSaveSuccess={handleSaveSuccess}
-          onSaveError={handleSaveError}
-          conference={conference}
-          onSavingStateChange={setIsSaving}
-        />
+        <SaveConference onSaveSuccess={handleSaveSuccess} conference={conference} onSavingStateChange={setIsSaving} />
       </Grid>
     </Grid>
   );

@@ -1,5 +1,21 @@
-import { ArrowBack } from "@mui/icons-material";
-import { Card, Grid, IconButton, Paper, Typography, Divider, Box, Chip, Avatar } from "@mui/material";
+import { ArrowBack, ArrowForward, LocationOn, Email, CalendarToday, Category, BusinessCenter, Star, Person } from "@mui/icons-material";
+import {
+  Card,
+  Grid,
+  IconButton,
+  Paper,
+  Typography,
+  Divider,
+  Box,
+  Chip,
+  Avatar,
+  Container,
+  Skeleton,
+  Alert,
+  Fade,
+  CardContent,
+  Stack
+} from "@mui/material";
 import { isNull } from "lodash";
 import { useNavigate, useParams } from "react-router-dom";
 import type { ConferenceDto } from "types";
@@ -15,118 +31,296 @@ const ConferenceDetailsContainer: React.FC = () => {
     navigate("/conferences");
   };
 
+  const formatDate = (date?: string): string => {
+    if (!date || date === "") return "";
+    const actualDate = new Date(date);
+    if (isNull(actualDate.getTime())) return "";
+    return actualDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+  };
+
+  const getRatingColor = (rating: number) => {
+    if (rating >= 4) return "#4caf50"; // Green
+    if (rating >= 3) return "#ff9800"; // Orange
+    return "#f44336"; // Red
+  };
+
   if (isLoading) {
     return (
-      <Grid container justifyContent="center" sx={{ mt: 4 }}>
-        <Typography>Loading conference...</Typography>
-      </Grid>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Skeleton variant="rectangular" width="100%" height={60} sx={{ mb: 3, borderRadius: 2 }} />
+        <Skeleton variant="rectangular" width="100%" height={300} sx={{ mb: 3, borderRadius: 2 }} />
+        <Skeleton variant="rectangular" width="100%" height={200} sx={{ borderRadius: 2 }} />
+      </Container>
     );
   }
 
   if (error) {
     return (
-      <Grid container justifyContent="center" sx={{ mt: 4 }}>
-        <Typography color="error">Error loading conference: {error.message}</Typography>
-      </Grid>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert severity="error" sx={{ borderRadius: 2 }}>
+          <Typography variant="h6">Error loading conference</Typography>
+          <Typography>{error.message}</Typography>
+        </Alert>
+      </Container>
     );
   }
-  const formatDate = (date?: string): string => {
-    if (!date || date === "") return "";
-    const actualDate = new Date(date);
-    if (isNull(actualDate.getTime())) return "";
-    return actualDate.toISOString().slice(0, 10);
-  };
 
   return (
-    <Grid container direction="row" spacing={3} sx={{ px: 4, py: 2, minHeight: "100%" }}>
-      {/* Header */}
-      <Grid>
-        <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }}>
-          <Grid container alignItems="center" spacing={2}>
-            <Grid>
-              <IconButton onClick={handleBack} sx={{ backgroundColor: "darkblue" }}>
-                <ArrowBack sx={{ color: "white" }} />
-              </IconButton>
-            </Grid>
-            <Grid>
-              <Typography variant="h4">Conference Details</Typography>
-            </Grid>
-          </Grid>
+    <Container maxWidth="lg" sx={{ py: 4, minHeight: "100%" }}>
+      {/* Header with Back Button */}
+      <Fade in timeout={300}>
+        <Paper
+          elevation={2}
+          sx={{
+            p: 3,
+            mb: 4,
+            borderRadius: 3,
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            color: "white"
+          }}
+        >
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <IconButton
+              onClick={handleBack}
+              sx={{
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
+                  transform: "translateX(-2px)"
+                },
+                transition: "all 0.2s ease"
+              }}
+            >
+              <ArrowBack />
+            </IconButton>
+            <Typography variant="h4" fontWeight="bold">
+              Conference Details
+            </Typography>
+          </Stack>
         </Paper>
-      </Grid>
+      </Fade>
 
-      {/* Main Details Card */}
-      <Grid>
-        <Card sx={{ p: 3 }}>
-          {/* General Info */}
-          <Typography variant="h5" gutterBottom>
-            {conference?.name}
-          </Typography>
-          <Divider sx={{ my: 2 }} />
-
-          <Grid container spacing={2}>
-            <Grid sx={{ xs: "12", sm: "6" }}>
-              <Typography variant="subtitle1">
-                <strong>Type:</strong> {conference?.conferenceTypeName}
-              </Typography>
-              <Typography variant="subtitle1">
-                <strong>Category:</strong> {conference?.categoryName}
-              </Typography>
-              <Typography variant="subtitle1">
-                <strong>Organizer Email:</strong> {conference?.organizerEmail}
-              </Typography>
-            </Grid>
-
-            {/* Location */}
-            <Grid sx={{ xs: "12", sm: "6" }}>
-              <Typography variant="subtitle1">
-                <strong>Location:</strong> {conference?.location?.name}
-              </Typography>
-              <Typography variant="subtitle1">{conference?.location?.address}</Typography>
-            </Grid>
-          </Grid>
-
-          {/* Dates */}
-          <Box mt={3}>
-            <Typography variant="subtitle1">
-              <strong>Dates:</strong> {formatDate(conference?.startDate)} – {formatDate(conference?.endDate)}
+      {/* Main Conference Info */}
+      <Fade in timeout={500}>
+        <Card
+          elevation={3}
+          sx={{
+            mb: 4,
+            borderRadius: 3,
+            overflow: "visible",
+            position: "relative"
+          }}
+        >
+          <CardContent sx={{ p: 4 }}>
+            <Typography
+              variant="h3"
+              gutterBottom
+              sx={{
+                fontWeight: "bold",
+                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                mb: 3
+              }}
+            >
+              {conference?.name}
             </Typography>
-          </Box>
-        </Card>
-      </Grid>
 
-      {/* Speakers Section */}
-      {(conference?.speakerList?.length ?? 0) > 0 && (
-        <Grid>
-          <Card sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Speakers
-            </Typography>
-            <Grid container spacing={2}>
-              {conference?.speakerList?.map((speaker, index) => (
-                <Grid sx={{ xs: "12", sm: "6", md: "4" }} key={index}>
-                  <Paper elevation={2} sx={{ p: 2, borderRadius: 2 }}>
-                    <Box display="flex" alignItems="center" mb={1}>
-                      <Avatar sx={{ mr: 2 }}>{speaker.name.charAt(0)}</Avatar>
-                      <Box>
-                        <Typography variant="subtitle1">{speaker.name}</Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Nationality: {speaker.nationality}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Rating: {speaker.rating}/5
-                        </Typography>
-                        {speaker.isMainSpeaker && <Chip label="Main Speaker" size="small" color="primary" sx={{ mt: 1 }} />}
+            <Divider sx={{ my: 3 }} />
+
+            <Grid container spacing={4}>
+              {/* Left Column */}
+              <Grid sx={{ xs: 12, md: 6 }}>
+                <Stack spacing={3}>
+                  <Box display="flex" alignItems="center">
+                    <BusinessCenter sx={{ mr: 2, color: "#667eea" }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Type
+                      </Typography>
+                      <Typography variant="h6">{conference?.conferenceTypeName}</Typography>
+                    </Box>
+                  </Box>
+
+                  <Box display="flex" alignItems="center">
+                    <Category sx={{ mr: 2, color: "#667eea" }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Category
+                      </Typography>
+                      <Typography variant="h6">{conference?.categoryName}</Typography>
+                    </Box>
+                  </Box>
+
+                  <Box display="flex" alignItems="center">
+                    <Email sx={{ mr: 2, color: "#667eea" }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Organizer
+                      </Typography>
+                      <Typography variant="h6">{conference?.organizerEmail}</Typography>
+                    </Box>
+                  </Box>
+                </Stack>
+              </Grid>
+
+              {/* Right Column */}
+              <Grid sx={{ xs: 12, md: 6 }}>
+                <Stack spacing={3}>
+                  <Box display="flex" alignItems="center">
+                    <LocationOn sx={{ mr: 2, color: "#667eea" }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Location
+                      </Typography>
+                      <Typography variant="h6">{conference?.location?.name}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {conference?.location?.address}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box display="flex" alignItems="center">
+                    <CalendarToday sx={{ mr: 2, color: "#667eea" }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Event Dates
+                      </Typography>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <Typography variant="h6">{formatDate(conference?.startDate)}</Typography>
+                        <ArrowForward sx={{ color: "#667eea" }} />
+                        <Typography variant="h6">{formatDate(conference?.endDate)}</Typography>
                       </Box>
                     </Box>
-                  </Paper>
-                </Grid>
-              ))}
+                  </Box>
+                </Stack>
+              </Grid>
             </Grid>
-          </Card>
-        </Grid>
-      )}
-    </Grid>
+          </CardContent>
+        </Card>
+      </Fade>
+
+      {/* Speakers Section */}
+      <Fade in timeout={700}>
+        <Card
+          elevation={3}
+          sx={{
+            borderRadius: 3,
+            overflow: "hidden"
+          }}
+        >
+          <Box
+            sx={{
+              p: 3,
+              background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+              color: "white"
+            }}
+          >
+            <Box display="flex" alignItems="center">
+              <Person sx={{ mr: 2 }} />
+              <Typography variant="h5" fontWeight="bold">
+                Speakers ({conference?.speakerList?.length || 0})
+              </Typography>
+            </Box>
+          </Box>
+
+          <CardContent sx={{ p: 4 }}>
+            {conference?.speakerList?.length ? (
+              <Grid container spacing={3}>
+                {conference.speakerList.map((speaker, index) => (
+                  <Grid sx={{ xs: 12, sm: 6, lg: 4 }} key={index}>
+                    <Fade in timeout={800 + index * 100}>
+                      <Paper
+                        elevation={2}
+                        sx={{
+                          p: 3,
+                          borderRadius: 3,
+                          transition: "all 0.3s ease",
+                          cursor: "pointer",
+                          "&:hover": {
+                            elevation: 6,
+                            transform: "translateY(-4px)",
+                            boxShadow: "0 8px 25px rgba(0,0,0,0.12)"
+                          }
+                        }}
+                      >
+                        <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
+                          <Avatar
+                            sx={{
+                              width: 64,
+                              height: 64,
+                              mb: 2,
+                              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                              fontSize: "1.5rem",
+                              fontWeight: "bold"
+                            }}
+                          >
+                            {speaker.name.charAt(0).toUpperCase()}
+                          </Avatar>
+
+                          <Typography variant="h6" fontWeight="bold" gutterBottom>
+                            {speaker.name}
+                          </Typography>
+
+                          <Stack direction="row" spacing={1} alignItems="center" mb={1}>
+                            <Typography variant="body2" color="text.secondary">
+                              Nationality:
+                            </Typography>
+                            <Chip label={speaker.nationality.toUpperCase()} size="small" variant="outlined" sx={{ fontWeight: "bold" }} />
+                          </Stack>
+
+                          <Box display="flex" alignItems="center" mb={2}>
+                            <Star sx={{ color: getRatingColor(speaker.rating), mr: 0.5, fontSize: "1.2rem" }} />
+                            <Typography variant="h6" sx={{ color: getRatingColor(speaker.rating), fontWeight: "bold" }}>
+                              {speaker.rating}/5
+                            </Typography>
+                          </Box>
+
+                          {speaker.isMainSpeaker && (
+                            <Chip
+                              label="Main Speaker"
+                              color="primary"
+                              variant="filled"
+                              sx={{
+                                fontWeight: "bold",
+                                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                              }}
+                            />
+                          )}
+                        </Box>
+                      </Paper>
+                    </Fade>
+                  </Grid>
+                ))}
+              </Grid>
+            ) : (
+              <Paper
+                sx={{
+                  p: 6,
+                  textAlign: "center",
+                  backgroundColor: "#fafafa",
+                  borderRadius: 3,
+                  border: "2px dashed #e0e0e0"
+                }}
+              >
+                <Person sx={{ fontSize: 48, color: "#bdbdbd", mb: 2 }} />
+                <Typography variant="h6" color="text.secondary" gutterBottom>
+                  No Speakers Announced
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Speakers for this conference will be announced soon.
+                </Typography>
+              </Paper>
+            )}
+          </CardContent>
+        </Card>
+      </Fade>
+    </Container>
   );
 };
 

@@ -4,7 +4,7 @@ import { isNull } from "lodash";
 import React from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { ConferenceDto, DictionaryItem, SaveConferenceDto, SpeakerDto } from "types";
+import type { ConferenceDto, DictionaryItem, SaveConferenceDto, SpeakerResponseDto } from "types";
 import { mutationFetcher, useApiSWR, useApiSWRMutation } from "units/swr";
 import { endpoints, toast } from "utils";
 
@@ -16,13 +16,14 @@ const SaveConference: React.FC<{
 }> = ({ onSaveSuccess, conference, onSavingStateChange }) => {
   const { t } = useTranslation();
   const isEditMode = conference ? true : false;
+  const [selectedExistingSpeakerId, setSelectedExistingSpeakerId] = useState<string>("");
 
   const { data: categories = [], isLoading: isLoadingCategory } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.categories);
   const { data: types = [] } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.conferenceType);
   const { data: cities = [] } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.cities);
   const { data: countries = [] } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.countries);
   const { data: counties = [] } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.counties);
-  const { data: speakers = [] } = useApiSWR<SpeakerDto[], Error>(endpoints.conferences.getSpeakers);
+  const { data: speakers = [] } = useApiSWR<SpeakerResponseDto[], Error>(endpoints.conferences.getSpeakers);
   const { trigger: saveConference, isMutating: isCreatingConference } = useApiSWRMutation(
     endpoints.conferences.saveConference,
     mutationFetcher,
@@ -30,7 +31,7 @@ const SaveConference: React.FC<{
       onSuccess: () => {
         toast.success(t("Conference saved successfully"));
         onSaveSuccess?.();
-        if (!isEditMode) resetForm();
+        // if (!isEditMode) resetForm();
       },
       onError: (err) => {
         toast.error(t("User.Error", { message: err.message }));
@@ -62,7 +63,6 @@ const SaveConference: React.FC<{
       {
         conferenceSpeakerId: 0,
         speakerId: 0,
-        id: 0,
         name: "",
         nationality: "",
         rating: 0,
@@ -77,9 +77,9 @@ const SaveConference: React.FC<{
         id: conference.id,
         conferenceTypeId: conference.conferenceTypeId || 0,
         categoryId: conference.categoryId || 0,
-        locationId: conference.locationId || 0,
+        locationId: conference.locationId || conference.location?.locationId || 0,
         location: {
-          locationId: conference.locationId || 0,
+          locationId: conference.locationId || conference.location?.locationId || 0,
           name: conference.location?.name || "",
           code: conference.location?.code || "",
           address: conference.location?.address || "",
@@ -94,9 +94,8 @@ const SaveConference: React.FC<{
         endDate: conference.endDate,
         name: conference.name,
         speakerList: (conference.speakerList || []).map((speaker) => ({
-          conferenceSpeakerId: speaker.conferenceSpeakerId ?? 0,
-          id: speaker.id || 0,
-          speakerId: speaker.id || 0,
+          conferenceSpeakerId: speaker.conferenceSpeakerId || 0,
+          speakerId: speaker.speakerId || 0,
           name: speaker.name || "",
           nationality: speaker.nationality || "",
           rating: speaker.rating || 0,
@@ -105,7 +104,6 @@ const SaveConference: React.FC<{
           {
             conferenceSpeakerId: 0,
             speakerId: 0,
-            id: 0,
             name: "",
             nationality: "",
             rating: 0,
@@ -126,9 +124,9 @@ const SaveConference: React.FC<{
 
   const [conferenceData, setConferenceData] = useState<SaveConferenceDto>(getConferenceData()); //aici ii dau initial conference objectul
 
-  const resetForm = () => {
-    setConferenceData(getInitialState());
-  };
+  // const resetForm = () => {
+  //   setConferenceData(getInitialState());
+  // };
 
   const handleChangeInput = (field: string, event: { target: { value: string } }) => {
     setConferenceData((prev) => ({
@@ -173,14 +171,35 @@ const SaveConference: React.FC<{
     _child?: React.ReactNode
   ) => {
     const selectedSpeakerId = parseInt(event?.target.value);
-    console.log("selectedSpeakerId ", selectedSpeakerId);
-    console.log("speakers ", speakers);
-    console.log("conferenceData ", conferenceData);
+    console.log("=== DEBUGGING SPEAKER SELECTION ===");
+    console.log("Selected speaker ID:", selectedSpeakerId);
+    console.log(
+      "Current speakers in conference:",
+      conferenceData.speakerList.map((s) => ({
+        name: s.name,
+        speakerId: s.speakerId
+      }))
+    );
+    console.log(
+      "Available speakers from API:",
+      speakers.map((s) => ({
+        name: s.name,
+        id: s.id
+      }))
+    );
+    // console.log("selectedSpeakerId ", selectedSpeakerId);
+    // console.log("speakers ", speakers);
+    // console.log("conferenceData ", conferenceData);
+
+    setSelectedExistingSpeakerId("");
 
     if (selectedSpeakerId && selectedSpeakerId > 0) {
       const selectedSpeaker = speakers.find((speaker) => speaker.id === selectedSpeakerId);
+      // console.log("selectedSpeaker speakerId  ", selectedSpeaker?.id);
+      console.log("selectedSpeaker found:", selectedSpeaker);
+
       if (selectedSpeaker) {
-        const isAlreadyAdded = conferenceData.speakerList.some((speaker) => speaker.id === selectedSpeakerId);
+        const isAlreadyAdded = conferenceData.speakerList.some((speaker) => speaker.speakerId === selectedSpeaker.id);
         if (isAlreadyAdded) {
           toast.warning("This speaker is already added to the conference");
           return;
@@ -188,43 +207,31 @@ const SaveConference: React.FC<{
         const emptySlotIndex = conferenceData.speakerList.findIndex(
           (speaker) => !speaker.name.trim() && !speaker.nationality.trim() && speaker.rating === 0
         );
+
+        const speakerToAdd = {
+          conferenceSpeakerId: 0,
+          speakerId: Number(selectedSpeaker.id),
+          name: String(selectedSpeaker.name),
+          nationality: String(selectedSpeaker.nationality),
+          rating: Number(selectedSpeaker.rating),
+          isMainSpeaker: false
+        };
+        console.log("Speaker to add:", speakerToAdd);
+
         if (emptySlotIndex !== -1) {
           setConferenceData((prev) => ({
             ...prev,
-            speakerList: prev.speakerList.map((speaker, index) =>
-              index === emptySlotIndex
-                ? {
-                    conferenceSpeakerId: selectedSpeaker.conferenceSpeakerId || 0,
-                    speakerId: selectedSpeaker.id,
-                    id: selectedSpeaker.id,
-                    name: selectedSpeaker.name,
-                    nationality: selectedSpeaker.nationality,
-                    rating: selectedSpeaker.rating,
-                    isMainSpeaker: false
-                  }
-                : speaker
-            )
+            speakerList: prev.speakerList.map((speaker, index) => (index === emptySlotIndex ? speakerToAdd : speaker))
           }));
         } else {
           setConferenceData((prev) => ({
             ...prev,
-            speakerList: [
-              ...prev.speakerList,
-              {
-                conferenceSpeakerId: selectedSpeaker.conferenceSpeakerId || 0,
-                speakerId: selectedSpeaker.id,
-                id: selectedSpeaker.id,
-                name: selectedSpeaker.name,
-                nationality: selectedSpeaker.nationality,
-                rating: selectedSpeaker.rating,
-                isMainSpeaker: false
-              }
-            ]
+            speakerList: [...prev.speakerList, speakerToAdd]
           }));
         }
         toast.success(`Added ${selectedSpeaker.name} to the conference`);
-        console.log("conferenceData dupa", conferenceData);
-        event.target.value = "";
+        // console.log("conferenceData dupa", conferenceData);
+        // event.target.value = "";
       }
     }
   };
@@ -244,7 +251,7 @@ const SaveConference: React.FC<{
       ...prev,
       speakerList: [
         ...prev.speakerList,
-        { conferenceSpeakerId: 0, speakerId: 0, id: 0, name: "", nationality: "", rating: 0, isMainSpeaker: false }
+        { conferenceSpeakerId: 0, speakerId: 0, name: "", nationality: "", rating: 0, isMainSpeaker: false }
       ]
     }));
   };
@@ -263,12 +270,52 @@ const SaveConference: React.FC<{
 
   const handleSaveConference = async () => {
     try {
-      if (!conferenceData.name || !conferenceData.organizerEmail || !conferenceData.conferenceTypeId || !conferenceData.categoryId) {
+      if (
+        !conferenceData.name ||
+        !conferenceData.organizerEmail ||
+        !conferenceData.conferenceTypeId ||
+        !conferenceData.categoryId ||
+        !conferenceData.startDate ||
+        !conferenceData.endDate
+      ) {
         toast.error("Please fill in all required fields");
         return;
       }
 
-      await saveConference(conferenceData);
+      const validSpeakers = conferenceData.speakerList.filter(
+        (speaker) => speaker.name.trim() && speaker.nationality.trim() && speaker.rating > 0
+      );
+
+      if (validSpeakers.length === 0) {
+        toast.error("Please add at least one valid speaker");
+        return;
+      }
+
+      const conferenceToSave = {
+        ...conferenceData,
+        location: {
+          ...conferenceData.location,
+          code: conferenceData.location.code || "",
+          longitude: Number(conferenceData.location.longitude) || 0,
+          latitude: Number(conferenceData.location.latitude) || 0
+        },
+        speakerList: validSpeakers.map((speaker) => ({
+          conferenceSpeakerId: Number(speaker.conferenceSpeakerId) || 0,
+          speakerId: Number(speaker.speakerId) || 0,
+          name: String(speaker.name).trim(),
+          nationality: String(speaker.nationality).trim(),
+          rating: Number(speaker.rating) || 0,
+          isMainSpeaker: Boolean(speaker.isMainSpeaker) || false
+        }))
+      };
+
+      console.log("=== CONFERENCE TO SAVE ===");
+      console.log(JSON.stringify(conferenceToSave, null, 2));
+      console.log("Speakers to save:", conferenceToSave.speakerList);
+      console.log("========================");
+
+      const result = await saveConference(conferenceToSave);
+      console.log("Save result:", result);
     } catch (error) {
       console.error("Error saving conference:", error);
     }
@@ -283,6 +330,19 @@ const SaveConference: React.FC<{
     maxWidth: { xs: "100%", sm: "300px", md: "350px" },
     flex: 1
   };
+
+  // React.useEffect(() => {
+  //   console.log("Conference data changed:");
+  //   console.log("Speaker list:", conferenceData.speakerList);
+  // }, [conferenceData.speakerList]);
+
+  // React.useEffect(() => {
+  //   if (conference) {
+  //     console.log("Conference prop changed, updating data");
+  //     setConferenceData(getConferenceData());
+  //   }
+  // }, [conference]);
+
   return (
     <Grid container padding={3} display={"flex"} justifyContent={"space-between"}>
       <Grid gap={3} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>
@@ -517,7 +577,7 @@ const SaveConference: React.FC<{
             <Grid sx={{ xs: 12, md: 6 }}>
               <FormControl fullWidth sx={commonFieldStyles}>
                 <InputLabel>Choose Existing Speaker</InputLabel>
-                <Select value="" label="Choose Existing Speaker" onChange={handleSelectExistingSpeaker}>
+                <Select value={selectedExistingSpeakerId} label="Choose Existing Speaker" onChange={handleSelectExistingSpeaker}>
                   <MenuItem value="">Choose an existing speaker</MenuItem>
                   {speakers.map((speaker) => (
                     <MenuItem key={`existing-speaker-${speaker.id}`} value={speaker.id}>

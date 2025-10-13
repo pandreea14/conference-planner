@@ -21,6 +21,7 @@ const Router: React.FC = () => {
           <Route path="conferences/new" element={<SaveConferenceContainer />} />
           <Route path="conferences/edit/:id" element={<SaveConferenceContainer />} />
           <Route path="conferences/details/:id" element={<ConferenceDetailsContainer />} />
+          <Route path="conferencesAttendees" element={<ConferencesContainer />} />
           <Route path="settings" element={<SettingsContainer />} />
           <Route path="notifications" element={<NotificationsContainer />} />
           <Route path="support" element={<SupportContainer />} />
