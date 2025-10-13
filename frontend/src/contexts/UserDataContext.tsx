@@ -1,4 +1,4 @@
-import React, { type ReactNode } from "react";
+import React, { type ReactNode, useState, useEffect } from "react";
 import { useApiSWR } from "../units/swr";
 import { endpoints, toast } from "../utils";
 import type { UserDto } from "../types/dto";
@@ -13,6 +13,29 @@ interface UserDataProviderProps {
 export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) => {
   const { t } = useTranslation();
 
+  const [userEmail, setUserEmailState] = useState<string>("");
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      setUserEmailState(storedUser);
+    }
+  }, []);
+
+  const setUserEmail = (email: string) => {
+    setUserEmailState(email);
+    localStorage.setItem("currentUser", email);
+    console.log("User email set:", email);
+  };
+
+  const clearUserEmail = () => {
+    setUserEmailState("");
+    localStorage.removeItem("currentUser");
+    console.log("User email cleared");
+  };
+
+  const isLoggedIn = !!userEmail;
+
   const {
     data: userData,
     isLoading,
@@ -24,7 +47,11 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
   const contextValue: UserDataContextPayload = {
     userData,
     isLoading,
-    error
+    error,
+    userEmail,
+    setUserEmail,
+    clearUserEmail,
+    isLoggedIn
   };
 
   if (isLoading) {

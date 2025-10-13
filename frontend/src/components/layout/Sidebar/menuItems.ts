@@ -16,8 +16,8 @@ export interface MenuItem {
 
 export const staticPrimaryNavItems: MenuItem[] = [
   { id: "homepage", labelKey: "Navigation.Homepage", icon: HomeIcon, route: "/" },
-  { id: "Organizerconferences", labelKey: "Navigation.ConferencesO", icon: FolderIcon, route: "/conferences" },
-  { id: "Attendeeconferences", labelKey: "Navigation.ConferencesA", icon: FolderIcon, route: "/conferencesAttendees" }
+  { id: "organizerConferences", labelKey: "Navigation.ConferencesO", icon: FolderIcon, route: "/myConferences" },
+  { id: "attendeeConferences", labelKey: "Navigation.ConferencesA", icon: FolderIcon, route: "/allConferences" }
 ];
 
 export const staticSecondaryNavItems: MenuItem[] = [

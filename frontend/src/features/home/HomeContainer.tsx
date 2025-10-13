@@ -1,19 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Typography, Card, CardContent, TextField, Grid, Button, Fade, Box } from "@mui/material";
+import { useUserData } from "hooks";
 
 const HomeContainer: React.FC = () => {
-  // const { t } = useTranslation();
+  const { userEmail, setUserEmail, clearUserEmail, isLoggedIn } = useUserData();
   const [email, setEmail] = useState<string>("");
-  const [savedUser, setSavedUser] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("currentUser");
-    if (storedUser) {
-      setSavedUser(storedUser);
-      // setEmail(storedUser);
-    }
-  }, []);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -42,17 +34,14 @@ const HomeContainer: React.FC = () => {
       return;
     }
 
-    setSavedUser(trimmedEmail);
+    setUserEmail(trimmedEmail);
     setEmailError("");
     setEmail("");
-
-    localStorage.setItem("currentUser", trimmedEmail);
   };
 
   const handleClear = () => {
-    setSavedUser("");
     setEmail("");
-    localStorage.removeItem("currentUser");
+    clearUserEmail();
   };
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
@@ -78,27 +67,26 @@ const HomeContainer: React.FC = () => {
             error={!!emailError}
             helperText={emailError}
           ></TextField>
-          <Button sx={{ backgroundColor: "darkblue", color: "white" }} onClick={handleSave}>
+          <Button sx={{ backgroundColor: "darkblue", color: "white" }} onClick={handleSave} disabled={!email.trim()}>
             Save
           </Button>
-          <Fade in={!!savedUser} timeout={500}>
+          <Fade in={isLoggedIn} timeout={500}>
             <Box>
-              {savedUser && (
+              {isLoggedIn && (
                 <Box
                   sx={{
                     marginTop: 2,
                     padding: 3,
                     backgroundColor: "#e3f2fd",
                     borderRadius: 2,
-                    textAlign: "center",
-                    border: "1px solid #2196f3"
+                    textAlign: "center"
                   }}
                 >
                   <Typography variant="body2" color="text.secondary" gutterBottom>
                     Current user:
                   </Typography>
                   <Typography variant="h6" color="primary" fontWeight="bold">
-                    {savedUser}
+                    {userEmail}
                   </Typography>
                   <Button size="small" color="error" onClick={handleClear} sx={{ marginTop: 1, backgroundColor: "pink" }}>
                     Clear

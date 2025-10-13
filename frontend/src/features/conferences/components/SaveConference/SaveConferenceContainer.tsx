@@ -6,7 +6,7 @@ import { useApiSWR } from "units/swr";
 import { endpoints, toast } from "utils";
 import { useTranslation } from "react-i18next";
 import type { ConferenceDto } from "types";
-import SaveConference from "../components/SaveConference";
+import SaveConference from "./SaveConference";
 import { notificationTypes } from "constants";
 import { useSubscription } from "units/notifications";
 

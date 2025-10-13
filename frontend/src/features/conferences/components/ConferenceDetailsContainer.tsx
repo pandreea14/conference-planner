@@ -28,7 +28,7 @@ const ConferenceDetailsContainer: React.FC = () => {
   const { data: conference, error, isLoading } = useApiSWR<ConferenceDto>(`${endpoints.conferences.conferenceById}/${id}`);
 
   const handleBack = () => {
-    navigate("/conferences");
+    navigate("/myConferences");
   };
 
   const formatDate = (date?: string): string => {
@@ -43,9 +43,9 @@ const ConferenceDetailsContainer: React.FC = () => {
   };
 
   const getRatingColor = (rating: number) => {
-    if (rating >= 4) return "#4caf50"; // Green
-    if (rating >= 3) return "#ff9800"; // Orange
-    return "#f44336"; // Red
+    if (rating >= 4) return "#4caf50";
+    if (rating >= 3) return "#ff9800";
+    return "#f44336";
   };
 
   if (isLoading) {
@@ -79,7 +79,7 @@ const ConferenceDetailsContainer: React.FC = () => {
             p: 3,
             mb: 4,
             borderRadius: 3,
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            background: "lightblue",
             color: "white"
           }}
         >
@@ -98,7 +98,7 @@ const ConferenceDetailsContainer: React.FC = () => {
             >
               <ArrowBack />
             </IconButton>
-            <Typography variant="h4" fontWeight="bold">
+            <Typography variant="h5" fontWeight="bold">
               Conference Details
             </Typography>
           </Stack>
@@ -122,7 +122,7 @@ const ConferenceDetailsContainer: React.FC = () => {
               gutterBottom
               sx={{
                 fontWeight: "bold",
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                background: "red",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 mb: 3
@@ -138,7 +138,7 @@ const ConferenceDetailsContainer: React.FC = () => {
               <Grid sx={{ xs: 12, md: 6 }}>
                 <Stack spacing={3}>
                   <Box display="flex" alignItems="center">
-                    <BusinessCenter sx={{ mr: 2, color: "#667eea" }} />
+                    <BusinessCenter sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
                         Type
@@ -148,7 +148,7 @@ const ConferenceDetailsContainer: React.FC = () => {
                   </Box>
 
                   <Box display="flex" alignItems="center">
-                    <Category sx={{ mr: 2, color: "#667eea" }} />
+                    <Category sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
                         Category
@@ -158,7 +158,7 @@ const ConferenceDetailsContainer: React.FC = () => {
                   </Box>
 
                   <Box display="flex" alignItems="center">
-                    <Email sx={{ mr: 2, color: "#667eea" }} />
+                    <Email sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
                         Organizer
@@ -173,7 +173,7 @@ const ConferenceDetailsContainer: React.FC = () => {
               <Grid sx={{ xs: 12, md: 6 }}>
                 <Stack spacing={3}>
                   <Box display="flex" alignItems="center">
-                    <LocationOn sx={{ mr: 2, color: "#667eea" }} />
+                    <LocationOn sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
                         Location
@@ -186,14 +186,14 @@ const ConferenceDetailsContainer: React.FC = () => {
                   </Box>
 
                   <Box display="flex" alignItems="center">
-                    <CalendarToday sx={{ mr: 2, color: "#667eea" }} />
+                    <CalendarToday sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
                         Event Dates
                       </Typography>
                       <Box display="flex" alignItems="center" gap={1}>
                         <Typography variant="h6">{formatDate(conference?.startDate)}</Typography>
-                        <ArrowForward sx={{ color: "#667eea" }} />
+                        <ArrowForward sx={{ color: "darkblue" }} />
                         <Typography variant="h6">{formatDate(conference?.endDate)}</Typography>
                       </Box>
                     </Box>
@@ -222,7 +222,7 @@ const ConferenceDetailsContainer: React.FC = () => {
             }}
           >
             <Box display="flex" alignItems="center">
-              <Person sx={{ mr: 2 }} />
+              <Person sx={{ mr: 2, color: "black" }} />
               <Typography variant="h5" fontWeight="bold">
                 Speakers ({conference?.speakerList?.length || 0})
               </Typography>

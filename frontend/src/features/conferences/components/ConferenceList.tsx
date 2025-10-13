@@ -10,13 +10,20 @@ const ConferenceList: React.FC<{ conferences: ConferenceDto[]; state: Conference
     const matchesLocation = state?.location === "" || conference.locationName.toLowerCase().includes(state?.location.toLowerCase());
     const matchesStartDate = state?.dateStart === "" || new Date(conference.startDate) >= new Date(state?.dateStart);
     const matchesType = state?.conferenceType[0] === "" || state?.conferenceType.includes(conference.conferenceTypeName);
-    // if(state.speakerName?.[0] && state.speakerName[0] !== "") {
-    //   const speakerName = state.speakerName[0]
-    //   const hasSpeaker = conference.speakers?
-    // trb sa pun lista de speakeri. sau parcurg dupa id-uri conferenceXSpeaker
-    // }
+    let matchesSpeaker = true;
+    if (state.speakerName?.[0] && state.speakerName[0] !== "") {
+      const selectedSpeakerName = state.speakerName[0].toLowerCase();
 
-    return matchesName && matchesLocation && matchesStartDate && matchesEmail && matchesType;
+      if (conference.speakerList && conference.speakerList.length > 0) {
+        matchesSpeaker = conference.speakerList.some((speaker) => speaker.name.toLowerCase().includes(selectedSpeakerName));
+      } else {
+        matchesSpeaker = false;
+      }
+
+      console.log(`Conference "${conference.name}" matches speaker "${selectedSpeakerName}": ${matchesSpeaker}`);
+    }
+
+    return matchesName && matchesLocation && matchesStartDate && matchesEmail && matchesType && matchesSpeaker;
   });
 
   if (filteredConferences.length === 0) {
