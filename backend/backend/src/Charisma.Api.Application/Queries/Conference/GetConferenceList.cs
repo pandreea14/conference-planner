@@ -63,6 +63,18 @@ namespace Charisma.Api.Application.Queries.Conference
                         });
                     });
 
+                    var speakersList = new List<ConferenceXSpeakerDto>();
+                    conference.ConferenceXSpeakers?.ForEach(x =>
+                    {
+                        speakersList.Add(new ConferenceXSpeakerDto
+                        {
+                            Id = x.Id,
+                            SpeakerName = x.Speaker.Name,
+                            IsMainSpeaker = x.IsMainSpeaker,
+                            Rating = x.Speaker.Rating
+                        });
+                    });
+
                     var resultItem = new ConferenceListItemDto()
                         {
                             Id = conference.Id,
@@ -76,8 +88,9 @@ namespace Charisma.Api.Application.Queries.Conference
                             StartDate = conference.StartDate,
                             EndDate = conference.EndDate,
                             Name = conference.Name,
-                            MainSpeakerName = conference.ConferenceXSpeakers?.FirstOrDefault(x => x.IsMainSpeaker)?.Speaker?.Name,
-                            AttendeesList = attendeesList
+                            //MainSpeakerName = conference.ConferenceXSpeakers?.FirstOrDefault(x => x.IsMainSpeaker)?.Speaker?.Name,
+                            AttendeesList = attendeesList,
+                            SpeakersList = speakersList
                         };
 
                     result.Add(resultItem);

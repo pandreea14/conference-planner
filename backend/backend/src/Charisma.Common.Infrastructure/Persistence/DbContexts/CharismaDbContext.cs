@@ -10,6 +10,7 @@ namespace Charisma.Common.Infrastructure.Persistence.DbContexts
         public DbSet<User> Users { get; set; }
         public DbSet<Conference> Conferences { get; set; }
         public DbSet<ConferenceXAttendee> ConferenceXAttendees { get; set; }
+        public DbSet<ConferenceXSpeaker> ConferenceXSpeaker { get; set; }
         public DbSet<Speaker> Speakers { get; set; }
         public DbSet<DictionaryCategory> DictionaryCategories { get; set; }
         public DbSet<DictionaryCity> DictionaryCities { get; set; }

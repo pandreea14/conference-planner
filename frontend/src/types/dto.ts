@@ -68,8 +68,16 @@ type ConferenceDto = {
   categoryName: string;
   startDate: string;
   endDate: string;
-  mainSpeakerName: string;
+  // mainSpeakerName: string;
   attendeesList: ConferenceXAttendeeDto[];
+  speakersList: ConferenceXSpeakerDto[];
+};
+
+type ConferenceXSpeakerDto = {
+  id: number;
+  speakerName: string;
+  isMainSpeaker: boolean;
+  rating: number;
 };
 
 type ConferenceFilterState = {

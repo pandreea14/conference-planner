@@ -1,5 +1,6 @@
 import { Delete, Save } from "@mui/icons-material";
 import { Box, Button, Card, Checkbox, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { useUserData } from "hooks";
 import { isNull } from "lodash";
 import React from "react";
 import { useState } from "react";
@@ -17,6 +18,7 @@ const SaveConference: React.FC<{
   const { t } = useTranslation();
   const isEditMode = conference ? true : false;
   const [selectedExistingSpeakerId, setSelectedExistingSpeakerId] = useState<string>("");
+  const { userEmail } = useUserData();
 
   const { data: categories = [], isLoading: isLoadingCategory } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.categories);
   const { data: types = [] } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.conferenceType);
@@ -42,7 +44,7 @@ const SaveConference: React.FC<{
   const getInitialState = (): SaveConferenceDto => ({
     id: 0,
     name: "",
-    organizerEmail: "",
+    organizerEmail: userEmail || "",
     startDate: "",
     endDate: "",
     conferenceTypeId: 0,
@@ -89,7 +91,7 @@ const SaveConference: React.FC<{
           longitude: conference.location?.longitude || 0,
           latitude: conference.location?.latitude || 0
         },
-        organizerEmail: conference.organizerEmail,
+        organizerEmail: conference.organizerEmail || userEmail || "",
         startDate: conference.startDate,
         endDate: conference.endDate,
         name: conference.name,
@@ -123,10 +125,6 @@ const SaveConference: React.FC<{
   };
 
   const [conferenceData, setConferenceData] = useState<SaveConferenceDto>(getConferenceData()); //aici ii dau initial conference objectul
-
-  // const resetForm = () => {
-  //   setConferenceData(getInitialState());
-  // };
 
   const handleChangeInput = (field: string, event: { target: { value: string } }) => {
     setConferenceData((prev) => ({
@@ -171,29 +169,12 @@ const SaveConference: React.FC<{
     _child?: React.ReactNode
   ) => {
     const selectedSpeakerId = parseInt(event?.target.value);
-    console.log("=== DEBUGGING SPEAKER SELECTION ===");
-    console.log("Selected speaker ID:", selectedSpeakerId);
-    console.log(
-      "Current speakers in conference:",
-      conferenceData.speakerList.map((s) => ({
-        name: s.name,
-        speakerId: s.speakerId
-      }))
-    );
-    console.log(
-      "Available speakers from API:",
-      speakers.map((s) => ({
-        name: s.name,
-        id: s.id
-      }))
-    );
-
     setSelectedExistingSpeakerId("");
 
     if (selectedSpeakerId && selectedSpeakerId > 0) {
       const selectedSpeaker = speakers.find((speaker) => speaker.id === selectedSpeakerId);
       // console.log("selectedSpeaker speakerId  ", selectedSpeaker?.id);
-      console.log("selectedSpeaker found:", selectedSpeaker);
+      // console.log("selectedSpeaker found:", selectedSpeaker);
 
       if (selectedSpeaker) {
         const isAlreadyAdded = conferenceData.speakerList.some((speaker) => speaker.speakerId === selectedSpeaker.id);
@@ -305,11 +286,6 @@ const SaveConference: React.FC<{
         }))
       };
 
-      // console.log("=== CONFERENCE TO SAVE ===");
-      // console.log(JSON.stringify(conferenceToSave, null, 2));
-      // console.log("Speakers to save:", conferenceToSave.speakerList);
-      // console.log("========================");
-
       const result = await saveConference(conferenceToSave);
       console.log("Save result:", result);
     } catch (error) {
@@ -363,7 +339,7 @@ const SaveConference: React.FC<{
                 label="Organizer Email"
                 variant="outlined"
                 value={conferenceData.organizerEmail}
-                onChange={(e) => handleChangeInput("organizerEmail", e)}
+                // onChange={(e) => handleChangeInput("organizerEmail", e)}
                 sx={commonFieldStyles}
               />
             </Grid>
@@ -475,21 +451,21 @@ const SaveConference: React.FC<{
             </Grid>
             <Grid sx={{ xs: 12, sm: 6, md: 4 }}>
               <TextField
-                id="longitude"
-                label="Longitude"
-                variant="outlined"
-                value={conferenceData.location.longitude}
-                onChange={(e) => handleChangeLocation("longitude", e)}
-                sx={commonFieldStyles}
-              />
-            </Grid>
-            <Grid sx={{ xs: 12, sm: 6, md: 4 }}>
-              <TextField
                 id="latitude"
                 label="Latitude"
                 variant="outlined"
                 value={conferenceData.location.latitude}
                 onChange={(e) => handleChangeLocation("latitude", e)}
+                sx={commonFieldStyles}
+              />
+            </Grid>
+            <Grid sx={{ xs: 12, sm: 6, md: 4 }}>
+              <TextField
+                id="longitude"
+                label="Longitude"
+                variant="outlined"
+                value={conferenceData.location.longitude}
+                onChange={(e) => handleChangeLocation("longitude", e)}
                 sx={commonFieldStyles}
               />
             </Grid>

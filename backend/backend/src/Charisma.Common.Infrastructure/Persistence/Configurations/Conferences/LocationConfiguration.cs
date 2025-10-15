@@ -17,8 +17,8 @@ namespace Charisma.Common.Infrastructure.Persistence.Configurations.Conferences
             builder.Property(x => x.CountryId).IsRequired();
             builder.Property(x => x.CountyId).IsRequired();
             builder.Property(x => x.CityId).IsRequired();
-            builder.Property(x => x.Latitude);
-            builder.Property(x => x.Longitude);
+            builder.Property(x => x.Latitude).HasPrecision(12,9);
+            builder.Property(x => x.Longitude).HasPrecision(12,9);
 
 
             builder.HasOne(x => x.Country)

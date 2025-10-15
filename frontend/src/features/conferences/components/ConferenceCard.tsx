@@ -10,9 +10,10 @@ import {
   CheckCircle,
   // EventBusy,
   Close,
-  OnlinePrediction
+  OnlinePrediction,
+  Grade
 } from "@mui/icons-material";
-import { Button, Card, Chip, Grid, Typography } from "@mui/material";
+import { Box, Button, Card, Chip, Grid, Stack, Typography } from "@mui/material";
 import { notificationTypes } from "constants";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -227,9 +228,7 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
                           ? "Withdrawn"
                           : `Status ${userStatus.statusName}`
                   }
-                  color={
-                    userStatus.hasAttended ? "success" : userStatus.isJoined ? "primary" : userStatus.isWithdrawn ? "error" : "default"
-                  }
+                  color={userStatus.hasAttended ? "default" : userStatus.isJoined ? "success" : userStatus.isWithdrawn ? "error" : "info"}
                   size="small"
                 />
               )}
@@ -243,9 +242,33 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
           <Grid spacing={2}>
             <Typography fontSize={13}>
               <Person sx={{ verticalAlign: "middle", mr: 1 }} />
-              Main Speaker:
-              {conference.mainSpeakerName ? " " + conference.mainSpeakerName : " none yet"}
+              Expert speakers invited:
             </Typography>
+            <Stack spacing={1} pl={4}>
+              {conference.speakersList?.filter((speaker) => speaker.isMainSpeaker).length === 0 ? (
+                <Box display="flex" alignItems="center" gap={1} sx={{ borderBottom: "1px solid #eee", pb: 0.5 }}>
+                  <Typography variant="body2" color="text.secondary" fontStyle="italic">
+                    To be announced
+                  </Typography>
+                </Box>
+              ) : (
+                conference.speakersList
+                  ?.filter((speaker) => speaker.isMainSpeaker)
+                  .map((speaker, index) => (
+                    <Box key={index} display="flex" alignItems="center" gap={1} sx={{ borderBottom: "1px solid #eee", pb: 0.5 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {speaker.speakerName}:
+                      </Typography>
+                      <Box display="flex" alignItems="center" gap={0.5}>
+                        <Typography fontWeight={500} color="text.primary">
+                          {speaker.rating}
+                        </Typography>
+                        <Grade />
+                      </Box>
+                    </Box>
+                  ))
+              )}
+            </Stack>
             <Typography fontSize={13}>
               <LocationOn sx={{ verticalAlign: "middle", mr: 1 }} />
               {conference.cityName}, {conference.countyName}, {conference.countryName}
@@ -300,7 +323,6 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
             )}
 
             {!isOrganizer && (
-              // <Grid container display={"flex"} justifyContent={"space-between"} gap={1}>
               <>
                 {buttonsToShow.showLoginMessage && (
                   <Typography variant="caption" color="text.secondary">
@@ -343,7 +365,6 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
                     {isChangingStatus ? "Processing..." : "Withdraw"}
                   </Button>
                 )}
-                {/* </Grid> */}
               </>
             )}
           </Grid>

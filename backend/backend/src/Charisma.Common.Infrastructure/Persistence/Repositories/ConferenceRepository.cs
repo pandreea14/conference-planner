@@ -35,6 +35,14 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
             return result;
         }
 
+        public Task<List<ConferenceXSpeaker>> GetSpeakersForConference(int conferenceId)
+        {
+            var result = dbContext.ConferenceXSpeaker
+                .Where(ca => ca.ConferenceId == conferenceId)
+                .ToListAsync();
+            return result;
+        }
+
         public Task<Conference> GetConferenceById(int id)
         {
             var result = dbContext.Conferences

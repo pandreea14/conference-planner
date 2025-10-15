@@ -36,7 +36,7 @@ namespace Charisma.Common.Domain.Dtos.Events.Conferences
         public int CountryId { get; init; }
         public int CountyId { get; init; }
         public int CityId { get; init; }
-        public int Latitude { get; init; }
-        public int Longitude { get; init; }
+        public decimal Latitude { get; init; }
+        public decimal Longitude { get; init; }
     }
 }

@@ -9,7 +9,7 @@ import {
 export interface MenuItem {
   id: string;
   labelKey: string;
-  icon: React.ElementType;
+  icon?: React.ElementType;
   route: string;
   badgeCount?: number;
 }
@@ -26,12 +26,33 @@ export const staticSecondaryNavItems: MenuItem[] = [
   { id: "settings", labelKey: "Navigation.Settings", icon: CogIcon, route: "/settings" }
 ];
 
+export const dynamicNavItems: MenuItem[] = [
+  { id: "details", labelKey: "Navigation.Conference", route: "/conferences/details" },
+  { id: "edit", labelKey: "Navigation.ConferencesO", route: "/conferences/edit" },
+  { id: "create", labelKey: "Navigation.ConferencesO", route: "/conferences/new" }
+];
+
 export const getLabelKeyByRoute = (route: string): string | undefined => {
-  const item = [...staticPrimaryNavItems, ...staticSecondaryNavItems].find((item) => item.route === route);
+  // const item = [...staticPrimaryNavItems, ...staticSecondaryNavItems, ...dynamicNavItems].find((item) => item.route === route);
+  // return item?.labelKey;
+
+  const allItems = [...staticPrimaryNavItems, ...staticSecondaryNavItems, ...dynamicNavItems];
+  let item = allItems.find((item) => item.route === route);
+
+  if (!item) {
+    item = allItems.find((item) => route.startsWith(item.route + "/"));
+  }
   return item?.labelKey;
 };
 
 export const getIdByRoute = (route: string): string | undefined => {
-  const item = [...staticPrimaryNavItems, ...staticSecondaryNavItems].find((item) => item.route === route);
+  // const item = [...staticPrimaryNavItems, ...staticSecondaryNavItems, ...dynamicNavItems].find((item) => item.route === route);
+  // return item?.id;
+
+  const allItems = [...staticPrimaryNavItems, ...staticSecondaryNavItems, ...dynamicNavItems];
+  let item = allItems.find((item) => item.route === route);
+  if (!item) {
+    item = allItems.find((item) => route.startsWith(item.route + "/"));
+  }
   return item?.id;
 };

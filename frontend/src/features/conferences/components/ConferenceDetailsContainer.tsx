@@ -18,17 +18,39 @@ import {
 } from "@mui/material";
 import { isNull } from "lodash";
 import { useNavigate, useParams } from "react-router-dom";
-import type { ConferenceDto } from "types";
+import type { DictionaryItem, ConferenceDto } from "types";
 import { useApiSWR } from "units/swr";
 import { endpoints } from "utils";
+// import { APIProvider } from "@vis.gl/react-google-maps";
 
 const ConferenceDetailsContainer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const navigation = useNavigate();
   const { data: conference, error, isLoading } = useApiSWR<ConferenceDto>(`${endpoints.conferences.conferenceById}/${id}`);
+  const { data: countries } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.countries);
+  const { data: counties } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.counties);
+  const { data: cities } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.cities);
+
+  const getCountryName = (countryId?: number): string => {
+    if (!countryId || !countries) return "Unknown Country";
+    const country = countries.find((c) => c.id === countryId);
+    return country?.name || "Unknown Country";
+  };
+
+  const getCountyName = (countyId?: number): string => {
+    if (!countyId || !counties) return "Unknown County";
+    const county = counties.find((c) => c.id === countyId);
+    return county?.name || "Unknown County";
+  };
+
+  const getCityName = (cityId?: number): string => {
+    if (!cityId || !cities) return "Unknown City";
+    const city = cities.find((c) => c.id === cityId);
+    return city?.name || "Unknown City";
+  };
 
   const handleBack = () => {
-    navigate("/myConferences");
+    navigation(-1);
   };
 
   const formatDate = (date?: string): string => {
@@ -69,7 +91,10 @@ const ConferenceDetailsContainer: React.FC = () => {
     );
   }
 
-  console.log("conference: ", conference);
+  const handleFeedbackNav = () => {
+    console.log("sunt aici");
+    navigation("/conferences/details/feedback");
+  };
 
   return (
     <Container maxWidth="lg" sx={{ minHeight: "100%" }}>
@@ -180,10 +205,12 @@ const ConferenceDetailsContainer: React.FC = () => {
                       <Typography variant="body2" color="text.secondary">
                         {conference?.location?.address}
                       </Typography>
-                      {/* <Typography variant="body2" color="text.secondary">
-                        {conference?.countryName}, {conference?.countyName}, {conference?.cityName}
-                      </Typography> */}
+                      <Typography variant="body2" color="text.secondary">
+                        {getCityName(conference?.location?.cityId)}, {getCountyName(conference?.location?.countyId)},{" "}
+                        {getCountryName(conference?.location?.countryId)}
+                      </Typography>
                     </Box>
+                    {/* <APIProvider apiKey={"Your API key here"} onLoad={() => console.log("Maps API has loaded.")}></APIProvider> */}
                   </Box>
 
                   <Box display="flex" alignItems="center">
@@ -206,7 +233,7 @@ const ConferenceDetailsContainer: React.FC = () => {
         </Card>
       </Fade>
 
-      <Fade in timeout={700}>
+      <Fade in timeout={700} onClick={handleFeedbackNav}>
         <Card
           elevation={3}
           sx={{
@@ -243,9 +270,9 @@ const ConferenceDetailsContainer: React.FC = () => {
                           transition: "all 0.3s ease",
                           cursor: "pointer",
                           "&:hover": {
-                            elevation: 6,
-                            transform: "translateY(-4px)",
-                            boxShadow: "0 8px 25px rgba(0,0,0,0.12)"
+                            elevation: 6
+                            // transform: "translateY(-4px)",
+                            // boxShadow: "0 8px 25px rgba(0,0,0,0.12)"
                           }
                         }}
                       >
@@ -255,7 +282,7 @@ const ConferenceDetailsContainer: React.FC = () => {
                               width: 64,
                               height: 64,
                               mb: 2,
-                              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                              background: "blue",
                               fontSize: "1.5rem",
                               fontWeight: "bold"
                             }}
@@ -288,7 +315,7 @@ const ConferenceDetailsContainer: React.FC = () => {
                               variant="filled"
                               sx={{
                                 fontWeight: "bold",
-                                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                                background: "blue"
                               }}
                             />
                           )}

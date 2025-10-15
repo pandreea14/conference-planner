@@ -2,6 +2,8 @@
   "Navigation": {
     "Homepage": "Page d'accueil",
     "Conferences": "Conférences",
+    "ConferencesO": "Mes Conférences",
+    "ConferencesA": "Tous les Conférences",
     "Settings": "Paramètres",
     "Notifications": "Notifications",
     "Support": "Support",

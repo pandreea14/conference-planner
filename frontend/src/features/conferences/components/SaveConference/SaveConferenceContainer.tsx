@@ -48,7 +48,7 @@ const SaveConferenceContainer: React.FC = () => {
   const handleSaveSuccess = () => {
     // refetchConferenceList();
     console.log("Save success handler called, isEditMode: ", isEditMode);
-    navigate("/conferences");
+    navigate("/myConferences");
     setIsSaving(false);
   };
 
@@ -57,7 +57,7 @@ const SaveConferenceContainer: React.FC = () => {
       toast.warning("Please wait for save to complete");
       return;
     }
-    navigate("/conferences");
+    navigate("/myConferences");
   };
 
   if (isEditMode && isLoading) {

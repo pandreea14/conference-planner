@@ -14,20 +14,20 @@ const ConferenceList: React.FC<{ conferences: ConferenceDto[]; state: Conference
     const matchesLocation = state?.location === "" || conference.locationName.toLowerCase().includes(state?.location.toLowerCase());
     const matchesStartDate = state?.dateStart === "" || new Date(conference.startDate) >= new Date(state?.dateStart);
     const matchesType = state?.conferenceType[0] === "" || state?.conferenceType.includes(conference.conferenceTypeName);
-    let matchesSpeaker = true;
-    if (state.speakerName?.[0] && state.speakerName[0] !== "") {
-      const selectedSpeakerName = state.speakerName[0].toLowerCase();
+    // let matchesSpeaker = true;
+    // if (state.speakerName?.[0] && state.speakerName[0] !== "") {
+    //   const selectedSpeakerName = state.speakerName[0].toLowerCase();
 
-      if (conference.speakerList && conference.speakerList.length > 0) {
-        matchesSpeaker = conference.speakerList.some((speaker) => speaker.name.toLowerCase().includes(selectedSpeakerName));
-      } else {
-        matchesSpeaker = false;
-      }
+    //   if (conference.speakerList && conference.speakerList.length > 0) {
+    //     matchesSpeaker = conference.speakerList.some((speaker) => speaker.name.toLowerCase().includes(selectedSpeakerName));
+    //   } else {
+    //     matchesSpeaker = false;
+    //   }
 
-      console.log(`Conference "${conference.name}" matches speaker "${selectedSpeakerName}": ${matchesSpeaker}`);
-    }
+    //   console.log(`Conference "${conference.name}" matches speaker "${selectedSpeakerName}": ${matchesSpeaker}`);
+    // }
 
-    return matchesName && matchesLocation && matchesStartDate && matchesEmail && matchesType && matchesSpeaker;
+    return matchesName && matchesLocation && matchesStartDate && matchesEmail && matchesType;
   });
 
   if (filteredConferences.length === 0) {
