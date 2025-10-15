@@ -187,9 +187,6 @@ const SaveConference: React.FC<{
         id: s.id
       }))
     );
-    // console.log("selectedSpeakerId ", selectedSpeakerId);
-    // console.log("speakers ", speakers);
-    // console.log("conferenceData ", conferenceData);
 
     setSelectedExistingSpeakerId("");
 
@@ -230,7 +227,6 @@ const SaveConference: React.FC<{
           }));
         }
         toast.success(`Added ${selectedSpeaker.name} to the conference`);
-        // console.log("conferenceData dupa", conferenceData);
         // event.target.value = "";
       }
     }
@@ -309,10 +305,10 @@ const SaveConference: React.FC<{
         }))
       };
 
-      console.log("=== CONFERENCE TO SAVE ===");
-      console.log(JSON.stringify(conferenceToSave, null, 2));
-      console.log("Speakers to save:", conferenceToSave.speakerList);
-      console.log("========================");
+      // console.log("=== CONFERENCE TO SAVE ===");
+      // console.log(JSON.stringify(conferenceToSave, null, 2));
+      // console.log("Speakers to save:", conferenceToSave.speakerList);
+      // console.log("========================");
 
       const result = await saveConference(conferenceToSave);
       console.log("Save result:", result);
@@ -330,19 +326,6 @@ const SaveConference: React.FC<{
     maxWidth: { xs: "100%", sm: "300px", md: "350px" },
     flex: 1
   };
-
-  // React.useEffect(() => {
-  //   console.log("Conference data changed:");
-  //   console.log("Speaker list:", conferenceData.speakerList);
-  // }, [conferenceData.speakerList]);
-
-  // React.useEffect(() => {
-  //   if (conference) {
-  //     console.log("Conference prop changed, updating data");
-  //     setConferenceData(getConferenceData());
-  //   }
-  // }, [conference]);
-
   return (
     <Grid container padding={3} display={"flex"} justifyContent={"space-between"}>
       <Grid gap={3} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>

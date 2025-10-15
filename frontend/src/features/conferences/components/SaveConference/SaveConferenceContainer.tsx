@@ -80,18 +80,31 @@ const SaveConferenceContainer: React.FC = () => {
     <Grid container sx={{ minHeight: "100%" }}>
       <Grid>
         <Paper
-          elevation={0}
+          elevation={2}
           sx={{
             p: 2,
-            // position: "fixed",
-            backgroundColor: "white",
-            borderRadius: 1,
-            borderBottom: "1px solid #e0e0e0"
+            mb: 2,
+            borderRadius: 3,
+            background: "white",
+            color: "black"
           }}
         >
           <Grid container alignItems="center" spacing={2}>
             <Grid>
-              <IconButton onClick={handleBack} disabled={isSaving} sx={{ mr: 1, backgroundColor: "darkblue" }}>
+              <IconButton
+                onClick={handleBack}
+                disabled={isSaving}
+                sx={{
+                  mr: 1,
+                  backgroundColor: "darkblue",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "lightblue",
+                    transform: "translateX(-2px)"
+                  },
+                  transition: "all 0.2s ease"
+                }}
+              >
                 <ArrowBack sx={{ color: "white" }} />
               </IconButton>
             </Grid>

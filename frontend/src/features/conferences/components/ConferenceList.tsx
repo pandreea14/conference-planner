@@ -3,7 +3,11 @@ import ConferenceCard from "./ConferenceCard";
 import type { ConferenceDto } from "types";
 import type { ConferenceFilterState } from "types";
 
-const ConferenceList: React.FC<{ conferences: ConferenceDto[]; state: ConferenceFilterState }> = ({ conferences, state }) => {
+const ConferenceList: React.FC<{ conferences: ConferenceDto[]; state: ConferenceFilterState; isOrganizer: boolean }> = ({
+  conferences,
+  state,
+  isOrganizer
+}) => {
   const filteredConferences = conferences.filter((conference) => {
     const matchesName = state?.name === "" || conference.name.toLowerCase().includes(state?.name.toLowerCase());
     const matchesEmail = state?.email === "" || conference.organizerEmail.toLowerCase().includes(state?.email.toLowerCase());
@@ -40,7 +44,7 @@ const ConferenceList: React.FC<{ conferences: ConferenceDto[]; state: Conference
     <Grid container spacing={1} padding={1}>
       {filteredConferences.map((conference) => (
         <Grid key={conference.id} size={{ xs: 6, md: 6 }} sx={{ display: "flex", padding: 1 }}>
-          <ConferenceCard conference={conference} />
+          <ConferenceCard conference={conference} isOrganizer={isOrganizer} />
         </Grid>
       ))}
     </Grid>

@@ -1,5 +1,3 @@
-import type { List } from "lodash";
-
 type SystemVersionDto = {
   version: string;
   buildDate: string;
@@ -51,12 +49,6 @@ type CommandExecutionError = {
   data: Record<string, unknown>;
 };
 
-type ConferenceXAttendeeDto = {
-  id: number;
-  attendeeEmail: string;
-  statusName: string;
-};
-
 type ConferenceDto = {
   id: number;
   conferenceTypeId?: number;
@@ -77,7 +69,7 @@ type ConferenceDto = {
   startDate: string;
   endDate: string;
   mainSpeakerName: string;
-  attendeesList: List<ConferenceXAttendeeDto>;
+  attendeesList: ConferenceXAttendeeDto[];
 };
 
 type ConferenceFilterState = {
@@ -130,6 +122,15 @@ type SaveConferenceDto = {
   endDate: string;
   name: string;
   speakerList: SpeakerDto[];
+};
+
+type ConferenceXAttendeeDto = {
+  id: number;
+  attendeeEmail: string;
+  statusName: string;
+  conferenceId?: number;
+  statusId?: number;
+  status?: DictionaryItem;
 };
 
 export type {

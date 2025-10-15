@@ -57,21 +57,21 @@ const MyConferencesContainer: React.FC = () => {
     navigate("/conferences/new");
   };
 
+  const handleGoToHome = () => {
+    navigate("/");
+  };
+
   if (!isLoggedIn) {
     return (
-      <Grid padding={3} sx={{ width: "100%", height: "100%" }}>
-        <Box
-          sx={{
-            position: "fixed",
-            left: "80%",
-            zIndex: 1300
-          }}
-        >
-          <Button size="medium" sx={{ background: "darkblue", color: "white", mt: 2 }} onClick={handleCreateConference}>
-            <Add sx={{ color: "white" }} />
-            Add conference
-          </Button>
-        </Box>
+      <Grid padding={3} sx={{ width: "50%", height: "30%" }} display={"flex"} justifyContent={"center"} flexDirection={"column"}>
+        <Alert severity="info" sx={{ borderRadius: 2, alignItems: "center", borderColor: "black", borderWidth: 100 }}>
+          <Typography variant="h6" gutterBottom>
+            You need to login!
+          </Typography>
+        </Alert>
+        <Button sx={{ backgroundColor: "darkblue", color: "white" }} onClick={handleGoToHome}>
+          Go To HomePage
+        </Button>
       </Grid>
     );
   }
@@ -93,7 +93,7 @@ const MyConferencesContainer: React.FC = () => {
 
       <Box sx={{ marginBottom: 3, padding: 2, backgroundColor: "#e3f2fd", borderRadius: 2 }}>
         <Typography variant="h5" fontWeight={"bold"} gutterBottom>
-          My Conferences
+          Conference Planner
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Organized by: <strong>{userEmail}</strong>
@@ -113,7 +113,7 @@ const MyConferencesContainer: React.FC = () => {
       ) : (
         <>
           <ConferenceListFilters state={state} onStateChange={setState} conferenceTypes={types} speakers={speakers} />
-          <ConferenceList conferences={conferences} state={state} />
+          <ConferenceList conferences={conferences} state={state} isOrganizer={true} />
         </>
       )}
     </Grid>

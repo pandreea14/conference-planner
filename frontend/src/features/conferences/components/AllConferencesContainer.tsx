@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { endpoints } from "utils/api";
 import { useApiSWR } from "units/swr";
 import type { ConferenceDto, DictionaryItem, SpeakerResponseDto } from "types/dto";
-import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "hooks";
 
@@ -14,7 +13,6 @@ const AllConferencesContainer: React.FC = () => {
   const { data: types = [] } = useApiSWR<DictionaryItem[], Error>(endpoints.dictionaries.conferenceType);
   const { data: speakers = [] } = useApiSWR<SpeakerResponseDto[], Error>(endpoints.conferences.getSpeakers);
   const { data: allConferences = [] } = useApiSWR<ConferenceDto[]>(endpoints.conferences.conferencesForAttendees);
-  console.log("conferences from API:", allConferences);
   const navigate = useNavigate();
 
   const [conferences, setConferences] = useState<ConferenceDto[]>([]);
@@ -43,7 +41,6 @@ const AllConferencesContainer: React.FC = () => {
     const filteredConferences = allConferences.filter((conference) => conference.organizerEmail !== userEmail);
 
     console.log(`Filtering conferences for user: ${userEmail}`);
-    console.log(`Total conferences: ${allConferences.length}`);
     console.log(`Filtered conferences: ${filteredConferences.length}`);
 
     setConferences(filteredConferences);
@@ -53,47 +50,29 @@ const AllConferencesContainer: React.FC = () => {
     console.log("User data changed:", { userEmail, isLoggedIn });
   }, [userEmail, isLoggedIn]);
 
-  const handleCreateConference = () => {
-    navigate("/conferences/new");
+  const handleGoToHome = () => {
+    navigate("/");
   };
-
   if (!isLoggedIn) {
     return (
-      <Grid padding={3} sx={{ width: "100%", height: "100%" }}>
-        <Box
-          sx={{
-            position: "fixed",
-            left: "80%",
-            zIndex: 1300
-          }}
-        >
-          <Button size="medium" sx={{ background: "darkblue", color: "white", mt: 2 }} onClick={handleCreateConference}>
-            <Add sx={{ color: "white" }} />
-            Add conference
-          </Button>
-        </Box>
+      <Grid padding={3} sx={{ width: "50%", height: "40%" }} flexDirection={"column"} display={"flex"} justifyContent={"center"}>
+        <Alert severity="info" sx={{ borderRadius: 2, alignItems: "center", borderColor: "black", borderWidth: 100 }}>
+          <Typography variant="h6" gutterBottom>
+            You need to login!
+          </Typography>
+        </Alert>
+        <Button sx={{ backgroundColor: "darkblue", color: "white" }} onClick={handleGoToHome}>
+          Go To HomePage
+        </Button>
       </Grid>
     );
   }
 
   return (
     <Grid padding={3} sx={{ width: "100%", height: "100%" }}>
-      <Box
-        sx={{
-          position: "fixed",
-          left: "80%",
-          zIndex: 1300
-        }}
-      >
-        <Button size="medium" sx={{ background: "darkblue", color: "white", mt: 2 }} onClick={handleCreateConference}>
-          <Add sx={{ color: "white" }} />
-          Add conference
-        </Button>
-      </Box>
-
       <Box sx={{ marginBottom: 3, padding: 2, backgroundColor: "#e3f2fd", borderRadius: 2 }}>
         <Typography variant="h5" fontWeight={"bold"} gutterBottom>
-          All Conferences
+          Conferences
         </Typography>
         <ConferenceListFilters state={state} onStateChange={setState} conferenceTypes={types} speakers={speakers} />
       </Box>
@@ -107,7 +86,7 @@ const AllConferencesContainer: React.FC = () => {
         </Alert>
       ) : (
         <>
-          <ConferenceList conferences={conferences} state={state} />
+          <ConferenceList conferences={conferences} state={state} isOrganizer={false} />
         </>
       )}
     </Grid>
