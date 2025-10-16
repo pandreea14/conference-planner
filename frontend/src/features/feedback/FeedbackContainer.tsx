@@ -14,7 +14,6 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import { useUserData } from "hooks";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { FeedbackDto } from "types";
@@ -24,7 +23,6 @@ import FeedbackCard from "./FeedbackCard";
 
 const FeedbackContainer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { userEmail } = useUserData();
   console.log("speaker id: ", id);
   const navigation = useNavigate();
   // const [newReview, setNewReview] = useState<string>("");
@@ -61,31 +59,6 @@ const FeedbackContainer: React.FC = () => {
       </Container>
     );
   }
-
-  // const FeedbackCard: React.FC<{ feedback: FeedbackDto[] }> = ({ feedback }) => {
-  //   return (
-  //     <Grid>
-  //       <Typography variant="h3" fontWeight={"bold"}>
-  //         Reviews for {}
-  //       </Typography>
-  //       {feedback
-  //         // ?.filter((fb) => fb.attendeeEmail === userEmail)
-  //         .map((fb, index) => (
-  //           <Grid container key={index} spacing={3} alignItems={"center"} flexDirection={"row"} display={"grid"}>
-  //             <Grid container display={"flex"} justifyContent={"space-between"}>
-  //               {fb.attendeeEmail}
-  //               <Rating value={fb.rating} readOnly />
-  //             </Grid>
-  //             <Grid sx={{ xs: 12, sm: 8 }}>
-  //               <TextField label="Review Message" value={fb.message} fullWidth InputProps={{ readOnly: true }} />
-  //             </Grid>
-  //             <Grid sx={{ xs: 6, sm: 2 }}></Grid>
-  //           </Grid>
-  //         ))}
-  //     </Grid>
-  //   );
-  // };
-
   return (
     <Container maxWidth="lg" sx={{ minHeight: "100%" }}>
       <Fade in timeout={300}>
@@ -133,7 +106,7 @@ const FeedbackContainer: React.FC = () => {
           <Grid container spacing={3} padding={3} alignItems={"center"} flexDirection={"row"} display={"flex"} justifyContent={"center"}>
             <TextField label="Review Message"></TextField>
             <Rating></Rating>
-            <Button>Submit Review</Button>
+            <Button sx={{ padding: 2 }}>Submit Review</Button>
           </Grid>
         </Card>
         <FeedbackCard feedback={feedbackForSpeaker} />

@@ -24,6 +24,7 @@ const Router: React.FC = () => {
           <Route path="conferences/edit/:id" element={<SaveConferenceContainer />} />
           <Route path="conferences/details/:id" element={<ConferenceDetailsContainer />} />
           <Route path="conferences/details/feedback/:id" element={<FeedbackContainer />} />
+          <Route path="myReviews" element={<FeedbackContainer />} />
           <Route path="allConferences" element={<AllConferencesContainer />} />
           <Route path="settings" element={<SettingsContainer />} />
           <Route path="notifications" element={<NotificationsContainer />} />

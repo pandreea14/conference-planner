@@ -22,19 +22,14 @@ const FeedbackCard: React.FC<{ feedback: FeedbackDto[] }> = ({ feedback }) => {
   if (!feedback || feedback.length === 0) {
     return (
       <Grid>
-        <Typography variant="h3" fontWeight={"bold"}>
-          Reviews
+        <Typography variant="h3" fontWeight={"bold"} textAlign={"center"}>
+          Be the first to leave a review!
         </Typography>
-        <Typography>No reviews yet</Typography>
       </Grid>
     );
   }
 
   const visibleFeedback = feedback.slice(currentIndex, currentIndex + Math.min(itemsPerPage, feedback.length));
-
-  // while (visibleFeedback.length < itemsPerPage) {
-  //   visibleFeedback.push({} as FeedbackDto);
-  // }
 
   return (
     <Grid sx={{ xs: 12 }}>
