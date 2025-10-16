@@ -255,7 +255,14 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
                 conference.speakersList
                   ?.filter((speaker) => speaker.isMainSpeaker)
                   .map((speaker, index) => (
-                    <Box key={index} display="flex" alignItems="center" gap={1} sx={{ borderBottom: "1px solid #eee", pb: 0.5 }}>
+                    <Box
+                      key={index}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent={"center"}
+                      gap={1}
+                      sx={{ borderBottom: "1px solid #eee", pb: 0.5 }}
+                    >
                       <Typography variant="body2" color="text.secondary">
                         {speaker.speakerName}:
                       </Typography>

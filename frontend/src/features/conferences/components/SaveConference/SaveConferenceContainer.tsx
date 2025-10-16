@@ -1,14 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Grid, Paper, Typography, IconButton } from "@mui/material";
+import { Grid, Paper, Typography, IconButton, Stack, Fade, Container } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { useApiSWR } from "units/swr";
 import { endpoints, toast } from "utils";
 import { useTranslation } from "react-i18next";
 import type { ConferenceDto } from "types";
-import SaveConference from "./SaveConference";
 import { notificationTypes } from "constants";
 import { useSubscription } from "units/notifications";
+import SaveConference from "./SaveConference";
 
 const SaveConferenceContainer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,8 +77,8 @@ const SaveConferenceContainer: React.FC = () => {
   }
 
   return (
-    <Grid container sx={{ minHeight: "100%" }}>
-      <Grid>
+    <Container maxWidth="lg" sx={{ minHeight: "100%" }}>
+      <Fade in timeout={300}>
         <Paper
           elevation={2}
           sx={{
@@ -89,38 +89,32 @@ const SaveConferenceContainer: React.FC = () => {
             color: "black"
           }}
         >
-          <Grid container alignItems="center" spacing={2}>
-            <Grid>
-              <IconButton
-                onClick={handleBack}
-                disabled={isSaving}
-                sx={{
-                  mr: 1,
-                  backgroundColor: "darkblue",
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: "lightblue",
-                    transform: "translateX(-2px)"
-                  },
-                  transition: "all 0.2s ease"
-                }}
-              >
-                <ArrowBack sx={{ color: "white" }} />
-              </IconButton>
-            </Grid>
-            <Grid alignItems={"center"}>
-              <Typography variant="h4" component="h1">
-                {isEditMode ? "Edit Conference" : "Create New Conference"}
-              </Typography>
-            </Grid>
-          </Grid>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <IconButton
+              onClick={handleBack}
+              sx={{
+                backgroundColor: "darkblue",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "lightblue",
+                  transform: "translateX(-2px)"
+                },
+                transition: "all 0.2s ease"
+              }}
+            >
+              <ArrowBack />
+            </IconButton>
+            <Typography variant="h4" fontWeight="bold">
+              {isEditMode ? "Edit Conference" : "Create New Conference"}
+            </Typography>
+          </Stack>
         </Paper>
-      </Grid>
+      </Fade>
 
       <Grid>
         <SaveConference onSaveSuccess={handleSaveSuccess} conference={conference} onSavingStateChange={setIsSaving} />
       </Grid>
-    </Grid>
+    </Container>
   );
 };
 

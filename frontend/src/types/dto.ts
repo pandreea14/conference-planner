@@ -141,6 +141,15 @@ type ConferenceXAttendeeDto = {
   status?: DictionaryItem;
 };
 
+type FeedbackDto = {
+  id: number;
+  conferenceId: number;
+  speakerId: number;
+  attendeeEmail: string;
+  rating: number;
+  message: string;
+};
+
 export type {
   SystemVersionDto,
   UserDto,
@@ -157,5 +166,6 @@ export type {
   SpeakerDto,
   SaveConferenceDto,
   LocationDto,
-  SpeakerResponseDto
+  SpeakerResponseDto,
+  FeedbackDto
 };

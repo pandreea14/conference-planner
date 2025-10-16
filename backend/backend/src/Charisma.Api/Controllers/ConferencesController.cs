@@ -43,6 +43,13 @@ namespace Charisma.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("feedback/{SpeakerId}")]
+        public async Task<IActionResult> GetFeedbackForSpeaker([FromRoute] GetFeedbackListForSpeaker.Query query)
+        {
+            var result = await mediator.Send(query);
+            return Ok(result);
+        }
+
         /// <summary>
         /// If id is null then create a new one. If id has value, edit the existing one
         /// </summary>
@@ -63,15 +70,22 @@ namespace Charisma.Api.Controllers
             return Ok(new AsyncCommandResult(CorrelationManager.GetCorrelationId()));
         }
 
-        //[HttpPut("change-attendance-status")]
-        //public async Task<ActionResult<bool>> ChangeAtendanceStatus([FromBody] ChangeAttendanceStatus command, CancellationToken cancellationToken)
-        //{
-        //    await mediator.Send(command, cancellationToken);
-        //    return Ok(new AsyncCommandResult(CorrelationManager.GetCorrelationId()));
-        //}
+        [HttpPut("change-speaker-feedback")]
+        public async Task<ActionResult<bool>> ModifySpeakerFeedback([FromBody] ChangeSpeakerFeedback command, CancellationToken cancellationToken)
+        {
+            await mediator.Send(command, cancellationToken);
+            return Ok(new AsyncCommandResult(CorrelationManager.GetCorrelationId()));
+        }
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult<bool>> DeleteConference([FromRoute] DeleteConference command, CancellationToken cancellationToken)
+        {
+            await mediator.Send(command, cancellationToken);
+            return Ok(new AsyncCommandResult(CorrelationManager.GetCorrelationId()));
+        }
+
+        [HttpDelete("feedback/{Id}")]
+        public async Task<ActionResult<bool>> DeleteFeedback([FromRoute] DeleteFeedback command, CancellationToken cancellationToken)
         {
             await mediator.Send(command, cancellationToken);
             return Ok(new AsyncCommandResult(CorrelationManager.GetCorrelationId()));

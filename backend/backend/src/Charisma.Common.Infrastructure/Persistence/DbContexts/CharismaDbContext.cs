@@ -18,6 +18,8 @@ namespace Charisma.Common.Infrastructure.Persistence.DbContexts
         public DbSet<DictionaryCountry> DictionaryCountries { get; set; }
         public DbSet<DictionaryCounty> DictionaryCounties { get; set; }
         public DbSet<DictionaryStatus> DictionaryStatuses { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

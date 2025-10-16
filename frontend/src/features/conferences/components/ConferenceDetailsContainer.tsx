@@ -91,9 +91,9 @@ const ConferenceDetailsContainer: React.FC = () => {
     );
   }
 
-  const handleFeedbackNav = () => {
-    console.log("sunt aici");
-    navigation("/conferences/details/feedback");
+  const handleFeedbackNav = (speakerId: number) => {
+    navigation(`/conferences/details/feedback/${speakerId}`);
+    console.log("speaker la apel: ", speakerId);
   };
 
   return (
@@ -233,7 +233,7 @@ const ConferenceDetailsContainer: React.FC = () => {
         </Card>
       </Fade>
 
-      <Fade in timeout={700} onClick={handleFeedbackNav}>
+      <Fade in timeout={700}>
         <Card
           elevation={3}
           sx={{
@@ -264,6 +264,7 @@ const ConferenceDetailsContainer: React.FC = () => {
                     <Fade in timeout={800 + index * 100}>
                       <Paper
                         elevation={2}
+                        onClick={() => handleFeedbackNav(speaker.speakerId)}
                         sx={{
                           p: 3,
                           borderRadius: 3,

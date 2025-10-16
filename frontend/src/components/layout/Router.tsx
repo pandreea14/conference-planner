@@ -7,11 +7,11 @@ import HomeContainer from "../../features/home/HomeContainer";
 import SettingsContainer from "../../features/settings/SettingsContainer";
 import NotificationsContainer from "../../features/notifications/NotificationsContainer";
 import SupportContainer from "../../features/support/SupportContainer";
-import SaveConferenceContainer from "features/conferences/components/SaveConference/SaveConferenceContainer";
+import SaveConferenceContainer from "features/conferences/components/saveConference/SaveConferenceContainer";
 import ConferenceDetailsContainer from "features/conferences/components/ConferenceDetailsContainer";
 import AllConferencesContainer from "features/conferences/components/AllConferencesContainer";
 import MyConferencesContainer from "features/conferences/components/MyConferencesContainer";
-import SpeakerFeedback from "features/conferences/SpeakerFeedback";
+import FeedbackContainer from "features/feedback/FeedbackContainer";
 
 const Router: React.FC = () => {
   return (
@@ -23,7 +23,7 @@ const Router: React.FC = () => {
           <Route path="conferences/new" element={<SaveConferenceContainer />} />
           <Route path="conferences/edit/:id" element={<SaveConferenceContainer />} />
           <Route path="conferences/details/:id" element={<ConferenceDetailsContainer />} />
-          <Route path="conferences/details/feedback" element={<SpeakerFeedback />} />
+          <Route path="conferences/details/feedback/:id" element={<FeedbackContainer />} />
           <Route path="allConferences" element={<AllConferencesContainer />} />
           <Route path="settings" element={<SettingsContainer />} />
           <Route path="notifications" element={<NotificationsContainer />} />

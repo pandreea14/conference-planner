@@ -36,7 +36,7 @@ const MyConferencesContainer: React.FC = () => {
 
     if (allConferences.length === 0) {
       console.log("No conferences loaded yet");
-      setConferences([]);
+      // setConferences([]);
       return;
     }
 

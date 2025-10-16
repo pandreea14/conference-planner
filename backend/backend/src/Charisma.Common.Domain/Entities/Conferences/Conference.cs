@@ -21,5 +21,6 @@ namespace Charisma.Common.Domain.Entities.Conferences
         public Location Location { get; set; }
         public List<ConferenceXSpeaker> ConferenceXSpeakers { get; set; }
         public List<ConferenceXAttendee> ConferenceXAttendees { get; set; }
+        public List<Feedback> Feedbacks { get; set; }
     }
 }

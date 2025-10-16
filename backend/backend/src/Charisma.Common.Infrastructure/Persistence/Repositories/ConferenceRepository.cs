@@ -24,6 +24,7 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
                     .ThenInclude(cs => cs.Speaker)
                 .Include(c=> c.ConferenceXAttendees)
                     .ThenInclude(ca => ca.Status)
+                //.Include(c => c.Feedbacks)
                 .ToListAsync();
             return result;
         }
@@ -43,6 +44,26 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
             return result;
         }
 
+        public Task<List<Feedback>> GetFeedbackForSpeaker(int speakerId) 
+        {
+            var result = dbContext.Feedbacks
+                .Where(f => f.SpeakerId == speakerId)
+                .ToListAsync();
+            return result;
+        }
+
+        public void DeleteFeedback(int id)
+        {
+            var feedbacks = dbContext.Feedbacks
+                .Where(f => f.Id == id);
+            dbContext.Feedbacks.RemoveRange(feedbacks);
+        }
+
+        public void AddSpeakerFeedback(Feedback feedback)
+        {
+            dbContext.Feedbacks.Add(feedback);
+        }
+
         public Task<Conference> GetConferenceById(int id)
         {
             var result = dbContext.Conferences
@@ -56,7 +77,15 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
                     .ThenInclude(cs => cs.Speaker)
                 .Include(c => c.ConferenceXAttendees)
                     .ThenInclude(s => s.Status)
+                //.Include(c => c.Feedbacks)
                 .FirstOrDefaultAsync(c => c.Id == id);
+            return result;
+        }
+
+        public Task<Feedback> GetFeedbackById(int id)
+        {
+            var result = dbContext.Feedbacks
+                .FirstOrDefaultAsync(f => f.Id == id);
             return result;
         }
 
@@ -80,6 +109,7 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
         {
             dbContext.RemoveRange(conference.ConferenceXSpeakers);
             dbContext.RemoveRange(conference.ConferenceXAttendees);
+            dbContext.RemoveRange(conference.Feedbacks);
             dbContext.Conferences.Remove(conference);
         }
 
