@@ -50,6 +50,13 @@ namespace Charisma.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("feedback")]
+        public async Task<IActionResult> GetFeedback([FromRoute] GetFeedback.Query query)
+        {
+            var result = await mediator.Send(query);
+            return Ok(result);
+        }
+
         /// <summary>
         /// If id is null then create a new one. If id has value, edit the existing one
         /// </summary>

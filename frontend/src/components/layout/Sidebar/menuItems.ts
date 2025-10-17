@@ -3,7 +3,9 @@ import {
   DescriptionOutlined as FolderIcon,
   NotificationsNoneOutlined as BellIcon,
   HelpOutlineOutlined as LifebuoyIcon,
-  SettingsOutlined as CogIcon
+  SettingsOutlined as CogIcon,
+  Reviews,
+  School
 } from "@mui/icons-material";
 
 export interface MenuItem {
@@ -16,9 +18,9 @@ export interface MenuItem {
 
 export const staticPrimaryNavItems: MenuItem[] = [
   { id: "homepage", labelKey: "Navigation.Homepage", icon: HomeIcon, route: "/" },
-  { id: "organizerConferences", labelKey: "Navigation.ConferencesO", icon: FolderIcon, route: "/myConferences" },
+  { id: "organizerConferences", labelKey: "Navigation.ConferencesO", icon: School, route: "/myConferences" },
   { id: "attendeeConferences", labelKey: "Navigation.ConferencesA", icon: FolderIcon, route: "/allConferences" },
-  { id: "myReviews", labelKey: "Navigation.Reviews", icon: FolderIcon, route: "/allConferences" }
+  { id: "myReviews", labelKey: "Navigation.Reviews", icon: Reviews, route: "/myReviews" }
 ];
 
 export const staticSecondaryNavItems: MenuItem[] = [

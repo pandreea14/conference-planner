@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Grid, Paper, Typography, IconButton, Stack, Fade, Container } from "@mui/material";
+import { Grid, Paper, Typography, IconButton, Stack, Container, Box } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { useApiSWR } from "units/swr";
 import { endpoints, toast } from "utils";
@@ -9,6 +9,7 @@ import type { ConferenceDto } from "types";
 import { notificationTypes } from "constants";
 import { useSubscription } from "units/notifications";
 import SaveConference from "./SaveConference";
+import HideOnScroll from "features/conferences/HideOnScroll";
 
 const SaveConferenceContainer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -78,10 +79,11 @@ const SaveConferenceContainer: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ minHeight: "100%" }}>
-      <Fade in timeout={300}>
+      <HideOnScroll>
         <Paper
           elevation={2}
           sx={{
+            position: "fixed",
             p: 2,
             mb: 2,
             borderRadius: 3,
@@ -109,7 +111,9 @@ const SaveConferenceContainer: React.FC = () => {
             </Typography>
           </Stack>
         </Paper>
-      </Fade>
+      </HideOnScroll>
+
+      <Box sx={{ height: "80px" }} />
 
       <Grid>
         <SaveConference onSaveSuccess={handleSaveSuccess} conference={conference} onSavingStateChange={setIsSaving} />

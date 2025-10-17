@@ -76,14 +76,30 @@ const FeedbackCard: React.FC<{ feedback: FeedbackDto[] }> = ({ feedback }) => {
                     boxShadow: 3,
                     borderRadius: 2,
                     transition: "transform 0.2s",
+                    backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white",
                     "&:hover": {
                       transform: "translateY(-4px)",
-                      boxShadow: 6
+                      boxShadow: 6,
+                      backgroundColor: index % 2 === 0 ? "#eeeeee" : "#fafafa"
                     }
                   }}
                 >
                   <CardContent sx={{ padding: 4, textAlign: "center" }}>
-                    <Rating value={fb.rating} readOnly size="large" sx={{ mb: 2 }} />
+                    <Rating
+                      value={fb.rating}
+                      readOnly
+                      size="large"
+                      precision={0.5}
+                      sx={{
+                        mb: 2,
+                        "& .MuiRating-iconFilled": {
+                          color: "#ffd700"
+                        },
+                        "& .MuiRating-iconHover": {
+                          color: "#ffcc02"
+                        }
+                      }}
+                    />
 
                     <Typography variant="h6" fontWeight="bold" color="primary" gutterBottom>
                       {fb.rating >= 4 ? "Awesome Speaker" : fb.rating >= 3 ? "Insightful" : "Did not enjoy that much"}

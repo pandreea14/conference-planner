@@ -1,42 +1,89 @@
 import { ArrowBack } from "@mui/icons-material";
 import {
   Alert,
+  Box,
   Button,
   Card,
   Container,
-  Fade,
+  // Fade,
   Grid,
   IconButton,
   Paper,
   Rating,
   Skeleton,
+  // Slide,
   Stack,
   TextField,
   Typography
+  // useScrollTrigger
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { FeedbackDto } from "types";
-import { useApiSWR } from "units/swr";
-import { endpoints } from "utils";
+import { putMutationFetcher, useApiSWR, useApiSWRMutation } from "units/swr";
+import { endpoints, toast } from "utils";
 import FeedbackCard from "./FeedbackCard";
+import { useSubscription } from "units/notifications";
+import { useTranslation } from "react-i18next";
+import { notificationTypes } from "constants";
+import { useUserData } from "hooks";
+// import HideOnScroll from "features/conferences/HideOnScroll";
 
 const FeedbackContainer: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { conferenceId, id } = useParams<{ conferenceId: string; id: string }>();
+  console.log("conferenceId: ", conferenceId);
   console.log("speaker id: ", id);
+  const { t } = useTranslation();
+  const { userEmail } = useUserData();
+  console.log("email:", userEmail);
   const navigation = useNavigate();
-  // const [newReview, setNewReview] = useState<string>("");
-  // const [newRating, setNewRating] = useState<number>(0);
+  const [newReview, setNewReview] = useState<string>("");
+  const [newRating, setNewRating] = useState<number>(0);
+  // const { data: conference } = useApiSWR<ConferenceDto>(`${endpoints.conferences.conferenceById}/${conferenceId}`);
   const {
     data: feedbackForSpeaker = [],
+    mutate,
     isLoading,
     error
   } = useApiSWR<FeedbackDto[]>(`${endpoints.conferences.getFeedbackBySpeaker}/${id}`);
 
-  console.log("feedback: ", feedbackForSpeaker);
+  const { trigger: submitFeedback, isMutating: isSubmittingFeedback } = useApiSWRMutation(
+    endpoints.conferences.updateFeedback,
+    putMutationFetcher<{ conferenceId: number; speakerId: number; attendeeEmail: string; rating: number; message: string }>,
+    {
+      onSuccess: () => {
+        mutate();
+        toast.success("Successfully updated!");
+        setNewRating(0);
+        setNewReview("");
+      },
+      onError: (err) => toast.error(err.message)
+    }
+  );
+  useSubscription(notificationTypes.FEEDBACK_UPDATED, {
+    onNotification: () => {
+      mutate();
+      toast.info(t("Feedback updated"));
+    }
+  });
 
   const handleBack = () => {
     navigation(-1);
+  };
+
+  const handleSubmitFeedback = async () => {
+    if (!newReview.trim() || !newRating) {
+      toast.error("Please provide both rating and review message");
+      return;
+    }
+
+    await submitFeedback({
+      conferenceId: parseInt(conferenceId!),
+      speakerId: parseInt(id!),
+      attendeeEmail: userEmail,
+      rating: newRating,
+      message: newReview.trim()
+    });
   };
 
   if (isLoading) {
@@ -61,10 +108,11 @@ const FeedbackContainer: React.FC = () => {
   }
   return (
     <Container maxWidth="lg" sx={{ minHeight: "100%" }}>
-      <Fade in timeout={300}>
+      <Grid>
         <Paper
           elevation={2}
           sx={{
+            position: "fixed",
             p: 2,
             mb: 2,
             borderRadius: 3,
@@ -92,21 +140,73 @@ const FeedbackContainer: React.FC = () => {
             </Typography>
           </Stack>
         </Paper>
-      </Fade>
+      </Grid>
+      <Box sx={{ height: "80px" }} />
       <Grid container spacing={3} display={"flex"} justifyContent={"center"} flexDirection={"column"}>
         <Grid sx={{ xs: 12 }} alignSelf={"center"}>
           <Typography variant="h3" fontWeight={"bold"} gutterBottom>
-            Reviews
+            Reviews for
           </Typography>
         </Grid>
         <Card>
           <Typography variant="h4" padding={3}>
-            Help up improve our conferences!
+            Help us improve our conferences and speakers!
           </Typography>
           <Grid container spacing={3} padding={3} alignItems={"center"} flexDirection={"row"} display={"flex"} justifyContent={"center"}>
-            <TextField label="Review Message"></TextField>
-            <Rating></Rating>
-            <Button sx={{ padding: 2 }}>Submit Review</Button>
+            <Grid sx={{ xs: 12, md: 4 }}>
+              <TextField
+                label="Review Message"
+                multiline
+                rows={2}
+                fullWidth
+                value={newReview}
+                onChange={(e) => setNewReview(e.target.value)}
+                placeholder="Share your thoughts about this speaker..."
+              />
+            </Grid>
+
+            <Grid sx={{ xs: 12, md: 3 }}>
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <Typography variant="body2" gutterBottom>
+                  Your Rating: {newRating}/5
+                </Typography>
+                <Rating
+                  name="speaker-rating"
+                  value={newRating}
+                  onChange={(event, newValue) => {
+                    setNewRating(newValue ?? 0);
+                  }}
+                  precision={0.5}
+                  size="large"
+                  sx={{
+                    fontSize: "2rem",
+                    "& .MuiRating-iconFilled": {
+                      color: "#ffd700"
+                    },
+                    "& .MuiRating-iconHover": {
+                      color: "#ffcc02"
+                    }
+                  }}
+                />
+              </Box>
+            </Grid>
+
+            <Grid sx={{ xs: 12, md: 4 }}>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={handleSubmitFeedback}
+                disabled={!newReview.trim() || !newRating || isSubmittingFeedback}
+                sx={{
+                  padding: 2,
+                  height: "56px",
+                  backgroundColor: "darkblue",
+                  "&:hover": { backgroundColor: "blue" }
+                }}
+              >
+                {isSubmittingFeedback ? "Submitting..." : "Submit Review"}
+              </Button>
+            </Grid>
           </Grid>
         </Card>
         <FeedbackCard feedback={feedbackForSpeaker} />

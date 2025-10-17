@@ -21,6 +21,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import type { DictionaryItem, ConferenceDto } from "types";
 import { useApiSWR } from "units/swr";
 import { endpoints } from "utils";
+// import HideOnScroll from "../HideOnScroll";
 // import { APIProvider } from "@vis.gl/react-google-maps";
 
 const ConferenceDetailsContainer: React.FC = () => {
@@ -92,16 +93,18 @@ const ConferenceDetailsContainer: React.FC = () => {
   }
 
   const handleFeedbackNav = (speakerId: number) => {
-    navigation(`/conferences/details/feedback/${speakerId}`);
+    navigation(`/conferences/details/${conference?.id}/feedback/${speakerId}`);
     console.log("speaker la apel: ", speakerId);
+    console.log("conference id la apel: ", conference?.id);
   };
 
   return (
     <Container maxWidth="lg" sx={{ minHeight: "100%" }}>
-      <Fade in timeout={300}>
+      <Grid>
         <Paper
           elevation={2}
           sx={{
+            position: "fixed",
             p: 2,
             mb: 2,
             borderRadius: 3,
@@ -129,7 +132,9 @@ const ConferenceDetailsContainer: React.FC = () => {
             </Typography>
           </Stack>
         </Paper>
-      </Fade>
+      </Grid>
+
+      <Box sx={{ height: "80px" }} />
 
       <Fade in timeout={500}>
         <Card

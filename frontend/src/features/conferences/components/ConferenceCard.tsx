@@ -242,7 +242,7 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
           <Grid spacing={2}>
             <Typography fontSize={13}>
               <Person sx={{ verticalAlign: "middle", mr: 1 }} />
-              Expert speakers invited:
+              Speakers invited:
             </Typography>
             <Stack spacing={1} pl={4}>
               {conference.speakersList?.filter((speaker) => speaker.isMainSpeaker).length === 0 ? (
@@ -301,7 +301,11 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
           </Grid>
           {isOrganizer === true ? (
             <Grid>
-              <Chip icon={<PeopleAlt />} label={`${conference.attendeesList?.length || 0} attendees`} />
+              <Chip
+                icon={<CheckCircle />}
+                label={`${conference.attendeesList?.filter((attendee) => attendee.statusName === "Attended" || attendee.statusName === "Joined").length || 0} attendees`}
+              />
+              <Chip icon={<PeopleAlt />} label={`${conference.attendeesList?.length || 0} total`} sx={{ ml: 1 }} variant="outlined" />
             </Grid>
           ) : (
             ""
