@@ -12,7 +12,7 @@ import ConferenceDetailsContainer from "features/conferences/components/Conferen
 import AllConferencesContainer from "features/conferences/components/AllConferencesContainer";
 import MyConferencesContainer from "features/conferences/components/MyConferencesContainer";
 import FeedbackContainer from "features/feedback/FeedbackContainer";
-import MyFeedback from "features/feedback/MyFeedback";
+import MyFeedbacksContainer from "features/feedback/MyFeedbacksContainer";
 
 const Router: React.FC = () => {
   return (
@@ -25,7 +25,7 @@ const Router: React.FC = () => {
           <Route path="conferences/edit/:id" element={<SaveConferenceContainer />} />
           <Route path="conferences/details/:id" element={<ConferenceDetailsContainer />} />
           <Route path="conferences/details/:conferenceId/feedback/:id" element={<FeedbackContainer />} />
-          <Route path="myReviews" element={<MyFeedback />} />
+          <Route path="myReviews" element={<MyFeedbacksContainer />} />
           <Route path="allConferences" element={<AllConferencesContainer />} />
           <Route path="settings" element={<SettingsContainer />} />
           <Route path="notifications" element={<NotificationsContainer />} />

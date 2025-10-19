@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Grid, Paper, Typography, IconButton, Stack, Container, Box } from "@mui/material";
+import { Grid, Paper, Typography, IconButton, Stack, Container } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { useApiSWR } from "units/swr";
 import { endpoints, toast } from "utils";
@@ -9,7 +9,6 @@ import type { ConferenceDto } from "types";
 import { notificationTypes } from "constants";
 import { useSubscription } from "units/notifications";
 import SaveConference from "./SaveConference";
-import HideOnScroll from "features/conferences/HideOnScroll";
 
 const SaveConferenceContainer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,7 +24,6 @@ const SaveConferenceContainer: React.FC = () => {
     isLoading,
     mutate: refetchCurrentConference
   } = useApiSWR<ConferenceDto>(isEditMode ? `${endpoints.conferences.conferenceById}/${id}` : null);
-  // console.log("Conference data for editing:", conference);
 
   const { mutate: refetchConferenceList } = useApiSWR<ConferenceDto[]>(endpoints.conferences.conferencesForAttendees);
 
@@ -79,41 +77,45 @@ const SaveConferenceContainer: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ minHeight: "100%" }}>
-      <HideOnScroll>
-        <Paper
-          elevation={2}
-          sx={{
-            position: "fixed",
-            p: 2,
-            mb: 2,
-            borderRadius: 3,
-            background: "white",
-            color: "black"
-          }}
-        >
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <IconButton
-              onClick={handleBack}
-              sx={{
-                backgroundColor: "darkblue",
-                color: "white",
-                "&:hover": {
-                  backgroundColor: "lightblue",
-                  transform: "translateX(-2px)"
-                },
-                transition: "all 0.2s ease"
-              }}
-            >
-              <ArrowBack />
-            </IconButton>
-            <Typography variant="h4" fontWeight="bold">
-              {isEditMode ? "Edit Conference" : "Create New Conference"}
-            </Typography>
-          </Stack>
-        </Paper>
-      </HideOnScroll>
-
-      <Box sx={{ height: "80px" }} />
+      <Paper
+        sx={{
+          position: "sticky",
+          zIndex: 1000,
+          top: 0,
+          padding: 2,
+          borderRadius: 3,
+          background: "white",
+          color: "black"
+        }}
+      >
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <IconButton
+            onClick={handleBack}
+            sx={{
+              backgroundColor: "darkblue",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "lightblue",
+                transform: "translateX(-2px)"
+              },
+              transition: "all 0.2s ease"
+            }}
+          >
+            <ArrowBack />
+          </IconButton>
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            sx={{
+              flexGrow: 1,
+              textAlign: "center",
+              pr: 5
+            }}
+          >
+            {isEditMode ? "Edit Conference" : "Create New Conference"}
+          </Typography>
+        </Stack>
+      </Paper>
 
       <Grid>
         <SaveConference onSaveSuccess={handleSaveSuccess} conference={conference} onSavingStateChange={setIsSaving} />

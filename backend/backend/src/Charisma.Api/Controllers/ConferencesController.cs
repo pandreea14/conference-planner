@@ -36,6 +36,13 @@ namespace Charisma.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("speaker/{Id}")]
+        public async Task<IActionResult> GetSpeakerById([FromRoute] GetSpeakerById.Query query)
+        {
+            var result = await mediator.Send(query);
+            return Ok(result);
+        }
+
         [HttpGet("conference/{Id}")]
         public async Task<IActionResult> GetConferenceById([FromRoute] GetConferenceById.Query query)
         {

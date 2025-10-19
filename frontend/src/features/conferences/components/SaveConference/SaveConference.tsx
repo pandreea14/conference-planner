@@ -304,7 +304,7 @@ const SaveConference: React.FC<{
   };
   return (
     <Grid container padding={3} display={"flex"} justifyContent={"space-between"}>
-      <Grid gap={3} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>
+      <Grid gap={1} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>
         <Card sx={{ padding: 2 }}>
           <h2>Conference Information </h2>
 

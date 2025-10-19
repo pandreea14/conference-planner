@@ -93,7 +93,7 @@ const MyConferencesContainer: React.FC = () => {
 
       <Box sx={{ marginBottom: 3, padding: 2, backgroundColor: "#e3f2fd", borderRadius: 2 }}>
         <Typography variant="h5" fontWeight={"bold"} gutterBottom>
-          Conference Planner
+          Create you own conferences
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Organized by: <strong>{userEmail}</strong>

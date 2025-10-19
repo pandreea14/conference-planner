@@ -44,6 +44,14 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
             return result;
         }
 
+        public Task<Speaker> GetSpeakerById(int id)
+        {
+            var result = dbContext.Speakers
+                .FirstOrDefaultAsync(s => s.Id == id);
+            return result;
+        }
+
+
         public Task<List<Feedback>> GetFeedbackForSpeaker(int speakerId) 
         {
             var result = dbContext.Feedbacks

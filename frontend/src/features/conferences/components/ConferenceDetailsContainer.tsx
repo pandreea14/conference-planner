@@ -94,47 +94,51 @@ const ConferenceDetailsContainer: React.FC = () => {
 
   const handleFeedbackNav = (speakerId: number) => {
     navigation(`/conferences/details/${conference?.id}/feedback/${speakerId}`);
-    console.log("speaker la apel: ", speakerId);
-    console.log("conference id la apel: ", conference?.id);
+    // console.log("speaker la apel: ", speakerId);
+    // console.log("conference id la apel: ", conference?.id);
   };
 
   return (
     <Container maxWidth="lg" sx={{ minHeight: "100%" }}>
-      <Grid>
-        <Paper
-          elevation={2}
-          sx={{
-            position: "fixed",
-            p: 2,
-            mb: 2,
-            borderRadius: 3,
-            background: "white",
-            color: "black"
-          }}
-        >
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <IconButton
-              onClick={handleBack}
-              sx={{
-                backgroundColor: "darkblue",
-                color: "white",
-                "&:hover": {
-                  backgroundColor: "lightblue",
-                  transform: "translateX(-2px)"
-                },
-                transition: "all 0.2s ease"
-              }}
-            >
-              <ArrowBack />
-            </IconButton>
-            <Typography variant="h5" fontWeight="bold">
-              Conference Details
-            </Typography>
-          </Stack>
-        </Paper>
-      </Grid>
-
-      <Box sx={{ height: "80px" }} />
+      <Paper
+        sx={{
+          position: "sticky",
+          zIndex: 1000,
+          top: 0,
+          padding: 2,
+          borderRadius: 3,
+          background: "white",
+          color: "black"
+        }}
+      >
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <IconButton
+            onClick={handleBack}
+            sx={{
+              backgroundColor: "darkblue",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "lightblue",
+                transform: "translateX(-2px)"
+              },
+              transition: "all 0.2s ease"
+            }}
+          >
+            <ArrowBack />
+          </IconButton>
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            sx={{
+              flexGrow: 1,
+              textAlign: "center",
+              pr: 5
+            }}
+          >
+            Conference Details
+          </Typography>
+        </Stack>
+      </Paper>
 
       <Fade in timeout={500}>
         <Card
@@ -154,8 +158,6 @@ const ConferenceDetailsContainer: React.FC = () => {
                 fontWeight: "bold",
                 background: "black",
                 WebkitBackgroundClip: "text"
-                // WebkitTextFillColor: "transparent",
-                // mb: 3
               }}
             >
               {conference?.name}
@@ -238,7 +240,8 @@ const ConferenceDetailsContainer: React.FC = () => {
         </Card>
       </Fade>
 
-      <Fade in timeout={700}>
+      {/* <Fade in timeout={500}> */}
+      <Grid gap={1} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>
         <Card
           elevation={3}
           sx={{
@@ -273,12 +276,11 @@ const ConferenceDetailsContainer: React.FC = () => {
                         sx={{
                           p: 3,
                           borderRadius: 3,
-                          transition: "all 0.3s ease",
                           cursor: "pointer",
                           "&:hover": {
-                            elevation: 6
-                            // transform: "translateY(-4px)",
-                            // boxShadow: "0 8px 25px rgba(0,0,0,0.12)"
+                            elevation: 6,
+                            transform: "translateY(-4px)",
+                            boxShadow: 6
                           }
                         }}
                       >
@@ -288,12 +290,11 @@ const ConferenceDetailsContainer: React.FC = () => {
                               width: 64,
                               height: 64,
                               mb: 2,
-                              background: "blue",
-                              fontSize: "1.5rem",
+                              background: "pink",
                               fontWeight: "bold"
                             }}
                           >
-                            {speaker.name.charAt(0).toUpperCase()}
+                            {speaker.name.charAt(0).toUpperCase() || speaker.image}
                           </Avatar>
 
                           <Typography variant="h6" fontWeight="bold" gutterBottom>
@@ -318,10 +319,8 @@ const ConferenceDetailsContainer: React.FC = () => {
                             <Chip
                               label="Main Speaker"
                               color="primary"
-                              variant="filled"
                               sx={{
-                                fontWeight: "bold",
-                                background: "blue"
+                                fontWeight: "bold"
                               }}
                             />
                           )}
@@ -352,9 +351,10 @@ const ConferenceDetailsContainer: React.FC = () => {
             )}
           </CardContent>
         </Card>
-      </Fade>
+      </Grid>
 
-      <Fade in timeout={700}>
+      {/* <Fade in timeout={700}> */}
+      <Grid gap={1} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>
         <Card
           elevation={3}
           sx={{
@@ -469,7 +469,7 @@ const ConferenceDetailsContainer: React.FC = () => {
             )}
           </CardContent>
         </Card>
-      </Fade>
+      </Grid>
     </Container>
   );
 };

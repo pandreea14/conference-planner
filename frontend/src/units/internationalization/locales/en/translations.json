@@ -7,7 +7,7 @@
   "DECIMAL": "{{number, decimalPlaces}}",
   "Navigation": {
     "Homepage": "Homepage",
-    "ConferencesO": "My Conferences",
+    "ConferencesO": "Conference Planner",
     "ConferencesA": "All Conferences",
     "Conference": "Conference",
     "Reviews": "My reviews",
