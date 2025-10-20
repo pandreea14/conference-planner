@@ -9,7 +9,8 @@ const ConferenceListFilters: React.FC<{
   onStateChange: (value: ConferenceFilterState) => void;
   conferenceTypes: DictionaryItem[];
   speakers: SpeakerResponseDto[];
-}> = ({ state, onStateChange, conferenceTypes, speakers }) => {
+  isOrganizer: boolean;
+}> = ({ state, onStateChange, conferenceTypes, speakers, isOrganizer }) => {
   const handleChangeName = (field: string, event: { target: { value: string } }) => {
     onStateChange({
       ...state,
@@ -92,13 +93,17 @@ const ConferenceListFilters: React.FC<{
               onChange={(event) => handleChangeName("location", event)}
             />
 
-            <TextField
-              id="email"
-              label="Organizer Email"
-              variant="outlined"
-              value={state?.email}
-              onChange={(event) => handleChangeName("email", event)}
-            />
+            {isOrganizer === false ? (
+              <TextField
+                id="email"
+                label="Organizer Email"
+                variant="outlined"
+                value={state?.email}
+                onChange={(event) => handleChangeName("email", event)}
+              />
+            ) : (
+              ""
+            )}
 
             <TextField
               type="date"
