@@ -215,6 +215,17 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
 
   const getButtonsToShow = () => {
     const status = getUserStatusPerConference();
+    const timeStatus = getConferenceTimeStatus();
+
+    if (timeStatus === TIME_STATUS.PAST) {
+      return {
+        showAttend: false,
+        showJoin: false,
+        showWithdraw: false,
+        showLoginMessage: false
+        // showPastMessage: true
+      };
+    }
 
     if (!userEmail) {
       return { showAttend: false, showJoin: false, showWithdraw: false, showLoginMessage: true };

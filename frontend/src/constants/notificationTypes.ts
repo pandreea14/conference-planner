@@ -7,4 +7,4 @@ export const CONFERENCE_CREATED = "Charisma.Common.Domain.Dtos.Events.Conference
 export const CONFERENCE_UPDATED = "Charisma.Common.Domain.Dtos.Events.Conferences.ConferenceUpdated";
 export const STATUS_UPDATED = "Charisma.Common.Domain.Dtos.Events.Conferences.AttendanceStatusChanged";
 export const FEEDBACK_UPDATED = "Charisma.Common.Domain.Dtos.Events.Conferences.SpeakerFeedbackChanged";
-export const FEEDBACK_DELETED = "Charisma.Common.Domain.Dtos.Events.Conferences.DeleteFeedback";
+export const FEEDBACK_DELETED = "Charisma.Common.Domain.Dtos.Events.Conferences.FeedbackDeleted";

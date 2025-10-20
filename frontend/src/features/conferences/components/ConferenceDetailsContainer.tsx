@@ -16,16 +16,17 @@ import {
   CardContent,
   Stack
 } from "@mui/material";
+import { useUserData } from "hooks";
 import { isNull } from "lodash";
 import { useNavigate, useParams } from "react-router-dom";
 import type { DictionaryItem, ConferenceDto } from "types";
 import { useApiSWR } from "units/swr";
 import { endpoints } from "utils";
-// import HideOnScroll from "../HideOnScroll";
 // import { APIProvider } from "@vis.gl/react-google-maps";
 
 const ConferenceDetailsContainer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { userEmail } = useUserData();
   const navigation = useNavigate();
   const { data: conference, error, isLoading } = useApiSWR<ConferenceDto>(`${endpoints.conferences.conferenceById}/${id}`);
   const { data: countries } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.countries);
@@ -91,6 +92,8 @@ const ConferenceDetailsContainer: React.FC = () => {
       </Container>
     );
   }
+
+  const isOrganizer = userEmail === conference?.organizerEmail;
 
   const handleFeedbackNav = (speakerId: number) => {
     navigation(`/conferences/details/${conference?.id}/feedback/${speakerId}`);
@@ -259,7 +262,7 @@ const ConferenceDetailsContainer: React.FC = () => {
             <Box display="flex" alignItems="center">
               <Person sx={{ mr: 2, color: "black" }} />
               <Typography variant="h5" fontWeight="bold">
-                Speakers ({conference?.speakerList?.length || 0})
+                Speakers ({conference?.speakerList?.length || 0}) - view speakers review
               </Typography>
             </Box>
           </Box>
@@ -354,84 +357,85 @@ const ConferenceDetailsContainer: React.FC = () => {
       </Grid>
 
       {/* <Fade in timeout={700}> */}
-      <Grid gap={1} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>
-        <Card
-          elevation={3}
-          sx={{
-            mb: 4,
-            mt: 4,
-            borderRadius: 3,
-            overflow: "hidden"
-          }}
-        >
-          <Box
+      {isOrganizer && (
+        <Grid gap={1} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>
+          <Card
+            elevation={3}
             sx={{
-              p: 3,
-              background: "lightblue",
-              color: "white"
+              mb: 4,
+              mt: 4,
+              borderRadius: 3,
+              overflow: "hidden"
             }}
           >
-            <Box display="flex" alignItems="center">
-              <Person sx={{ mr: 2, color: "black" }} />
-              <Typography variant="h5" fontWeight="bold">
-                Attendees ({conference?.attendeesList?.length || 0})
-              </Typography>
+            <Box
+              sx={{
+                p: 3,
+                background: "lightblue",
+                color: "white"
+              }}
+            >
+              <Box display="flex" alignItems="center">
+                <Person sx={{ mr: 2, color: "black" }} />
+                <Typography variant="h5" fontWeight="bold">
+                  Attendees ({conference?.attendeesList?.length || 0})
+                </Typography>
+              </Box>
             </Box>
-          </Box>
 
-          <CardContent sx={{ p: 4 }}>
-            {conference?.attendeesList?.length ? (
-              <Grid container spacing={3}>
-                {conference.attendeesList.map((attendee, index) => (
-                  <Grid sx={{ xs: 12, sm: 6, lg: 4 }} key={index}>
-                    <Fade in timeout={800 + index * 100}>
-                      <Paper
-                        elevation={2}
-                        sx={{
-                          p: 3,
-                          borderRadius: 3,
-                          transition: "all 0.3s ease",
-                          cursor: "pointer",
-                          "&:hover": {
-                            elevation: 6,
-                            transform: "translateY(-4px)",
-                            boxShadow: "0 8px 25px rgba(0,0,0,0.12)"
-                          }
-                        }}
-                      >
-                        <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
-                          <Avatar
-                            sx={{
-                              width: 64,
-                              height: 64,
-                              mb: 2,
-                              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                              fontSize: "1.5rem",
-                              fontWeight: "bold"
-                            }}
-                          >
-                            {attendee.attendeeEmail.charAt(0).toUpperCase()}
-                          </Avatar>
+            <CardContent sx={{ p: 4 }}>
+              {conference?.attendeesList?.length ? (
+                <Grid container spacing={3}>
+                  {conference.attendeesList.map((attendee, index) => (
+                    <Grid sx={{ xs: 12, sm: 6, lg: 4 }} key={index}>
+                      <Fade in timeout={800 + index * 100}>
+                        <Paper
+                          elevation={2}
+                          sx={{
+                            p: 3,
+                            borderRadius: 3,
+                            transition: "all 0.3s ease",
+                            cursor: "pointer",
+                            "&:hover": {
+                              elevation: 6,
+                              transform: "translateY(-4px)",
+                              boxShadow: "0 8px 25px rgba(0,0,0,0.12)"
+                            }
+                          }}
+                        >
+                          <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
+                            <Avatar
+                              sx={{
+                                width: 64,
+                                height: 64,
+                                mb: 2,
+                                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                                fontSize: "1.5rem",
+                                fontWeight: "bold"
+                              }}
+                            >
+                              {attendee.attendeeEmail.charAt(0).toUpperCase()}
+                            </Avatar>
 
-                          <Typography variant="h6" fontWeight="bold" gutterBottom>
-                            {attendee.attendeeEmail}
-                          </Typography>
+                            <Typography variant="h6" fontWeight="bold" gutterBottom>
+                              {attendee.attendeeEmail}
+                            </Typography>
 
-                          {/* <Stack direction="row" spacing={1} alignItems="center" mb={1}>
+                            {/* <Stack direction="row" spacing={1} alignItems="center" mb={1}>
                             <Typography variant="body2" color="text.secondary">
                               Nationality:
                             </Typography>
                             <Chip label={speaker.nationality.toUpperCase()} size="small" variant="outlined" sx={{ fontWeight: "bold" }} />
                           </Stack> */}
 
-                          {/* <Box display="flex" alignItems="center" mb={2}>
+                            {/* <Box display="flex" alignItems="center" mb={2}>
                             <Star sx={{ color: getRatingColor(speaker.rating), mr: 0.5, fontSize: "1.2rem" }} />
                             <Typography variant="h6" sx={{ color: getRatingColor(speaker.rating), fontWeight: "bold" }}>
                               {speaker.rating}/5
                             </Typography>
                           </Box> */}
 
-                          {/* {speaker.isMainSpeaker && (
+                            {/* {speaker.isMainSpeaker && (
                             <Chip
                               label="Main Speaker"
                               color="primary"
@@ -442,34 +446,35 @@ const ConferenceDetailsContainer: React.FC = () => {
                               }}
                             />
                           )} */}
-                        </Box>
-                      </Paper>
-                    </Fade>
-                  </Grid>
-                ))}
-              </Grid>
-            ) : (
-              <Paper
-                sx={{
-                  p: 6,
-                  textAlign: "center",
-                  backgroundColor: "#fafafa",
-                  borderRadius: 3,
-                  border: "2px dashed #e0e0e0"
-                }}
-              >
-                <Person sx={{ fontSize: 48, color: "#bdbdbd", mb: 2 }} />
-                <Typography variant="h6" color="text.secondary" gutterBottom>
-                  No Attendees Yet
-                </Typography>
-                {/* <Typography variant="body2" color="text.secondary">
+                          </Box>
+                        </Paper>
+                      </Fade>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Paper
+                  sx={{
+                    p: 6,
+                    textAlign: "center",
+                    backgroundColor: "#fafafa",
+                    borderRadius: 3,
+                    border: "2px dashed #e0e0e0"
+                  }}
+                >
+                  <Person sx={{ fontSize: 48, color: "#bdbdbd", mb: 2 }} />
+                  <Typography variant="h6" color="text.secondary" gutterBottom>
+                    No Attendees Yet
+                  </Typography>
+                  {/* <Typography variant="body2" color="text.secondary">
                   Speakers for this conference will be announced soon.
                 </Typography> */}
-              </Paper>
-            )}
-          </CardContent>
-        </Card>
-      </Grid>
+                </Paper>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      )}
     </Container>
   );
 };

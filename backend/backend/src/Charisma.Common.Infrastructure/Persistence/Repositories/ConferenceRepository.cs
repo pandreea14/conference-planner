@@ -123,7 +123,7 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
         {
             dbContext.RemoveRange(conference.ConferenceXSpeakers);
             dbContext.RemoveRange(conference.ConferenceXAttendees);
-            dbContext.RemoveRange(conference.Feedbacks);
+            //dbContext.RemoveRange(conference.Feedbacks);
             dbContext.Conferences.Remove(conference);
         }
 
