@@ -23,6 +23,7 @@ namespace Charisma.Common.Domain.Dtos
     public record ConferenceXAttendeeDto
     {
         public int Id { get; init; }
+        public int ConferenceId { get; init; }
         public string AttendeeEmail { get; init; }
         public string StatusName {  get; init; }
     }

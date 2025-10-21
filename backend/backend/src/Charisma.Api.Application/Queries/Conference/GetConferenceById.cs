@@ -53,6 +53,13 @@ namespace Charisma.Api.Application.Queries.Conference
                         Rating = x.Speaker.Rating,
                         SpeakerId = x.SpeakerId
                     }).ToList()
+                    //AttendeesList = conference.ConferenceXAttendees.Select(x => new ConferenceXAttendee()
+                    //{
+                    //    Id = x.Id,
+                    //    AttendeeEmail = x.AttendeeEmail,
+                    //    ConferenceId = x.ConferenceId,
+                    //    StatusId = x.StatusId
+                    //}).ToList()
                 };
             }
         }

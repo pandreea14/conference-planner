@@ -10,6 +10,7 @@ namespace Charisma.Common.Domain.Abstractions
         Task<List<Conference>> GetConferences();
         Task<Conference> GetConferenceById(int id);
         Task<List<Speaker>> GetSpeakers();
+        //Task<List<ConferenceXAttendee>> GetAttendees(int id);
         Task<Speaker> GetSpeakerById(int id);
 
         void Add(Conference conference);

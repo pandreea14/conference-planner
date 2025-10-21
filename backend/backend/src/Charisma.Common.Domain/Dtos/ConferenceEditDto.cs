@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Charisma.Common.Domain.Entities.Conferences;
+using Charisma.Common.Domain.Entities.Dictionaries;
+using MediatR;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,7 @@ namespace Charisma.Common.Domain.Dtos
         public DateTime EndDate { get; init; }
         public string Name { get; init; }
         public List<Speaker> SpeakerList { get; init; }
+        //public List<ConferenceXAttendee> AttendeesList { get; init; }
     }
 
     public record Speaker
@@ -33,6 +36,16 @@ namespace Charisma.Common.Domain.Dtos
         public bool IsMainSpeaker { get; init; }
 
     }
+
+    //public record ConferenceXAttendee
+    //{
+    //    public int Id { get; set; }
+    //    public string AttendeeEmail { get; set; }
+    //    public int ConferenceId { get; set; }
+    //    public int StatusId { get; set; }
+    //    //public DictionaryStatus Status { get; set; }
+    //}
+
     public record Location
     {
         public int LocationId { get; init; }

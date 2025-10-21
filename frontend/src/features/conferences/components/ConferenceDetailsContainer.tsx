@@ -14,12 +14,13 @@ import {
   Alert,
   Fade,
   CardContent,
-  Stack
+  Stack,
+  Button
 } from "@mui/material";
 import { useUserData } from "hooks";
 import { isNull } from "lodash";
 import { useNavigate, useParams } from "react-router-dom";
-import type { DictionaryItem, ConferenceDto } from "types";
+import type { DictionaryItem, ConferenceDto, ConferenceXAttendeeDto } from "types";
 import { useApiSWR } from "units/swr";
 import { endpoints } from "utils";
 // import { APIProvider } from "@vis.gl/react-google-maps";
@@ -32,6 +33,7 @@ const ConferenceDetailsContainer: React.FC = () => {
   const { data: countries } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.countries);
   const { data: counties } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.counties);
   const { data: cities } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.cities);
+  const { data: attendees, mutate } = useApiSWR<ConferenceXAttendeeDto[]>(`${endpoints.conferences.getAttendeesByConference}/${id}`);
 
   const getCountryName = (countryId?: number): string => {
     if (!countryId || !countries) return "Unknown Country";
@@ -99,6 +101,30 @@ const ConferenceDetailsContainer: React.FC = () => {
     navigation(`/conferences/details/${conference?.id}/feedback/${speakerId}`);
     // console.log("speaker la apel: ", speakerId);
     // console.log("conference id la apel: ", conference?.id);
+  };
+
+  const handleKickButton = async (attendeeEmail: string) => {
+    try {
+      const response = await fetch(endpoints.conferences.updateAttendanceStatus, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          conferenceId: Number(id),
+          newStatusId: 4,
+          atendeeEmail: attendeeEmail
+        })
+      });
+
+      if (response.ok) {
+        mutate();
+      } else {
+        console.error("Failed to kick attendee:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error kicking attendee:", error);
+    }
   };
 
   return (
@@ -293,7 +319,7 @@ const ConferenceDetailsContainer: React.FC = () => {
                               width: 64,
                               height: 64,
                               mb: 2,
-                              background: "pink",
+                              background: "rgba(149, 246, 225, 1)",
                               fontWeight: "bold"
                             }}
                           >
@@ -378,29 +404,22 @@ const ConferenceDetailsContainer: React.FC = () => {
               <Box display="flex" alignItems="center">
                 <Person sx={{ mr: 2, color: "black" }} />
                 <Typography variant="h5" fontWeight="bold">
-                  Attendees ({conference?.attendeesList?.length || 0})
+                  Attendees ({attendees?.length || 0})
                 </Typography>
               </Box>
             </Box>
 
             <CardContent sx={{ p: 4 }}>
-              {conference?.attendeesList?.length ? (
+              {attendees?.length ? (
                 <Grid container spacing={3}>
-                  {conference.attendeesList.map((attendee, index) => (
+                  {attendees?.map((attendee, index) => (
                     <Grid sx={{ xs: 12, sm: 6, lg: 4 }} key={index}>
                       <Fade in timeout={800 + index * 100}>
                         <Paper
                           elevation={2}
                           sx={{
                             p: 3,
-                            borderRadius: 3,
-                            transition: "all 0.3s ease",
-                            cursor: "pointer",
-                            "&:hover": {
-                              elevation: 6,
-                              transform: "translateY(-4px)",
-                              boxShadow: "0 8px 25px rgba(0,0,0,0.12)"
-                            }
+                            borderRadius: 3
                           }}
                         >
                           <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
@@ -409,7 +428,7 @@ const ConferenceDetailsContainer: React.FC = () => {
                                 width: 64,
                                 height: 64,
                                 mb: 2,
-                                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                                background: "rgba(149, 246, 225, 1)",
                                 fontSize: "1.5rem",
                                 fontWeight: "bold"
                               }}
@@ -421,31 +440,35 @@ const ConferenceDetailsContainer: React.FC = () => {
                               {attendee.attendeeEmail}
                             </Typography>
 
-                            {/* <Stack direction="row" spacing={1} alignItems="center" mb={1}>
-                            <Typography variant="body2" color="text.secondary">
-                              Nationality:
-                            </Typography>
-                            <Chip label={speaker.nationality.toUpperCase()} size="small" variant="outlined" sx={{ fontWeight: "bold" }} />
-                          </Stack> */}
-
-                            {/* <Box display="flex" alignItems="center" mb={2}>
-                            <Star sx={{ color: getRatingColor(speaker.rating), mr: 0.5, fontSize: "1.2rem" }} />
-                            <Typography variant="h6" sx={{ color: getRatingColor(speaker.rating), fontWeight: "bold" }}>
-                              {speaker.rating}/5
-                            </Typography>
-                          </Box> */}
-
-                            {/* {speaker.isMainSpeaker && (
-                            <Chip
-                              label="Main Speaker"
-                              color="primary"
-                              variant="filled"
-                              sx={{
-                                fontWeight: "bold",
-                                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-                              }}
-                            />
-                          )} */}
+                            <Stack direction="row" spacing={1} alignItems="center" mb={1}>
+                              <Typography variant="body2" color="text.secondary">
+                                Status:
+                              </Typography>
+                              <Chip label={attendee.statusName.toUpperCase()} size="small" variant="outlined" sx={{ fontWeight: "bold" }} />
+                            </Stack>
+                            {attendee.statusName === "Kicked" ? (
+                              ""
+                            ) : (
+                              <Button
+                                onClick={() => handleKickButton(attendee.attendeeEmail)}
+                                sx={{
+                                  color: "black",
+                                  backgroundColor: "pink",
+                                  mt: 2,
+                                  paddingInline: 4,
+                                  borderRadius: 3,
+                                  transition: "all 0.3s ease",
+                                  cursor: "pointer",
+                                  "&:hover": {
+                                    elevation: 6,
+                                    transform: "translateY(-4px)",
+                                    boxShadow: "0 8px 25px rgba(0,0,0,0.12)"
+                                  }
+                                }}
+                              >
+                                Kick
+                              </Button>
+                            )}
                           </Box>
                         </Paper>
                       </Fade>

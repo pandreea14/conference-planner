@@ -40,7 +40,14 @@ const AllConferencesContainer: React.FC = () => {
       return;
     }
 
-    const filteredConferences = allConferences.filter((conference) => conference.organizerEmail !== userEmail);
+    const filteredConferences = allConferences
+      .filter((conference) => conference.organizerEmail !== userEmail)
+      .sort((a, b) => {
+        const dateA = a.startDate ? new Date(a.startDate).getTime() : 0;
+        const dateB = b.startDate ? new Date(b.startDate).getTime() : 0;
+        return dateB - dateA; // Ascending order (earliest first)
+        // Use dateB - dateA for descending order (latest first)
+      });
 
     console.log(`Filtering conferences for user: ${userEmail}`);
     console.log(`Filtered conferences: ${filteredConferences.length}`);

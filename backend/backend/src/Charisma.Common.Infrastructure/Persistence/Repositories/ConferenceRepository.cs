@@ -31,6 +31,7 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
         public Task<List<ConferenceXAttendee>> GetAtendeesForConference(int conferenceId)
         {
             var result = dbContext.ConferenceXAttendees
+                .Include(ca => ca.Status)
                 .Where(ca => ca.ConferenceId == conferenceId)
                 .ToListAsync();
             return result;

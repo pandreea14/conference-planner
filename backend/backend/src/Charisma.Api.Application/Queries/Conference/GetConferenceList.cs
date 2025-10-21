@@ -59,6 +59,7 @@ namespace Charisma.Api.Application.Queries.Conference
                         {
                             AttendeeEmail = x.AttendeeEmail,
                             Id = x.Id,
+                            ConferenceId = x.ConferenceId,
                             StatusName = x.Status.Name
                         });
                     });

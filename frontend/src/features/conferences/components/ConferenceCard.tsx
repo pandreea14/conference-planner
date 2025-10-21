@@ -13,7 +13,8 @@ import {
   Grade,
   HistoryToggleOff,
   AccessTime,
-  PlayCircleFilled
+  PlayCircleFilled,
+  Block
 } from "@mui/icons-material";
 import { Box, Button, Card, Chip, Grid, Stack, Typography } from "@mui/material";
 import { notificationTypes } from "constants";
@@ -25,23 +26,13 @@ import { deleteMutationFetcher, putMutationFetcher, useApiSWR, useApiSWRMutation
 import { endpoints } from "utils";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "hooks";
-
-const ATTENDANCE_STATUS = {
-  JOINED: "Joined",
-  WITHDRAWN: "Withdrawn",
-  ATTENDED: "Attended"
-} as const;
+import { ATTENDANCE_STATUS, TIME_STATUS } from "utils/feedbackUtils";
 
 const STATUS_NAME_TO_ID = {
   Joined: 1,
   Withdrawn: 2,
-  Attended: 3
-} as const;
-
-const TIME_STATUS = {
-  PAST: "Ended",
-  ONGOING: "Ongoing",
-  FUTURE: "Future"
+  Attended: 3,
+  Kicked: 4
 } as const;
 
 const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean }> = ({ conference, isOrganizer }) => {
@@ -51,17 +42,17 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
 
   const getUserStatusPerConference = () => {
     if (!userEmail) {
-      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isRegistered: false };
+      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isKicked: false, isRegistered: false };
     }
 
     if (!conference.attendeesList || conference.attendeesList.length === 0) {
-      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isRegistered: false };
+      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isKicked: false, isRegistered: false };
     }
 
     const userAttendance = conference.attendeesList.find((attendee: ConferenceXAttendeeDto) => attendee.attendeeEmail === userEmail);
 
     if (!userAttendance) {
-      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isRegistered: false };
+      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isKicked: false, isRegistered: false };
     }
 
     return {
@@ -69,6 +60,7 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
       isJoined: userAttendance.statusName === ATTENDANCE_STATUS.JOINED,
       isWithdrawn: userAttendance.statusName === ATTENDANCE_STATUS.WITHDRAWN,
       hasAttended: userAttendance.statusName === ATTENDANCE_STATUS.ATTENDED,
+      isKicked: userAttendance.statusName === ATTENDANCE_STATUS.KICKED,
       isRegistered: true
     };
   };
@@ -79,7 +71,7 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
     {
       onSuccess: () => {
         refetchConferenceList();
-        toast.success("Succesfully marked!");
+        toast.success("Successfully marked!");
       },
       onError: (err) => toast.error(err.message)
     }
@@ -245,16 +237,14 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
       case ATTENDANCE_STATUS.ATTENDED:
         return { showAttend: false, showJoin: true, showWithdraw: true, showLoginMessage: false };
 
+      case ATTENDANCE_STATUS.KICKED:
+        return { showAttend: false, showJoin: false, showWithdraw: false, showLoginMessage: false };
+
       default:
         return { showAttend: true, showJoin: false, showWithdraw: false, showLoginMessage: false };
     }
   };
 
-  // const getConferenceTimeStatus = () => {
-  //   const endDate = new Date(conference.endDate);
-  //   const now = new Date();
-  //   return endDate < now;
-  // };
   const getConferenceTimeStatus = (): (typeof TIME_STATUS)[keyof typeof TIME_STATUS] => {
     const startDate = new Date(conference.startDate);
     const endDate = new Date(conference.endDate);
@@ -269,7 +259,6 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
     }
   };
 
-  // const isPastConference = getConferenceTimeStatus();
   const conferenceTimeStatus = getConferenceTimeStatus();
   const userStatus = getUserStatusPerConference();
   const buttonsToShow = getButtonsToShow();
@@ -313,6 +302,8 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
                       <OnlinePrediction />
                     ) : userStatus.isWithdrawn ? (
                       <Close />
+                    ) : userStatus.isKicked ? (
+                      <Block />
                     ) : (
                       <EmojiObjects />
                     )
@@ -324,7 +315,9 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
                         ? "Joined"
                         : userStatus.isWithdrawn
                           ? "Withdrawn"
-                          : `Status ${userStatus.statusName}`
+                          : userStatus.isKicked
+                            ? "Banned by organizer"
+                            : `Status ${userStatus.statusName}`
                   }
                   color={userStatus.hasAttended ? "default" : userStatus.isJoined ? "success" : userStatus.isWithdrawn ? "error" : "info"}
                   size="small"
@@ -395,13 +388,6 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
                   day: "numeric"
                 })}
               </Typography>
-              {/* <Chip
-                icon={isPastConference ? <HistoryToggleOff /> : <AccessTime />}
-                label={isPastConference ? "Ended" : "Future"}
-                color={isPastConference ? "warning" : "primary"}
-                size="small"
-                sx={{ ml: 1, height: "20px" }}
-              /> */}
               <Chip label={timeChipProps.label} color={"default"} size="small" sx={{ ml: 1, height: "20px" }} />
             </Grid>
           </Grid>
@@ -411,7 +397,12 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
                 icon={<CheckCircle />}
                 label={`${conference.attendeesList?.filter((attendee) => attendee.statusName === "Attended" || attendee.statusName === "Joined").length || 0} attendees`}
               />
-              <Chip icon={<PeopleAlt />} label={`${conference.attendeesList?.length || 0} total`} sx={{ ml: 1 }} variant="outlined" />
+              <Chip
+                icon={<PeopleAlt />}
+                label={`${conference.attendeesList?.length || 0} interacted with`}
+                sx={{ ml: 1 }}
+                variant="outlined"
+              />
             </Grid>
           ) : (
             ""
