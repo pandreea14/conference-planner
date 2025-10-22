@@ -14,9 +14,9 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import type { ConferenceDto, FeedbackDto, SpeakerDto } from "types";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import type { ConferenceDto, ConferenceXAttendeeDto, FeedbackDto, SpeakerDto } from "types";
 import { putMutationFetcher, useApiSWR, useApiSWRMutation } from "units/swr";
 import { endpoints, toast } from "utils";
 import { useSubscription } from "units/notifications";
@@ -28,19 +28,34 @@ import { ATTENDANCE_STATUS, TIME_STATUS } from "utils/feedbackUtils";
 
 const FeedbackContainer: React.FC = () => {
   const { conferenceId, id } = useParams<{ conferenceId: string; id: string }>();
+  const [searchParams] = useSearchParams();
+  const feedbackId = searchParams.get("feedbackId");
   const { t } = useTranslation();
   const { userEmail } = useUserData();
   const navigation = useNavigate();
   const [newReview, setNewReview] = useState<string>("");
   const [newRating, setNewRating] = useState<number>(0);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+
   const { data: speaker } = useApiSWR<SpeakerDto>(`${endpoints.conferences.getSpeakerById}/${id}`);
   const { data: conference } = useApiSWR<ConferenceDto>(`${endpoints.conferences.conferenceById}/${conferenceId}`);
+  const { data: attendees } = useApiSWR<ConferenceXAttendeeDto[]>(`${endpoints.conferences.getAttendeesByConference}/${conferenceId}`);
   const {
     data: feedbackForSpeaker = [],
     mutate,
     isLoading,
     error
   } = useApiSWR<FeedbackDto[]>(`${endpoints.conferences.getFeedbackBySpeaker}/${id}`);
+  useEffect(() => {
+    if (feedbackId && feedbackForSpeaker.length > 0) {
+      const existingFeedback = feedbackForSpeaker.find((f) => f.id === parseInt(feedbackId));
+      if (existingFeedback && existingFeedback.attendeeEmail === userEmail) {
+        setNewReview(existingFeedback.message);
+        setNewRating(existingFeedback.rating);
+        setIsEditing(true);
+      }
+    }
+  }, [feedbackId, feedbackForSpeaker, userEmail]);
 
   const { trigger: submitFeedback, isMutating: isSubmittingFeedback } = useApiSWRMutation(
     endpoints.conferences.updateFeedback,
@@ -51,6 +66,8 @@ const FeedbackContainer: React.FC = () => {
         toast.success("Successfully updated!");
         setNewRating(0);
         setNewReview("");
+        setIsEditing(false);
+        navigation(`/conferences/details/${conferenceId}/feedback/${id}`, { replace: true });
       },
       onError: (err) => toast.error(err.message)
     }
@@ -66,7 +83,7 @@ const FeedbackContainer: React.FC = () => {
     navigation(-1);
   };
 
-  const handleRatingChange = (event: React.SyntheticEvent, newValue: number | null) => {
+  const handleRatingChange = (e: React.SyntheticEvent, newValue: number | null) => {
     setNewRating(newValue ?? 0);
   };
 
@@ -89,11 +106,13 @@ const FeedbackContainer: React.FC = () => {
   //   });
   // };
   const handleSubmitFeedback = async () => {
-    const reviewCheck = canSubmitReview();
+    if (!isEditing) {
+      const reviewCheck = canSubmitReview();
 
-    if (!reviewCheck.allowed) {
-      toast.error(reviewCheck.reason || "You cannot submit a review");
-      return;
+      if (!reviewCheck.allowed) {
+        toast.error(reviewCheck.reason || "You cannot submit a review");
+        return;
+      }
     }
 
     if (!newReview.trim() || !newRating) {
@@ -141,12 +160,14 @@ const FeedbackContainer: React.FC = () => {
     if (timeStatus === TIME_STATUS.FUTURE) {
       return { allowed: false, reason: "You can only submit reviews for ongoing or completed conferences" };
     }
+    // console.log("att list ", attendees);
 
     // Check if user attended or joined the conference
-    const userAttendance = conference.attendeesList?.find((attendee) => attendee.attendeeEmail === userEmail);
+    const userAttendance = attendees?.find((attendee) => attendee.attendeeEmail === userEmail);
+    // console.log("user attendance ", userAttendance);
 
     if (!userAttendance) {
-      return { allowed: false, reason: "You must register for the conference to leave a review" };
+      return { allowed: false, reason: "You must be an attendee of the conference to leave a review" };
     }
 
     if (userAttendance.statusName === ATTENDANCE_STATUS.WITHDRAWN) {
@@ -186,6 +207,8 @@ const FeedbackContainer: React.FC = () => {
   }
 
   const reviewCheck = canSubmitReview();
+  const canSumbit = isEditing || reviewCheck.allowed;
+
   return (
     <Container maxWidth="lg" sx={{ minHeight: "100%" }}>
       <Paper
@@ -217,26 +240,44 @@ const FeedbackContainer: React.FC = () => {
 
           <Typography
             variant="h5"
-            fontWeight="bold"
             sx={{
               flexGrow: 1,
               textAlign: "center",
-              pr: 5
+              pr: 5,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis"
             }}
           >
-            Feedback for {speaker?.name || "Speaker"}
+            Feedback for
+            <Typography variant="h5" fontWeight="bold" component="span" sx={{ mx: 0.5 }}>
+              {speaker?.name || "Speaker"}
+            </Typography>
+            from
+            <Typography variant="h5" fontWeight="bold" component="span" sx={{ mx: 0.5 }}>
+              {conference?.name}
+            </Typography>
+            conference
           </Typography>
         </Stack>
       </Paper>
       <Grid container spacing={3} display={"flex"} justifyContent={"center"} flexDirection={"column"}>
-        {!reviewCheck.allowed && (
+        {!canSumbit && (
           <Alert severity="warning" sx={{ mx: 3, mt: 2 }}>
             {reviewCheck.reason}
           </Alert>
         )}
+        {isEditing && (
+          <Alert severity="info" sx={{ mx: 3, mt: 2 }}>
+            You are editing your existing review
+          </Alert>
+        )}
         <Card sx={{ width: "100%", mb: 3 }}>
           <Typography variant="h4" padding={3}>
-            Help us improve our conferences and speakers!
+            {isEditing ? "Edit Your Review" : "Help us improve our conferences and speakers!"}
           </Typography>
           <Grid container spacing={3} padding={3} alignItems={"center"} flexDirection={"row"} display={"flex"} justifyContent={"center"}>
             <Grid sx={{ xs: 12, md: 4 }}>

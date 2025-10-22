@@ -17,23 +17,36 @@ import {
   Stack,
   Button
 } from "@mui/material";
+import { notificationTypes } from "constants";
+import ConferenceMap from "features/map/ConferenceMap";
 import { useUserData } from "hooks";
 import { isNull } from "lodash";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import type { DictionaryItem, ConferenceDto, ConferenceXAttendeeDto } from "types";
+import { useSubscription } from "units/notifications";
 import { useApiSWR } from "units/swr";
-import { endpoints } from "utils";
-// import { APIProvider } from "@vis.gl/react-google-maps";
+import { endpoints, toast } from "utils";
 
 const ConferenceDetailsContainer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { userEmail } = useUserData();
+  const { t } = useTranslation();
   const navigation = useNavigate();
   const { data: conference, error, isLoading } = useApiSWR<ConferenceDto>(`${endpoints.conferences.conferenceById}/${id}`);
   const { data: countries } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.countries);
   const { data: counties } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.counties);
   const { data: cities } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.cities);
-  const { data: attendees, mutate } = useApiSWR<ConferenceXAttendeeDto[]>(`${endpoints.conferences.getAttendeesByConference}/${id}`);
+  const { data: attendees, mutate: refetchAttendee } = useApiSWR<ConferenceXAttendeeDto[]>(
+    `${endpoints.conferences.getAttendeesByConference}/${id}`
+  );
+
+  useSubscription(notificationTypes.STATUS_UPDATED, {
+    onNotification: () => {
+      refetchAttendee();
+      toast.info(t("Status updated"));
+    }
+  });
 
   const getCountryName = (countryId?: number): string => {
     if (!countryId || !countries) return "Unknown Country";
@@ -99,8 +112,6 @@ const ConferenceDetailsContainer: React.FC = () => {
 
   const handleFeedbackNav = (speakerId: number) => {
     navigation(`/conferences/details/${conference?.id}/feedback/${speakerId}`);
-    // console.log("speaker la apel: ", speakerId);
-    // console.log("conference id la apel: ", conference?.id);
   };
 
   const handleKickButton = async (attendeeEmail: string) => {
@@ -117,10 +128,8 @@ const ConferenceDetailsContainer: React.FC = () => {
         })
       });
 
-      if (response.ok) {
-        mutate();
-      } else {
-        console.error("Failed to kick attendee:", response.statusText);
+      if (!response.ok) {
+        toast.error("Failed to kick attendee");
       }
     } catch (error) {
       console.error("Error kicking attendee:", error);
@@ -195,9 +204,17 @@ const ConferenceDetailsContainer: React.FC = () => {
             <Divider sx={{ my: 3 }} />
 
             <Grid container spacing={4}>
-              <Grid sx={{ xs: 12, md: 6 }}>
-                <Stack spacing={3}>
-                  <Box display="flex" alignItems="center">
+              <Grid sx={{ xs: 12, md: 4 }}>
+                <Stack
+                  spacing={3}
+                  display={"flex"}
+                  direction="row"
+                  justifyContent={"space-between"}
+                  alignItems={"flex-start"}
+                  flexWrap="nowrap"
+                  sx={{ width: "100%" }}
+                >
+                  <Box display="flex" alignItems="center" sx={{ flex: 1, minWidth: 0 }}>
                     <BusinessCenter sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
@@ -207,7 +224,7 @@ const ConferenceDetailsContainer: React.FC = () => {
                     </Box>
                   </Box>
 
-                  <Box display="flex" alignItems="center">
+                  <Box display="flex" alignItems="center" sx={{ flex: 1, minWidth: 0 }}>
                     <Category sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
@@ -217,7 +234,7 @@ const ConferenceDetailsContainer: React.FC = () => {
                     </Box>
                   </Box>
 
-                  <Box display="flex" alignItems="center">
+                  <Box display="flex" alignItems="center" sx={{ flex: 0.2, minWidth: 0 }}>
                     <Email sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
@@ -230,7 +247,27 @@ const ConferenceDetailsContainer: React.FC = () => {
               </Grid>
 
               <Grid sx={{ xs: 12, md: 6 }}>
-                <Stack spacing={3}>
+                <Stack
+                  spacing={3}
+                  direction="row"
+                  justifyContent={"space-between"}
+                  alignItems={"flex-start"}
+                  flexWrap="nowrap"
+                  sx={{ width: "100%" }}
+                >
+                  <Box display="flex" alignItems="center">
+                    <CalendarToday sx={{ mr: 2, color: "darkblue" }} />
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Event Dates
+                      </Typography>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <Typography variant="h6">{formatDate(conference?.startDate)}</Typography>
+                        <ArrowForward sx={{ color: "darkblue" }} />
+                        <Typography variant="h6">{formatDate(conference?.endDate)}</Typography>
+                      </Box>
+                    </Box>
+                  </Box>
                   <Box display="flex" alignItems="center">
                     <LocationOn sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
@@ -246,30 +283,23 @@ const ConferenceDetailsContainer: React.FC = () => {
                         {getCountryName(conference?.location?.countryId)}
                       </Typography>
                     </Box>
-                    {/* <APIProvider apiKey={"Your API key here"} onLoad={() => console.log("Maps API has loaded.")}></APIProvider> */}
-                  </Box>
-
-                  <Box display="flex" alignItems="center">
-                    <CalendarToday sx={{ mr: 2, color: "darkblue" }} />
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        Event Dates
-                      </Typography>
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <Typography variant="h6">{formatDate(conference?.startDate)}</Typography>
-                        <ArrowForward sx={{ color: "darkblue" }} />
-                        <Typography variant="h6">{formatDate(conference?.endDate)}</Typography>
-                      </Box>
-                    </Box>
                   </Box>
                 </Stack>
               </Grid>
             </Grid>
+            {conference?.location?.latitude && conference?.location?.longitude && (
+              <ConferenceMap
+                latitude={conference.location.latitude}
+                longitude={conference.location.longitude}
+                locationName={conference.location.name ?? "Conference Location"}
+                address={conference.location.address ?? ""}
+              />
+            )}
+            <Box display="flex" alignItems="center"></Box>
           </CardContent>
         </Card>
       </Fade>
 
-      {/* <Fade in timeout={500}> */}
       <Grid gap={1} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>
         <Card
           elevation={3}
@@ -382,7 +412,6 @@ const ConferenceDetailsContainer: React.FC = () => {
         </Card>
       </Grid>
 
-      {/* <Fade in timeout={700}> */}
       {isOrganizer && (
         <Grid gap={1} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>
           <Card
@@ -489,9 +518,6 @@ const ConferenceDetailsContainer: React.FC = () => {
                   <Typography variant="h6" color="text.secondary" gutterBottom>
                     No Attendees Yet
                   </Typography>
-                  {/* <Typography variant="body2" color="text.secondary">
-                  Speakers for this conference will be announced soon.
-                </Typography> */}
                 </Paper>
               )}
             </CardContent>

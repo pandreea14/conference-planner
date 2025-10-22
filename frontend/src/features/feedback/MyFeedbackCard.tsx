@@ -28,7 +28,7 @@ const MyFeedbackCard: React.FC<{ feedback: FeedbackDto; index: number; onFeedbac
     }
   );
   const handleFeedbackNav = () => {
-    navigation(`/conferences/details/${conference?.id}/feedback/${speaker?.speakerId}`);
+    navigation(`/conferences/details/${conference?.id}/feedback/${speaker?.speakerId}?feedbackId=${feedback.id}`);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
