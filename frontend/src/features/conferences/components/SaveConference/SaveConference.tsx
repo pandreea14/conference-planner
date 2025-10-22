@@ -5,7 +5,7 @@ import { isNull } from "lodash";
 import React from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { ConferenceDto, DictionaryItem, SaveConferenceDto, SpeakerResponseDto } from "types";
+import type { ConferenceDto, DictionaryItem, LocationDto, SaveConferenceDto, SpeakerResponseDto } from "types";
 import { mutationFetcher, useApiSWR, useApiSWRMutation } from "units/swr";
 import { endpoints, toast } from "utils";
 
@@ -18,6 +18,7 @@ const SaveConference: React.FC<{
   const { t } = useTranslation();
   const isEditMode = conference ? true : false;
   const [selectedExistingSpeakerId, setSelectedExistingSpeakerId] = useState<string>("");
+  const [selectedExistingLocationId, setSelectedExistingLocationId] = useState<string>("");
   const { userEmail } = useUserData();
 
   const { data: categories = [], isLoading: isLoadingCategory } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.categories);
@@ -26,6 +27,8 @@ const SaveConference: React.FC<{
   const { data: countries = [] } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.countries);
   const { data: counties = [] } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.counties);
   const { data: speakers = [] } = useApiSWR<SpeakerResponseDto[], Error>(endpoints.conferences.getSpeakers);
+  const { data: locations = [] } = useApiSWR<LocationDto[], Error>(endpoints.conferences.locations);
+
   const { trigger: saveConference, isMutating: isCreatingConference } = useApiSWRMutation(
     endpoints.conferences.saveConference,
     mutationFetcher,
@@ -150,6 +153,37 @@ const SaveConference: React.FC<{
     }));
   };
 
+  const handleSelectExistingLocation = (
+    event: React.ChangeEvent<HTMLInputElement> | (Event & { target: { value: string; name: string } }),
+    _child?: React.ReactNode
+  ) => {
+    const selectedLocationId = parseInt(event?.target.value);
+    setSelectedExistingLocationId("");
+
+    if (selectedLocationId && selectedLocationId > 0) {
+      const selectedLocation = locations.find((location) => location.locationId === selectedLocationId);
+
+      if (selectedLocation) {
+        setConferenceData((prev) => ({
+          ...prev,
+          locationId: selectedLocation.locationId,
+          location: {
+            locationId: selectedLocation.locationId,
+            name: selectedLocation.name || "",
+            code: selectedLocation.code || "",
+            address: selectedLocation.address || "",
+            longitude: selectedLocation.longitude || 0,
+            latitude: selectedLocation.latitude || 0,
+            countryId: selectedLocation.countryId || 0,
+            countyId: selectedLocation.countyId || 0,
+            cityId: selectedLocation.cityId || 0
+          }
+        }));
+        toast.success(`Selected location: ${selectedLocation.name}`);
+      }
+    }
+  };
+
   const handleChangeLocationForIds = (field: string, event: { target: { value: string } }) => {
     setConferenceData((prev) => ({
       ...prev,
@@ -158,9 +192,11 @@ const SaveConference: React.FC<{
   };
 
   const handleChangeSpeaker = (index: number | 0, field: string, value: string | number | boolean) => {
+    const finalValue = field === "rating" ? Number(value) || 0 : value;
+
     setConferenceData((prev) => ({
       ...prev,
-      speakerList: prev.speakerList.map((speaker, i) => (i === index ? { ...speaker, [field]: value } : speaker))
+      speakerList: prev.speakerList.map((speaker, i) => (i === index ? { ...speaker, [field]: finalValue } : speaker))
     }));
   };
 
@@ -410,17 +446,30 @@ const SaveConference: React.FC<{
         </Card>
 
         <Card sx={{ padding: 3 }}>
-          <h2>Location Information </h2>
+          <Grid container spacing={2} alignItems="center" sx={{ mb: 3 }}>
+            <Grid sx={{ xs: 12, md: 6 }}>
+              <h2>Location Information</h2>
+            </Grid>
+            <Grid sx={{ xs: 12, md: 6 }}>
+              <FormControl fullWidth sx={commonFieldStyles}>
+                <InputLabel>Choose Existing Location</InputLabel>
+                <Select value={selectedExistingLocationId} label="Choose Existing Location" onChange={handleSelectExistingLocation}>
+                  <MenuItem value="">Choose an existing location</MenuItem>
+                  {locations.map((location) => (
+                    <MenuItem key={`existing-location-${location.locationId}`} value={location.locationId}>
+                      {location.name} - {location.address}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
 
           <Grid
             container
             spacing={3}
             justifyContent={"space-around"}
             display={"flex"}
-            // display={"flex"}
-            // justifyContent={"space-around"}
-            // rowSpacing={1}
-            // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             sx={{
               p: 2,
               border: "1px solid #e0e0e0",
@@ -566,26 +615,21 @@ const SaveConference: React.FC<{
             >
               <Grid sx={{ xs: 12, md: 3, sm: 6 }}>
                 <TextField
-                  // fullWidth
                   id={`speakerName-${index}`}
                   label="Speaker name"
                   variant="outlined"
                   value={speaker.name}
                   onChange={(e) => handleChangeSpeaker(index, "name", e.target.value)}
-                  // sx={commonFieldStyles}
                 />
               </Grid>
 
               <Grid sx={{ xs: 12, md: 3, sm: 6 }}>
                 <TextField
-                  // fullWidth
                   id={`nationality-${index}`}
                   label="Speaker nationality"
                   variant="outlined"
-                  // sx={{ flex: 1 }}
                   value={speaker.nationality}
                   onChange={(e) => handleChangeSpeaker(index, "nationality", e.target.value)}
-                  // sx={commonFieldStyles}
                 />
               </Grid>
 
@@ -594,10 +638,14 @@ const SaveConference: React.FC<{
                   id={`rating-${index}`}
                   label="Rating"
                   variant="outlined"
-                  // sx={{ flex: 1 }}
+                  type="number"
+                  inputProps={{
+                    min: 0,
+                    max: 5,
+                    step: 1
+                  }}
                   value={speaker.rating}
                   onChange={(e) => handleChangeSpeaker(index, "rating", e.target.value)}
-                  // sx={commonFieldStyles}
                 />
               </Grid>
 
@@ -629,7 +677,6 @@ const SaveConference: React.FC<{
           ))}
 
           <Button size="medium" sx={{ background: "darkblue", color: "white", mt: 3 }} onClick={addSpeaker}>
-            {/* <Add sx={{ color: "white" }} /> */}
             Add New Speaker
           </Button>
         </Card>

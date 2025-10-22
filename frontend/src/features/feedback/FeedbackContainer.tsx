@@ -83,7 +83,7 @@ const FeedbackContainer: React.FC = () => {
     navigation(-1);
   };
 
-  const handleRatingChange = (e: React.SyntheticEvent, newValue: number | null) => {
+  const handleRatingChange = (_e: React.SyntheticEvent, newValue: number | null) => {
     setNewRating(newValue ?? 0);
   };
 
@@ -156,13 +156,11 @@ const FeedbackContainer: React.FC = () => {
 
     const timeStatus = getConferenceTimeStatus();
 
-    // Can only review if conference is ongoing or ended
     if (timeStatus === TIME_STATUS.FUTURE) {
       return { allowed: false, reason: "You can only submit reviews for ongoing or completed conferences" };
     }
     // console.log("att list ", attendees);
 
-    // Check if user attended or joined the conference
     const userAttendance = attendees?.find((attendee) => attendee.attendeeEmail === userEmail);
     // console.log("user attendance ", userAttendance);
 

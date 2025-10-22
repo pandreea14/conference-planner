@@ -29,6 +29,13 @@ namespace Charisma.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("locations")]
+        public async Task<IActionResult> GetLocationsList([FromRoute] GetLocationsList.Query query)
+        {
+            var result = await mediator.Send(query);
+            return Ok(result);
+        }
+
         [HttpGet("speakers")]
         public async Task<IActionResult> GetSpeakersList([FromRoute] GetSpeakerList.Query query)
         {

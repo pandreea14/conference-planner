@@ -37,6 +37,17 @@ namespace Charisma.Common.Infrastructure.Persistence.Repositories
             return result;
         }
 
+        public Task<List<Location>> GetLocations()
+        {
+            var result = dbContext.Locations
+                .Include(l=>l.City)
+                .Include(l=>l.Country)
+                .Include(l=>l.County)
+                .ToListAsync();
+            return result;
+        }
+
+
         public Task<List<ConferenceXSpeaker>> GetSpeakersForConference(int conferenceId)
         {
             var result = dbContext.ConferenceXSpeaker
