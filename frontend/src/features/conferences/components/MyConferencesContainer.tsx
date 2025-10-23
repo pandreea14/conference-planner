@@ -9,12 +9,19 @@ import { Add, Clear, FilterAlt } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "hooks";
 import { getActiveFilters, removeFilter, clearAllFilters, hasActiveFilters, type ActiveFilter } from "utils/filterUtils";
+import { useTranslation } from "react-i18next";
+import { notificationTypes } from "constants";
+import { useSubscription } from "units/notifications";
+import { toast } from "react-toastify";
 
 const MyConferencesContainer: React.FC = () => {
+  const { t } = useTranslation();
   const { userEmail, isLoggedIn } = useUserData();
   const { data: types = [] } = useApiSWR<DictionaryItem[], Error>(endpoints.dictionaries.conferenceType);
   const { data: speakers = [] } = useApiSWR<SpeakerResponseDto[], Error>(endpoints.conferences.getSpeakers);
-  const { data: allConferences = [] } = useApiSWR<ConferenceDto[]>(endpoints.conferences.conferencesForAttendees);
+  const { data: allConferences = [], mutate: refetchConferenceList } = useApiSWR<ConferenceDto[]>(
+    endpoints.conferences.conferencesForAttendees
+  );
   console.log("conferences from API:", allConferences);
   const navigate = useNavigate();
 
@@ -26,6 +33,20 @@ const MyConferencesContainer: React.FC = () => {
     email: "",
     conferenceType: [""],
     speakerName: [""]
+  });
+
+  useSubscription(notificationTypes.CONFERENCE_CREATED, {
+    onNotification: () => {
+      refetchConferenceList();
+      toast.info(t("Conferences.ConferenceCreatedNotification") || "Conference created successfully");
+    }
+  });
+
+  useSubscription(notificationTypes.CONFERENCE_UPDATED, {
+    onNotification: () => {
+      refetchConferenceList();
+      toast.info(t("Conferences.ConferenceUpdatedNotification") || "Conference updated successfully");
+    }
   });
 
   useEffect(() => {
@@ -46,8 +67,7 @@ const MyConferencesContainer: React.FC = () => {
       .sort((a, b) => {
         const dateA = a.startDate ? new Date(a.startDate).getTime() : 0;
         const dateB = b.startDate ? new Date(b.startDate).getTime() : 0;
-        return dateB - dateA; // Ascending order (earliest first)
-        // Use dateB - dateA for descending order (latest first)
+        return dateB - dateA;
       });
 
     console.log(`Filtering conferences for user: ${userEmail}`);
@@ -81,11 +101,11 @@ const MyConferencesContainer: React.FC = () => {
       <Grid padding={3} sx={{ width: "50%", height: "30%" }} display={"flex"} justifyContent={"center"} flexDirection={"column"}>
         <Alert severity="info" sx={{ borderRadius: 2, alignItems: "center", borderColor: "black", borderWidth: 100 }}>
           <Typography variant="h6" gutterBottom>
-            You need to login!
+            {t("Homepage.plsLogin")}
           </Typography>
         </Alert>
         <Button sx={{ backgroundColor: "darkblue", color: "white" }} onClick={handleGoToHome}>
-          Go To HomePage
+          {t("Navigation.GoToHome")}
         </Button>
       </Grid>
     );
@@ -107,7 +127,7 @@ const MyConferencesContainer: React.FC = () => {
       </Box>
       <Box sx={{ marginBottom: 3, padding: 2, backgroundColor: "#e3f2fd", borderRadius: 2 }}>
         <Typography variant="h5" fontWeight={"bold"} gutterBottom>
-          Create your own conferences
+          {t("Conferences.CreateTitle")}
         </Typography>
 
         <Grid container spacing={2} alignItems="center">

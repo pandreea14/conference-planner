@@ -51,7 +51,21 @@
     "SelectLanguage": "Choisir la langue"
   },
   "Homepage": {
-    "Title": "Page d'accueil"
+    "Title": "Page d'accueil",
+    "CardTitle": "Bienvenue!",
+    "CurrentUser": "Utilisateur actuel:",
+    "EnterEmail": "Entrez votre e-mail pour continuer...",
+    "plsLogin": "Vous devez vous connecter!"
+  },
+  "Conferences": {
+    "CreateTitle": "Créez vos propres conférences",
+    "AllTitle": "Conferences",
+    "CreatePageHeader": "Creați o conferință nouă",
+    "EditHeader": "Creați-vă propriile conferințe"
+  },
+  "Review": {
+    "Title": "Cliquez sur votre avis pour le modifier",
+    "AllTitle": "Conferences"
   },
   "Contracts": {
     "Title": "Contrats"

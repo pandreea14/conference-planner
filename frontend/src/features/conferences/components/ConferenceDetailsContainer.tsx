@@ -1,4 +1,15 @@
-import { ArrowBack, ArrowForward, LocationOn, Email, CalendarToday, Category, BusinessCenter, Star, Person } from "@mui/icons-material";
+import {
+  ArrowBack,
+  ArrowForward,
+  LocationOn,
+  Email,
+  CalendarToday,
+  Category,
+  BusinessCenter,
+  Star,
+  Person,
+  ExpandMore
+} from "@mui/icons-material";
 import {
   Card,
   Grid,
@@ -15,12 +26,14 @@ import {
   Fade,
   CardContent,
   Stack,
-  Button
+  Button,
+  Collapse
 } from "@mui/material";
 import { notificationTypes } from "constants";
 import ConferenceMap from "features/map/ConferenceMap";
 import { useUserData } from "hooks";
 import { isNull } from "lodash";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import QRCode from "react-qr-code";
 import { useNavigate, useParams } from "react-router-dom";
@@ -34,6 +47,9 @@ const ConferenceDetailsContainer: React.FC = () => {
   const { userEmail } = useUserData();
   const { t } = useTranslation();
   const navigation = useNavigate();
+  const [speakersExpanded, setSpeakersExpanded] = useState<boolean>(true);
+  const [attendeesExpanded, setAttendeesExpanded] = useState<boolean>(true);
+
   const { data: conference, error, isLoading } = useApiSWR<ConferenceDto>(`${endpoints.conferences.conferenceById}/${id}`);
   // console.log("conference: ", conference);
   const { data: countries } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.countries);
@@ -290,15 +306,6 @@ const ConferenceDetailsContainer: React.FC = () => {
                       </Box>
                     </Box>
                   </Stack>
-
-                  {/* <Stack
-                    spacing={3}
-                    direction="row"
-                    justifyContent={"space-between"}
-                    alignItems={"flex-start"}
-                    flexWrap="wrap"
-                    sx={{ width: "100%" }}
-                  > */}
                   <Box display="flex" alignItems="center" sx={{ flex: 1, minWidth: 0 }}>
                     <CalendarToday sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
@@ -319,16 +326,21 @@ const ConferenceDetailsContainer: React.FC = () => {
                         Location
                       </Typography>
                       <Typography variant="h6">{conference?.location?.name}</Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {conference?.location?.address}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {getCityName(conference?.location?.cityId)}, {getCountyName(conference?.location?.countyId)},{" "}
-                        {getCountryName(conference?.location?.countryId)}
-                      </Typography>
+                      {conference?.location?.name !== "Remote" ? (
+                        <>
+                          <Typography variant="body2" color="text.secondary">
+                            {conference?.location?.address}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {getCityName(conference?.location?.cityId)}, {getCountyName(conference?.location?.countyId)},{" "}
+                            {getCountryName(conference?.location?.countryId)}
+                          </Typography>
+                        </>
+                      ) : (
+                        ""
+                      )}
                     </Box>
                   </Box>
-                  {/* </Stack> */}
                 </Stack>
               </Grid>
 
@@ -361,13 +373,15 @@ const ConferenceDetailsContainer: React.FC = () => {
             </Grid>
             <br />
 
-            {conference?.location?.latitude && conference?.location?.longitude && (
+            {conference?.location?.latitude && conference?.location?.longitude && conference?.location?.name !== "Remote" ? (
               <ConferenceMap
                 latitude={conference.location.latitude}
                 longitude={conference.location.longitude}
                 locationName={conference.location.name ?? "Conference Location"}
                 address={conference.location.address ?? ""}
               />
+            ) : (
+              ""
             )}
             <Box display="flex" alignItems="center"></Box>
           </CardContent>
@@ -383,10 +397,18 @@ const ConferenceDetailsContainer: React.FC = () => {
           }}
         >
           <Box
+            onClick={() => setSpeakersExpanded(!speakersExpanded)}
             sx={{
               p: 3,
               background: "lightblue",
-              color: "white"
+              color: "white",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              "&:hover": {
+                background: "rgba(173, 216, 230, 0.9)"
+              }
             }}
           >
             <Box display="flex" alignItems="center">
@@ -395,134 +417,36 @@ const ConferenceDetailsContainer: React.FC = () => {
                 Speakers ({conference?.speakerList?.length || 0}) - view speakers review
               </Typography>
             </Box>
-          </Box>
-
-          <CardContent sx={{ p: 4 }}>
-            {conference?.speakerList?.length ? (
-              <Grid container spacing={3}>
-                {conference.speakerList.map((speaker, index) => (
-                  <Grid sx={{ xs: 12, sm: 6, lg: 4 }} key={index}>
-                    <Fade in timeout={800 + index * 100}>
-                      <Paper
-                        elevation={2}
-                        onClick={() => handleFeedbackNav(speaker.speakerId)}
-                        sx={{
-                          p: 3,
-                          borderRadius: 3,
-                          cursor: "pointer",
-                          "&:hover": {
-                            elevation: 6,
-                            transform: "translateY(-4px)",
-                            boxShadow: 6
-                          }
-                        }}
-                      >
-                        <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
-                          <Avatar
-                            sx={{
-                              width: 64,
-                              height: 64,
-                              mb: 2,
-                              background: "rgba(149, 246, 225, 1)",
-                              fontWeight: "bold"
-                            }}
-                          >
-                            {speaker.name.charAt(0).toUpperCase() || speaker.image}
-                          </Avatar>
-
-                          <Typography variant="h6" fontWeight="bold" gutterBottom>
-                            {speaker.name}
-                          </Typography>
-
-                          <Stack direction="row" spacing={1} alignItems="center" mb={1}>
-                            <Typography variant="body2" color="text.secondary">
-                              Nationality:
-                            </Typography>
-                            <Chip label={speaker.nationality.toUpperCase()} size="small" variant="outlined" sx={{ fontWeight: "bold" }} />
-                          </Stack>
-
-                          <Box display="flex" alignItems="center" mb={2}>
-                            <Star sx={{ color: getRatingColor(speaker.rating), mr: 0.5, fontSize: "1.2rem" }} />
-                            <Typography variant="h6" sx={{ color: getRatingColor(speaker.rating), fontWeight: "bold" }}>
-                              {speaker.rating}/5
-                            </Typography>
-                          </Box>
-
-                          {speaker.isMainSpeaker && (
-                            <Chip
-                              label="Main Speaker"
-                              color="primary"
-                              sx={{
-                                fontWeight: "bold"
-                              }}
-                            />
-                          )}
-                        </Box>
-                      </Paper>
-                    </Fade>
-                  </Grid>
-                ))}
-              </Grid>
-            ) : (
-              <Paper
-                sx={{
-                  p: 6,
-                  textAlign: "center",
-                  backgroundColor: "#fafafa",
-                  borderRadius: 3,
-                  border: "2px dashed #e0e0e0"
-                }}
-              >
-                <Person sx={{ fontSize: 48, color: "#bdbdbd", mb: 2 }} />
-                <Typography variant="h6" color="text.secondary" gutterBottom>
-                  No Speakers Announced
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Speakers for this conference will be announced soon.
-                </Typography>
-              </Paper>
-            )}
-          </CardContent>
-        </Card>
-      </Grid>
-
-      {isOrganizer && (
-        <Grid gap={1} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>
-          <Card
-            elevation={3}
-            sx={{
-              mb: 4,
-              mt: 4,
-              borderRadius: 3,
-              overflow: "hidden"
-            }}
-          >
-            <Box
+            <IconButton
               sx={{
-                p: 3,
-                background: "lightblue",
-                color: "white"
+                transform: speakersExpanded ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 0.3s ease",
+                color: "black"
               }}
             >
-              <Box display="flex" alignItems="center">
-                <Person sx={{ mr: 2, color: "black" }} />
-                <Typography variant="h5" fontWeight="bold">
-                  Attendees ({attendees?.length || 0})
-                </Typography>
-              </Box>
-            </Box>
+              <ExpandMore />
+            </IconButton>
+          </Box>
 
+          <Collapse in={speakersExpanded} timeout="auto" unmountOnExit>
             <CardContent sx={{ p: 4 }}>
-              {attendees?.length ? (
+              {conference?.speakerList?.length ? (
                 <Grid container spacing={3}>
-                  {attendees?.map((attendee, index) => (
+                  {conference.speakerList.map((speaker, index) => (
                     <Grid sx={{ xs: 12, sm: 6, lg: 4 }} key={index}>
                       <Fade in timeout={800 + index * 100}>
                         <Paper
                           elevation={2}
+                          onClick={() => handleFeedbackNav(speaker.speakerId)}
                           sx={{
                             p: 3,
-                            borderRadius: 3
+                            borderRadius: 3,
+                            cursor: "pointer",
+                            "&:hover": {
+                              elevation: 6,
+                              transform: "translateY(-4px)",
+                              boxShadow: 6
+                            }
                           }}
                         >
                           <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
@@ -532,45 +456,38 @@ const ConferenceDetailsContainer: React.FC = () => {
                                 height: 64,
                                 mb: 2,
                                 background: "rgba(149, 246, 225, 1)",
-                                fontSize: "1.5rem",
                                 fontWeight: "bold"
                               }}
                             >
-                              {attendee.attendeeEmail.charAt(0).toUpperCase()}
+                              {speaker.name.charAt(0).toUpperCase() || speaker.image}
                             </Avatar>
 
                             <Typography variant="h6" fontWeight="bold" gutterBottom>
-                              {attendee.attendeeEmail}
+                              {speaker.name}
                             </Typography>
 
                             <Stack direction="row" spacing={1} alignItems="center" mb={1}>
                               <Typography variant="body2" color="text.secondary">
-                                Status:
+                                Nationality:
                               </Typography>
-                              <Chip label={attendee.statusName.toUpperCase()} size="small" variant="outlined" sx={{ fontWeight: "bold" }} />
+                              <Chip label={speaker.nationality.toUpperCase()} size="small" variant="outlined" sx={{ fontWeight: "bold" }} />
                             </Stack>
-                            {attendee.statusName === "Kicked" ? (
-                              ""
-                            ) : (
-                              <Button
-                                onClick={() => handleKickButton(attendee.attendeeEmail)}
+
+                            <Box display="flex" alignItems="center" mb={2}>
+                              <Star sx={{ color: getRatingColor(speaker.rating), mr: 0.5, fontSize: "1.2rem" }} />
+                              <Typography variant="h6" sx={{ color: getRatingColor(speaker.rating), fontWeight: "bold" }}>
+                                {speaker.rating}/5
+                              </Typography>
+                            </Box>
+
+                            {speaker.isMainSpeaker && (
+                              <Chip
+                                label="Main Speaker"
+                                color="primary"
                                 sx={{
-                                  color: "black",
-                                  backgroundColor: "pink",
-                                  mt: 2,
-                                  paddingInline: 4,
-                                  borderRadius: 3,
-                                  transition: "all 0.3s ease",
-                                  cursor: "pointer",
-                                  "&:hover": {
-                                    elevation: 6,
-                                    transform: "translateY(-4px)",
-                                    boxShadow: "0 8px 25px rgba(0,0,0,0.12)"
-                                  }
+                                  fontWeight: "bold"
                                 }}
-                              >
-                                Kick
-                              </Button>
+                              />
                             )}
                           </Box>
                         </Paper>
@@ -590,11 +507,151 @@ const ConferenceDetailsContainer: React.FC = () => {
                 >
                   <Person sx={{ fontSize: 48, color: "#bdbdbd", mb: 2 }} />
                   <Typography variant="h6" color="text.secondary" gutterBottom>
-                    No Attendees Yet
+                    No Speakers Announced
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Speakers for this conference will be announced soon.
                   </Typography>
                 </Paper>
               )}
             </CardContent>
+          </Collapse>
+        </Card>
+      </Grid>
+
+      {isOrganizer && (
+        <Grid gap={1} flexDirection={"column"} display={"flex"} justifyContent={"center"} sx={{ background: "white" }}>
+          <Card
+            elevation={3}
+            sx={{
+              mb: 4,
+              mt: 4,
+              borderRadius: 3,
+              overflow: "hidden"
+            }}
+          >
+            <Box
+              onClick={() => setAttendeesExpanded(!attendeesExpanded)}
+              sx={{
+                p: 3,
+                background: "lightblue",
+                color: "white",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                "&:hover": {
+                  background: "rgba(173, 216, 230, 0.9)"
+                }
+              }}
+            >
+              <Box display="flex" alignItems="center">
+                <Person sx={{ mr: 2, color: "black" }} />
+                <Typography variant="h5" fontWeight="bold">
+                  Attendees ({attendees?.length || 0})
+                </Typography>
+              </Box>
+              <IconButton
+                sx={{
+                  transform: attendeesExpanded ? "rotate(180deg)" : "rotate(0deg)",
+                  transition: "transform 0.3s ease",
+                  color: "black"
+                }}
+              >
+                <ExpandMore />
+              </IconButton>
+            </Box>
+
+            <Collapse in={attendeesExpanded} timeout="auto" unmountOnExit>
+              <CardContent sx={{ p: 4 }}>
+                {attendees?.length ? (
+                  <Grid container spacing={3}>
+                    {attendees?.map((attendee, index) => (
+                      <Grid sx={{ xs: 12, sm: 6, lg: 4 }} key={index}>
+                        <Fade in timeout={800 + index * 100}>
+                          <Paper
+                            elevation={2}
+                            sx={{
+                              p: 3,
+                              borderRadius: 3
+                            }}
+                          >
+                            <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
+                              <Avatar
+                                sx={{
+                                  width: 64,
+                                  height: 64,
+                                  mb: 2,
+                                  background: "rgba(149, 246, 225, 1)",
+                                  fontSize: "1.5rem",
+                                  fontWeight: "bold"
+                                }}
+                              >
+                                {attendee.attendeeEmail.charAt(0).toUpperCase()}
+                              </Avatar>
+
+                              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                                {attendee.attendeeEmail}
+                              </Typography>
+
+                              <Stack direction="row" spacing={1} alignItems="center" mb={1}>
+                                <Typography variant="body2" color="text.secondary">
+                                  Status:
+                                </Typography>
+                                <Chip
+                                  label={attendee.statusName.toUpperCase()}
+                                  size="small"
+                                  variant="outlined"
+                                  sx={{ fontWeight: "bold" }}
+                                />
+                              </Stack>
+                              {attendee.statusName === "Kicked" ? (
+                                ""
+                              ) : (
+                                <Button
+                                  onClick={() => handleKickButton(attendee.attendeeEmail)}
+                                  sx={{
+                                    color: "black",
+                                    backgroundColor: "pink",
+                                    mt: 2,
+                                    paddingInline: 4,
+                                    borderRadius: 3,
+                                    transition: "all 0.3s ease",
+                                    cursor: "pointer",
+                                    "&:hover": {
+                                      elevation: 6,
+                                      transform: "translateY(-4px)",
+                                      boxShadow: "0 8px 25px rgba(0,0,0,0.12)"
+                                    }
+                                  }}
+                                >
+                                  Kick
+                                </Button>
+                              )}
+                            </Box>
+                          </Paper>
+                        </Fade>
+                      </Grid>
+                    ))}
+                  </Grid>
+                ) : (
+                  <Paper
+                    sx={{
+                      p: 6,
+                      textAlign: "center",
+                      backgroundColor: "#fafafa",
+                      borderRadius: 3,
+                      border: "2px dashed #e0e0e0"
+                    }}
+                  >
+                    <Person sx={{ fontSize: 48, color: "#bdbdbd", mb: 2 }} />
+                    <Typography variant="h6" color="text.secondary" gutterBottom>
+                      No Attendees Yet
+                    </Typography>
+                  </Paper>
+                )}
+              </CardContent>
+            </Collapse>
           </Card>
         </Grid>
       )}

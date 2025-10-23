@@ -64,7 +64,7 @@ const MyFeedbacksContainer: React.FC = () => {
           <>
             <Box sx={{ marginBottom: 3, padding: 2, backgroundColor: "#e3f2fd", borderRadius: 2 }}>
               <Typography variant="h5" fontWeight={"bold"} gutterBottom>
-                Click your review to edit
+                {t("Review.Title")}
               </Typography>
               <Typography variant="body1" color="text.secondary">
                 Logged in with: <strong>{userEmail}</strong>

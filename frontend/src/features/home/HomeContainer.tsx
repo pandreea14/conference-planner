@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Typography, Card, CardContent, TextField, Grid, Button, Fade, Box } from "@mui/material";
 import { useUserData } from "hooks";
+import { useTranslation } from "react-i18next";
 
 const HomeContainer: React.FC = () => {
+  const { t } = useTranslation();
   const { userEmail, setUserEmail, clearUserEmail, isLoggedIn } = useUserData();
   const [email, setEmail] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
@@ -53,11 +55,11 @@ const HomeContainer: React.FC = () => {
     <Card sx={{ maxWidth: 500, width: "100%" }}>
       <CardContent>
         <Typography variant="h5" textAlign="center" gutterBottom>
-          Welcome!
+          {t("Homepage.CardTitle")!}
         </Typography>
         <Grid container flexDirection={"column"} display={"flex"} justifyContent={"center"}>
           <TextField
-            label="Enter email to continue..."
+            label={t("Homepage.EnterEmail")}
             value={email}
             onChange={handleEmailChange}
             onKeyDown={handleKeyPress}
@@ -68,7 +70,7 @@ const HomeContainer: React.FC = () => {
             helperText={emailError}
           ></TextField>
           <Button sx={{ backgroundColor: "darkblue", color: "white" }} onClick={handleSave} disabled={!email.trim()}>
-            Save
+            {t("Common.Save")}
           </Button>
           <Fade in={isLoggedIn} timeout={500}>
             <Box>
@@ -83,13 +85,13 @@ const HomeContainer: React.FC = () => {
                   }}
                 >
                   <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Current user:
+                    {t("Homepage.CurrentUser")}
                   </Typography>
                   <Typography variant="h6" color="primary" fontWeight="bold">
                     {userEmail}
                   </Typography>
                   <Button size="small" color="error" onClick={handleClear} sx={{ marginTop: 1, backgroundColor: "pink" }}>
-                    Clear
+                    {t("Common.Remove")}
                   </Button>
                 </Box>
               )}

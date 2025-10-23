@@ -9,8 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { useUserData } from "hooks";
 import { getActiveFilters, removeFilter, clearAllFilters, hasActiveFilters, type ActiveFilter } from "utils/filterUtils";
 import { Clear, FilterAlt } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 const AllConferencesContainer: React.FC = () => {
+  const { t } = useTranslation();
   const { userEmail, isLoggedIn } = useUserData();
   const { data: types = [] } = useApiSWR<DictionaryItem[], Error>(endpoints.dictionaries.conferenceType);
   const { data: speakers = [] } = useApiSWR<SpeakerResponseDto[], Error>(endpoints.conferences.getSpeakers);
@@ -79,11 +81,11 @@ const AllConferencesContainer: React.FC = () => {
       <Grid padding={3} sx={{ width: "50%", height: "40%" }} flexDirection={"column"} display={"flex"} justifyContent={"center"}>
         <Alert severity="info" sx={{ borderRadius: 2, alignItems: "center", borderColor: "black", borderWidth: 100 }}>
           <Typography variant="h6" gutterBottom>
-            You need to login!
+            {t("Homepage.plsLogin")}
           </Typography>
         </Alert>
         <Button sx={{ backgroundColor: "darkblue", color: "white" }} onClick={handleGoToHome}>
-          Go To HomePage
+          {t("Navigation.GoToHome")}
         </Button>
       </Grid>
     );
@@ -95,7 +97,7 @@ const AllConferencesContainer: React.FC = () => {
         <Grid container spacing={2} alignItems="center">
           <Grid sx={{ xs: 12, md: 6 }}>
             <Typography variant="h5" fontWeight={"bold"} gutterBottom>
-              Conferences
+              {t("Conferences.AllTitle")}
             </Typography>
             <ConferenceListFilters state={state} onStateChange={setState} conferenceTypes={types} speakers={speakers} isOrganizer={false} />
           </Grid>
@@ -162,7 +164,6 @@ const AllConferencesContainer: React.FC = () => {
               ? "No conferences match your current filters. Try adjusting your search criteria."
               : 'You haven\'t organized any conferences yet. Click the "Add conference" button to create your first one!'}
           </Typography>
-          {/* <Typography>You haven't organized any conferences yet. Click the "Add conference" button to create your first one!</Typography> */}
         </Alert>
       ) : (
         <>

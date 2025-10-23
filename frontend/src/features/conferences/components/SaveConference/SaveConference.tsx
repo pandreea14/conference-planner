@@ -36,7 +36,6 @@ const SaveConference: React.FC<{
       onSuccess: () => {
         toast.success(t("Conference saved successfully"));
         onSaveSuccess?.();
-        // if (!isEditMode) resetForm();
       },
       onError: (err) => {
         toast.error(t("User.Error", { message: err.message }));
@@ -182,6 +181,17 @@ const SaveConference: React.FC<{
         toast.success(`Selected location: ${selectedLocation.name}`);
       }
     }
+  };
+  const getUniqueLocations = () => {
+    const seenNames = new Set<string>();
+    return locations.filter((location) => {
+      const normalizedName = location.name.trim().toLowerCase();
+      if (seenNames.has(normalizedName)) {
+        return false;
+      }
+      seenNames.add(normalizedName);
+      return true;
+    });
   };
 
   const handleChangeLocationForIds = (field: string, event: { target: { value: string } }) => {
@@ -384,7 +394,6 @@ const SaveConference: React.FC<{
               <TextField
                 type="date"
                 label="Start Date"
-                // sx={{ minWidth: 250 }}
                 name="startDate"
                 value={formatDate(conferenceData.startDate)}
                 onChange={(e) => handleChangeInput("startDate", e)}
@@ -397,7 +406,6 @@ const SaveConference: React.FC<{
               <TextField
                 type="date"
                 label="End Date"
-                // sx={{ minWidth: 250 }}
                 name="endDate"
                 value={formatDate(conferenceData.endDate)}
                 onChange={(e) => handleChangeInput("endDate", e)}
@@ -455,7 +463,7 @@ const SaveConference: React.FC<{
                 <InputLabel>Choose Existing Location</InputLabel>
                 <Select value={selectedExistingLocationId} label="Choose Existing Location" onChange={handleSelectExistingLocation}>
                   <MenuItem value="">Choose an existing location</MenuItem>
-                  {locations.map((location) => (
+                  {getUniqueLocations().map((location) => (
                     <MenuItem key={`existing-location-${location.locationId}`} value={location.locationId}>
                       {location.name} - {location.address}
                     </MenuItem>

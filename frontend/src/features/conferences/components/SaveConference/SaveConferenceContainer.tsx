@@ -45,7 +45,6 @@ const SaveConferenceContainer: React.FC = () => {
   });
 
   const handleSaveSuccess = () => {
-    // refetchConferenceList();
     console.log("Save success handler called, isEditMode: ", isEditMode);
     navigate("/myConferences");
     setIsSaving(false);
