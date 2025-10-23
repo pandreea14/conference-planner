@@ -22,6 +22,7 @@ import ConferenceMap from "features/map/ConferenceMap";
 import { useUserData } from "hooks";
 import { isNull } from "lodash";
 import { useTranslation } from "react-i18next";
+import QRCode from "react-qr-code";
 import { useNavigate, useParams } from "react-router-dom";
 import type { DictionaryItem, ConferenceDto, ConferenceXAttendeeDto } from "types";
 import { useSubscription } from "units/notifications";
@@ -34,6 +35,7 @@ const ConferenceDetailsContainer: React.FC = () => {
   const { t } = useTranslation();
   const navigation = useNavigate();
   const { data: conference, error, isLoading } = useApiSWR<ConferenceDto>(`${endpoints.conferences.conferenceById}/${id}`);
+  // console.log("conference: ", conference);
   const { data: countries } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.countries);
   const { data: counties } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.counties);
   const { data: cities } = useApiSWR<DictionaryItem[]>(endpoints.dictionaries.cities);
@@ -136,6 +138,50 @@ const ConferenceDetailsContainer: React.FC = () => {
     }
   };
 
+  const getUserStatus = () => {
+    if (!userEmail) {
+      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isKicked: false, isRegistered: false };
+    }
+
+    const userAttendance = conference?.attendeesList.find((attendee: ConferenceXAttendeeDto) => attendee.attendeeEmail === userEmail);
+
+    console.log("user att: ", userAttendance);
+    if (!userAttendance) {
+      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isKicked: false, isRegistered: false };
+    }
+
+    return {
+      statusName: userAttendance.statusName,
+      isJoined: userAttendance.statusId === 1,
+      isWithdrawn: userAttendance.statusId === 2,
+      hasAttended: userAttendance.statusId === 3,
+      isKicked: userAttendance.statusId === 4,
+      isRegistered: true
+    };
+  };
+
+  const userStatus = getUserStatus();
+  const getQrValue = (): string => {
+    if (!conference || !userEmail) return "";
+    return (
+      conference.joinUrl ||
+      JSON.stringify({
+        conferenceId: conference.id,
+        userEmail,
+        ts: Date.now()
+      })
+    );
+  };
+
+  const qrValue = getQrValue();
+
+  // console.log("user joined: ", userStatus.isJoined);
+  // console.log("user att: ", userStatus.hasAttended);
+  // console.log("user withd: ", userStatus.isWithdrawn);
+  // console.log("user kick: ", userStatus.isKicked);
+  // console.log("user reg: ", userStatus.isRegistered);
+  // console.log("ticket, ", conference?.joinUrl);
+
   return (
     <Container maxWidth="lg" sx={{ minHeight: "100%" }}>
       <Paper
@@ -189,73 +235,71 @@ const ConferenceDetailsContainer: React.FC = () => {
           }}
         >
           <CardContent sx={{ p: 4 }}>
-            <Typography
-              variant="h3"
-              gutterBottom
-              sx={{
-                fontWeight: "bold",
-                background: "black",
-                WebkitBackgroundClip: "text"
-              }}
-            >
-              {conference?.name}
-            </Typography>
-
-            <Divider sx={{ my: 3 }} />
-
-            <Grid container spacing={4}>
-              <Grid sx={{ xs: 12, md: 4 }}>
-                <Stack
-                  spacing={3}
-                  display={"flex"}
-                  direction="row"
-                  justifyContent={"space-between"}
-                  alignItems={"flex-start"}
-                  flexWrap="nowrap"
-                  sx={{ width: "100%" }}
+            <Grid container spacing={4} display={"flex"} justifyContent={"space-evenly"}>
+              <Grid sx={{ xs: 12, md: userStatus.isJoined && qrValue ? 8 : 12 }}>
+                <Typography
+                  variant="h3"
+                  gutterBottom
+                  sx={{
+                    fontWeight: "bold",
+                    background: "black",
+                    WebkitBackgroundClip: "text"
+                  }}
                 >
+                  {conference?.name}
+                </Typography>
+
+                <Divider sx={{ my: 3 }} />
+
+                <Stack spacing={3}>
+                  <Stack
+                    spacing={3}
+                    direction="row"
+                    justifyContent={"space-between"}
+                    alignItems={"flex-start"}
+                    flexWrap="wrap"
+                    sx={{ width: "100%" }}
+                  >
+                    <Box display="flex" alignItems="center" sx={{ flex: 1, minWidth: 0 }}>
+                      <BusinessCenter sx={{ mr: 2, color: "darkblue" }} />
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          Type
+                        </Typography>
+                        <Typography variant="h6">{conference?.conferenceTypeName}</Typography>
+                      </Box>
+                    </Box>
+
+                    <Box display="flex" alignItems="center" sx={{ flex: 1, minWidth: 0 }}>
+                      <Category sx={{ mr: 2, color: "darkblue" }} />
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          Category
+                        </Typography>
+                        <Typography variant="h6">{conference?.categoryName}</Typography>
+                      </Box>
+                    </Box>
+
+                    <Box display="flex" alignItems="center" sx={{ flex: 1, minWidth: 0 }}>
+                      <Email sx={{ mr: 2, color: "darkblue" }} />
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">
+                          Organizer
+                        </Typography>
+                        <Typography variant="h6">{conference?.organizerEmail}</Typography>
+                      </Box>
+                    </Box>
+                  </Stack>
+
+                  {/* <Stack
+                    spacing={3}
+                    direction="row"
+                    justifyContent={"space-between"}
+                    alignItems={"flex-start"}
+                    flexWrap="wrap"
+                    sx={{ width: "100%" }}
+                  > */}
                   <Box display="flex" alignItems="center" sx={{ flex: 1, minWidth: 0 }}>
-                    <BusinessCenter sx={{ mr: 2, color: "darkblue" }} />
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        Type
-                      </Typography>
-                      <Typography variant="h6">{conference?.conferenceTypeName}</Typography>
-                    </Box>
-                  </Box>
-
-                  <Box display="flex" alignItems="center" sx={{ flex: 1, minWidth: 0 }}>
-                    <Category sx={{ mr: 2, color: "darkblue" }} />
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        Category
-                      </Typography>
-                      <Typography variant="h6">{conference?.categoryName}</Typography>
-                    </Box>
-                  </Box>
-
-                  <Box display="flex" alignItems="center" sx={{ flex: 0.2, minWidth: 0 }}>
-                    <Email sx={{ mr: 2, color: "darkblue" }} />
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        Organizer
-                      </Typography>
-                      <Typography variant="h6">{conference?.organizerEmail}</Typography>
-                    </Box>
-                  </Box>
-                </Stack>
-              </Grid>
-
-              <Grid sx={{ xs: 12, md: 6 }}>
-                <Stack
-                  spacing={3}
-                  direction="row"
-                  justifyContent={"space-between"}
-                  alignItems={"flex-start"}
-                  flexWrap="nowrap"
-                  sx={{ width: "100%" }}
-                >
-                  <Box display="flex" alignItems="center">
                     <CalendarToday sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
@@ -268,7 +312,7 @@ const ConferenceDetailsContainer: React.FC = () => {
                       </Box>
                     </Box>
                   </Box>
-                  <Box display="flex" alignItems="center">
+                  <Box display="flex" alignItems="center" sx={{ flex: 1, minWidth: 0 }}>
                     <LocationOn sx={{ mr: 2, color: "darkblue" }} />
                     <Box>
                       <Typography variant="body2" color="text.secondary">
@@ -284,9 +328,39 @@ const ConferenceDetailsContainer: React.FC = () => {
                       </Typography>
                     </Box>
                   </Box>
+                  {/* </Stack> */}
                 </Stack>
               </Grid>
+
+              {userStatus.isJoined && qrValue && (
+                <Grid sx={{ xs: 12, md: 4 }}>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent="flex-start"
+                    gap={2}
+                    sx={{
+                      p: 3,
+                      border: "2px dashed #e0e0e0",
+                      borderRadius: 3,
+                      backgroundColor: "#fafafa",
+                      ml: "auto"
+                    }}
+                  >
+                    <Typography variant="h6" fontWeight="bold" color="darkblue">
+                      Join Meeting
+                    </Typography>
+                    <QRCode value={qrValue} size={200} />
+                    <Typography variant="caption" color="text.secondary" textAlign="center">
+                      Scan to join the conference
+                    </Typography>
+                  </Box>
+                </Grid>
+              )}
             </Grid>
+            <br />
+
             {conference?.location?.latitude && conference?.location?.longitude && (
               <ConferenceMap
                 latitude={conference.location.latitude}

@@ -16,7 +16,21 @@ import {
   PlayCircleFilled,
   Block
 } from "@mui/icons-material";
-import { Box, Button, Card, Chip, Grid, Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  Stack,
+  Typography
+} from "@mui/material";
 import { notificationTypes } from "constants";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -27,6 +41,8 @@ import { endpoints } from "utils";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "hooks";
 import { ATTENDANCE_STATUS, TIME_STATUS } from "utils/feedbackUtils";
+import { useState } from "react";
+import QRCode from "react-qr-code";
 
 const STATUS_NAME_TO_ID = {
   Joined: 1,
@@ -40,30 +56,8 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
   const navigate = useNavigate();
   const { userEmail } = useUserData();
 
-  const getUserStatusPerConference = () => {
-    if (!userEmail) {
-      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isKicked: false, isRegistered: false };
-    }
-
-    if (!conference.attendeesList || conference.attendeesList.length === 0) {
-      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isKicked: false, isRegistered: false };
-    }
-
-    const userAttendance = conference.attendeesList.find((attendee: ConferenceXAttendeeDto) => attendee.attendeeEmail === userEmail);
-
-    if (!userAttendance) {
-      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isKicked: false, isRegistered: false };
-    }
-
-    return {
-      statusName: userAttendance.statusName,
-      isJoined: userAttendance.statusName === ATTENDANCE_STATUS.JOINED,
-      isWithdrawn: userAttendance.statusName === ATTENDANCE_STATUS.WITHDRAWN,
-      hasAttended: userAttendance.statusName === ATTENDANCE_STATUS.ATTENDED,
-      isKicked: userAttendance.statusName === ATTENDANCE_STATUS.KICKED,
-      isRegistered: true
-    };
-  };
+  const [qrOpen, setQrOpen] = useState(false);
+  const [qrValue, setQrValue] = useState<string>("");
 
   const { trigger: changeAttendeeStatus, isMutating: isChangingStatus } = useApiSWRMutation(
     endpoints.conferences.updateAttendanceStatus,
@@ -156,54 +150,43 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
         newStatusId: STATUS_NAME_TO_ID["Joined"],
         atendeeEmail: userEmail
       });
+
+      const payload = conference.joinUrl ? conference.joinUrl : JSON.stringify({ conferenceId: conference.id, userEmail, ts: Date.now() });
+
+      setQrValue(payload);
+      setQrOpen(true);
+
+      toast.success("Successfully registered! Scan the QR to join the meeting.");
     } catch (error) {
       console.error("error adding attendance: ", error);
       toast.error("Failed to mark attendance");
     }
   };
 
-  // const handleJoin = async () => {
-  //   if (!userEmail) {
-  //     toast.error("Please log in to join the conference.");
-  //     return;
-  //   }
+  const getUserStatusPerConference = () => {
+    if (!userEmail) {
+      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isKicked: false, isRegistered: false };
+    }
 
-  //   // 1. Schimbă starea de participare la "Joined" (Dacă nu e deja Joined)
-  //   const currentStatus = getUserStatusPerConference();
+    if (!conference.attendeesList || conference.attendeesList.length === 0) {
+      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isKicked: false, isRegistered: false };
+    }
 
-  //   if (!currentStatus.isJoined) {
-  //       try {
-  //           await changeAttendeeStatus({
-  //               conferenceId: conference.id,
-  //               newStatusId: STATUS_NAME_TO_ID["Joined"],
-  //               atendeeEmail: userEmail
-  //           });
-  //       } catch (error) {
-  //           console.error("error joining conference: ", error);
-  //           toast.error("Failed to register attendance status.");
-  //           return; // Oprește execuția dacă statusul nu se poate schimba
-  //       }
-  //   }
+    const userAttendance = conference.attendeesList.find((attendee: ConferenceXAttendeeDto) => attendee.attendeeEmail === userEmail);
 
-  //   // 2. Redirecționează către Zoom DOAR dacă este ONGOING
-  //   const timeStatus = getConferenceTimeStatus();
+    if (!userAttendance) {
+      return { statusName: null, isJoined: false, isWithdrawn: false, hasAttended: false, isKicked: false, isRegistered: false };
+    }
 
-  //   if (timeStatus === TIME_STATUS.ONGOING) {
-  //       // Presupunem că 'joinUrl' este câmpul care conține link-ul Zoom
-  //       if (conference.joinUrl) {
-  //           // Folosim window.open pentru a deschide link-ul într-o fereastră nouă, păstrând aplicația activă
-  //           window.open(conference.joinUrl, "_blank");
-  //           toast.info("Redirecting to the live meeting!");
-  //       } else {
-  //           toast.warning("The live meeting link is not available yet.");
-  //       }
-  //   } else if (timeStatus === TIME_STATUS.FUTURE) {
-  //       // Dacă e în viitor, arată doar mesajul de succes pentru înregistrare.
-  //       toast.success("Successfully registered for the conference!");
-  //   } else if (timeStatus === TIME_STATUS.PAST) {
-  //       toast.warning("This conference has already ended.");
-  //   }
-  // };
+    return {
+      statusName: userAttendance.statusName,
+      isJoined: userAttendance.statusName === ATTENDANCE_STATUS.JOINED,
+      isWithdrawn: userAttendance.statusName === ATTENDANCE_STATUS.WITHDRAWN,
+      hasAttended: userAttendance.statusName === ATTENDANCE_STATUS.ATTENDED,
+      isKicked: userAttendance.statusName === ATTENDANCE_STATUS.KICKED,
+      isRegistered: true
+    };
+  };
 
   const getButtonsToShow = () => {
     const status = getUserStatusPerConference();
@@ -215,7 +198,6 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
         showJoin: false,
         showWithdraw: false,
         showLoginMessage: false
-        // showPastMessage: true
       };
     }
 
@@ -478,6 +460,22 @@ const ConferenceCard: React.FC<{ conference: ConferenceDto; isOrganizer: boolean
           </Grid>
         </Grid>
       </Card>
+      <Dialog open={qrOpen} onClose={() => setQrOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle>
+          Join Conference
+          <IconButton aria-label="close" onClick={() => setQrOpen(false)} sx={{ position: "absolute", right: 8, top: 8 }} size="large">
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Box display="flex" justifyContent="center" alignItems="center" p={2}>
+            {qrValue ? <QRCode value={qrValue} size={200} /> : <Typography>No QR available</Typography>}
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ alignSelf: "center" }}>
+          <Alert>Info: View ticket in conference description</Alert>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

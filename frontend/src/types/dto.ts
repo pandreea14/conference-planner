@@ -71,6 +71,7 @@ type ConferenceDto = {
   // mainSpeakerName: string;
   attendeesList: ConferenceXAttendeeDto[];
   speakersList: ConferenceXSpeakerDto[];
+  joinUrl: string;
 };
 
 type ConferenceXSpeakerDto = {

@@ -52,14 +52,14 @@ namespace Charisma.Api.Application.Queries.Conference
                         Nationality = x.Speaker.Nationality,
                         Rating = x.Speaker.Rating,
                         SpeakerId = x.SpeakerId
+                    }).ToList(),
+                    AttendeesList = conference.ConferenceXAttendees.Select(x => new ConferenceXAttendee()
+                    {
+                        Id = x.Id,
+                        AttendeeEmail = x.AttendeeEmail,
+                        ConferenceId = x.ConferenceId,
+                        StatusId = x.StatusId
                     }).ToList()
-                    //AttendeesList = conference.ConferenceXAttendees.Select(x => new ConferenceXAttendee()
-                    //{
-                    //    Id = x.Id,
-                    //    AttendeeEmail = x.AttendeeEmail,
-                    //    ConferenceId = x.ConferenceId,
-                    //    StatusId = x.StatusId
-                    //}).ToList()
                 };
             }
         }

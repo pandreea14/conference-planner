@@ -22,7 +22,7 @@ namespace Charisma.Common.Domain.Dtos
         public DateTime EndDate { get; init; }
         public string Name { get; init; }
         public List<Speaker> SpeakerList { get; init; }
-        //public List<ConferenceXAttendee> AttendeesList { get; init; }
+        public List<ConferenceXAttendee> AttendeesList { get; init; }
     }
 
     public record Speaker
@@ -37,14 +37,14 @@ namespace Charisma.Common.Domain.Dtos
 
     }
 
-    //public record ConferenceXAttendee
-    //{
-    //    public int Id { get; set; }
-    //    public string AttendeeEmail { get; set; }
-    //    public int ConferenceId { get; set; }
-    //    public int StatusId { get; set; }
-    //    //public DictionaryStatus Status { get; set; }
-    //}
+    public record ConferenceXAttendee
+    {
+        public int Id { get; set; }
+        public string AttendeeEmail { get; set; }
+        public int ConferenceId { get; set; }
+        public int StatusId { get; set; }
+        //public DictionaryStatus Status { get; set; }
+    }
 
     public record Location
     {

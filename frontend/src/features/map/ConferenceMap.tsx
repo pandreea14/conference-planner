@@ -27,12 +27,7 @@ const ConferenceMap: React.FC<ConferenceMapProps> = ({ latitude, longitude, loca
   const position: [number, number] = [latitude, longitude];
   return (
     <Box sx={{ height: 300, width: "100%", borderRadius: 3, overflow: "hidden" }}>
-      <MapContainer
-        center={position}
-        zoom={13}
-        scrollWheelZoom={false} // Dezactivează zoom-ul cu rotița pentru o experiență mai bună în scroll
-        style={{ height: "100%", width: "100%" }}
-      >
+      <MapContainer center={position} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
